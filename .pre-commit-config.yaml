@@ -1,0 +1,36 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.0.0
+    hooks:
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-merge-conflict
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.4.1
+    hooks:
+      - id: pyupgrade
+  - repo: https://github.com/python/black
+    rev: 19.10b0
+    hooks:
+      - id: black
+        exclude: ^tests/
+        args: [ --safe, --quiet ]
+  - repo: https://github.com/asottile/seed-isort-config
+    rev: v2.1.1
+    hooks:
+      - id: seed-isort-config
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v4.3.21
+    hooks:
+      - id: isort
+        exclude: ^tests/
+
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.8.1
+    hooks:
+      - id: flake8
+        additional_dependencies: [ flake8-blind-except, flake8-bugbear, flake8-comprehensions,
+                                     flake8-debugger, flake8-docstrings, flake8-isort, flake8-polyfill, flake8-pytest,
+                                     flake8-quotes, yesqa ]
+        exclude: ^tests/
