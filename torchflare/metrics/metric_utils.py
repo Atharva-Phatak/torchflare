@@ -29,7 +29,7 @@ class MetricAndLossContainer:
     def reset(self):
         """Method to reset the state of metrics and loss meter."""
         self.loss_meter.reset()
-        if self.metrics is not None and self.exp._compute_metric_flag:
+        if self.metrics is not None and self.exp.compute_metric_flag:
 
             for metric in self.metrics:
                 metric.reset()
@@ -44,7 +44,7 @@ class MetricAndLossContainer:
             A dictionary containing corresponding metrics.
         """
         metric_dict = {prefix + "loss": self.loss_meter.avg}
-        if self.metrics is not None and self.exp._compute_metric_flag:
+        if self.metrics is not None and self.exp.compute_metric_flag:
             metric_vals = [metric.compute().item() for metric in self.metrics]
             metric_dict.update({prefix + key: value for key, value in zip(self.metric_names, metric_vals)})
 
@@ -60,7 +60,7 @@ class MetricAndLossContainer:
             n : The number of batches in a single iteration(batch_size)
         """
         self.loss_meter.update(loss, n)
-        if self.metrics is not None and self.exp._compute_metric_flag:
+        if self.metrics is not None and self.exp.compute_metric_flag:
             for metric in self.metrics:
                 metric.accumulate(op, y)
 

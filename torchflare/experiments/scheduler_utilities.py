@@ -85,7 +85,7 @@ class LRScheduler:
     def _scheduler_step(self):
 
         if isinstance(self.scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
-            val = self.exp.exp_logs.get(self.exp.val_key + self.exp._main_metic)
+            val = self.exp.exp_logs.get(self.exp.val_key + self.exp.main_metic)
             self.scheduler.step(val)
 
         else:

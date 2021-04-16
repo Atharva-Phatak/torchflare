@@ -15,12 +15,12 @@ class DummyPipe:
         self.val_metrics = True
         self._metric_runner = MetricAndLossContainer(metrics=metrics)
         self._metric_runner._set_experiment(self)
-        self._compute_metric_flag = None
+        self.compute_metric_flag = None
 
     def train_fn(self):
 
         self._metric_runner.reset()
-        self._compute_metric_flag = self.train_metric
+        self.compute_metric_flag = self.train_metric
         loss = 10
         for _ in range(10):
 
@@ -33,7 +33,7 @@ class DummyPipe:
 
     def val_fn(self):
 
-        self._compute_metric_flag = self.val_metrics
+        self.compute_metric_flag = self.val_metrics
         self._metric_runner.reset()
         loss = 20
         for _ in range(10):
@@ -42,7 +42,7 @@ class DummyPipe:
 
         metrics = self._metric_runner.compute(prefix="val_")
         loss_bool = "val_loss" in metrics
-        assert loss_bool == True
+        assert loss_bool is True
 
     def fit(self):
 

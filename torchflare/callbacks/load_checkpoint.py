@@ -16,7 +16,7 @@ class LoadCheckpoint(Callbacks, ABC):
 
     def experiment_start(self):
         """Load checkpoint before starting training."""
-        checkpoint = torch.load(self.exp._path, map_location=torch.device(self.exp.device))
+        checkpoint = torch.load(self.exp.path, map_location=torch.device(self.exp.device))
         self.exp.model.load_state_dict(checkpoint["model_state_dict"])
         self.exp.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
 

@@ -66,4 +66,4 @@ class EarlyStopping(Callbacks, ABC):
 
         if self.stopping_counter >= self.patience:
             print("Early Stopping !")
-            self.exp._stop_training = True
+            self.exp.stop_training = True
