@@ -1,0 +1,16 @@
+2021-04-11 02:05:54,771 INFO    MainThread:22260 [wandb_setup.py:_flush():70] setting env: {'silent': 'true'}
+2021-04-11 02:05:54,771 WARNING MainThread:22260 [wandb_setup.py:_flush():70] could not save program above cwd: /home/atharva/pyenv/Dev/bin/pytest
+2021-04-11 02:05:54,771 INFO    MainThread:22260 [wandb_setup.py:_flush():70] multiprocessing start_methods=fork,spawn,forkserver
+2021-04-11 02:05:54,771 INFO    MainThread:22260 [wandb_setup.py:_flush():70] setting login settings: {}
+2021-04-11 02:05:54,771 INFO    MainThread:22260 [wandb_setup.py:_flush():70] [34m[1mwandb[0m: Currently logged in as: [33mnotsogenius[0m (use `wandb login --relogin` to force relogin)
+2021-04-11 02:05:54,771 INFO    MainThread:22260 [wandb_init.py:_log_setup():318] Logging user logs to ./tests/callbacks/wandb/run-20210411_020554-26quradw/logs/debug.log
+2021-04-11 02:05:54,771 INFO    MainThread:22260 [wandb_init.py:_log_setup():319] Logging internal logs to ./tests/callbacks/wandb/run-20210411_020554-26quradw/logs/debug-internal.log
+2021-04-11 02:05:57,490 INFO    MainThread:22260 [wandb_run.py:_console_start():1399] atexit reg
+2021-04-11 02:05:57,490 INFO    MainThread:22260 [wandb_run.py:_redirect():1262] redirect: SettingsConsole.REDIRECT
+2021-04-11 02:05:57,491 INFO    MainThread:22260 [wandb_run.py:_redirect():1267] Redirecting console.
+2021-04-11 02:05:57,491 INFO    MainThread:22260 [redirect.py:install():213] install start
+2021-04-11 02:05:57,491 INFO    MainThread:22260 [redirect.py:install():228] install stop
+2021-04-11 02:05:57,491 INFO    MainThread:22260 [redirect.py:install():213] install start
+2021-04-11 02:05:57,492 INFO    MainThread:22260 [redirect.py:install():228] install stop
+2021-04-11 02:05:57,492 INFO    MainThread:22260 [wandb_run.py:_redirect():1313] Redirects installed.
+2021-04-11 02:05:57,494 INFO    MainThread:22260 [wandb_run.py:finish():1056] finishing run notsogenius/dl-experiment/26quradw

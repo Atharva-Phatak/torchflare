@@ -1,0 +1,31 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.10.17
+    framework: huggingface
+    huggingface_version: 4.4.2
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.8.5
+    t:
+      1:
+      - 1
+      - 5
+      - 11
+      2:
+      - 1
+      - 5
+      - 11
+      3:
+      - 2
+      4: 3.8.5
+      5: 0.10.17
+      6: 4.4.2
+bs:
+  desc: null
+  value: 16
+lr:
+  desc: null
+  value: 0.01
