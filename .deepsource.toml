@@ -2,7 +2,12 @@ version = 1
 
 test_patterns = [
     "tests/**",
-    "\"test_*.py"
+    "test_*.py"
+]
+
+exclude_patterns = [
+    "docs/**",
+    ":!:*.md"
 ]
 
 [[analyzers]]
