@@ -226,7 +226,7 @@ class ExperimentState:
     def _before_step(self, iterator, prefix):
         # before every train/val step create progress bar.
         self._create_bar(iterator=iterator)
-        self._compute_metric_flag = self.compute_train_metrics if "train_" in prefix else self._compute_val_metrics
+        self.compute_metric_flag = self.compute_train_metrics if "train_" in prefix else self._compute_val_metrics
 
     def cleanup(self):
         """Function to reset the states of monitors and model."""

@@ -91,7 +91,7 @@ class Experiment(ExperimentState):
         """
         self.model = model
         self.resume_checkpoint = resume_checkpoint
-        self._main_metric = main_metric
+        self.main_metric = main_metric
 
         self._set_optimizer(optimizer=optimizer, optimizer_params=optimizer_params)
         self._set_scheduler(scheduler=scheduler, scheduler_params=scheduler_params)
