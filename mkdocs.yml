@@ -1,0 +1,124 @@
+site_name: TorchFlare
+site_author: Atharva Phatak
+
+theme:
+  name: material
+  favicon: ./static/images/logo_pink_circle_big.svg
+  logo: ./static/images/logo_pink_circle_big.svg
+  palette:
+    primary: white
+    accent: black
+  font:
+    text: Ubuntu
+    code: Ubuntu
+  features:
+    - navigation.tabs
+    - navigation.expand
+
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          rendering:
+            show_root_heading: false
+            show_source: true
+            show_category_heading: true
+
+# Extensions
+markdown_extensions:
+  - meta
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - admonition # alerts
+  - pymdownx.details #  collapsible alerts
+  - pymdownx.superfences # nest code and content inside alerts
+  - attr_list # add HTML and CSS to Markdown elements
+  - pymdownx.inlinehilite # inline code highlights
+  - pymdownx.keys # show keystroke symbols
+  - pymdownx.snippets # insert content from other files
+  - pymdownx.tabbed # content tabs
+  - footnotes
+  - def_list
+  - pymdownx.arithmatex: # mathjax
+      generic: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+      clickable_checkbox: true
+  - codehilite
+  - pymdownx.highlight:
+      use_pygments: true
+  - toc:
+      toc_depth: 4
+
+extra:
+  social:
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/in/atharva-phatak
+    - icon: fontawesome/brands/github
+      link: https://github.com/Atharva-Phatak
+    - icon: fontawesome/solid/paper-plane
+      link: mailto:athp456@gmail.com
+
+# Extra JS
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - API Reference:
+    - Experiment: './experiment.md'
+    - Datasets:
+        - ImageDataset: './datasets/image_data.md'
+        - SegmentationDataset: './datasets/segmentation_data.md'
+        - TabularDataset: './datasets/tabular_data.md'
+        - TextClassificationDataset: './datasets/text_data.md'
+    - SimpleDataloader: './dataloader.md'
+    - Metrics:
+        - Classification:
+            - Accuracy: './metrics/classification/accuracy.md'
+            - Precision: './metrics/classification/precision.md'
+            - Recall: './metrics/classification/recall.md'
+            - FBeta: './metrics/classification/fbeta.md'
+            - F1Score: './metrics/classification/f1_score.md'
+        - Segmentation:
+            - DiceScore: './metrics/segmentation/dice.md'
+            - IOU: './metrics/segmentation/iou.md'
+        - Regression:
+            - MAE: './metrics/regression/mae.md'
+            - MSE: './metrics/regression/mse.md'
+            - MSLE: './metrics/regression/msle.md'
+            - R2Score: './metrics/regression/r2.md'
+    - Criterion:
+        - Cross Entropy Losses: './criterion/cross_entropy.md'
+        - Focal Loss variants: './criterion/focal_loss.md'
+        - Triplet Loss: './criterion/triplet.md'
+        - Segmentation Losses : './criterion/segmentation.md'
+    - Callbacks:
+        - EarlyStopping: './callbacks/early_stopping.md'
+        - ModelCheckpoint: './callbacks/model_checkpoint.md'
+        - 'Notifiers':
+            - SlackNotifierCallback: './callbacks/notifiers/slack_notifier.md'
+            - DiscordNotifierCallback: './callbacks/notifiers/discord_notifier.md'
+        - Logging:
+            - CometLogger: './callbacks/logging/comet_logger.md'
+            - NeptuneLogger: './callbacks/logging/neptune_logger.md'
+            - TensorboardLogger: './callbacks/logging/tensorboard_logger.md'
+            - WandbLogger: './callbacks/logging/wandb_logger.md'
+    - Batch Mixers: './batch_mixers/batch_mixer.md'
+    - Modules:
+        - ArcFace: './modules/arcface.md'
+        - CosFace: './modules/cosface.md'
+        - Lightweight ArcFace: './modules/airface.md'
+        - AMSoftmax: './modules/am_softmax.md'
+        - Sqeeze and Excitation Blocks: './modules/se_modules.md'
+  - Tutorials:
+      - Image Classification: './Tutorials/image_classification.md'
+
+# Extra CSS
+extra_css:
+  - ./static/css/custom.css
