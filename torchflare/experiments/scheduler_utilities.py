@@ -41,12 +41,14 @@ def get_scheduler(scheduler):
 
         try:
             if scheduler.startswith("get_"):
-                return getattr(transformers, scheduler.lower())
+                sch = getattr(transformers, scheduler.lower())
             else:
                 dir_sch = dir(torch.optim.lr_scheduler)
                 opts = [o.lower() for o in dir_sch]
                 str_idx = opts.index(scheduler.lower())
-                return getattr(torch.optim.lr_scheduler, dir_sch[str_idx])
+                sch = getattr(torch.optim.lr_scheduler, dir_sch[str_idx])
+
+            return sch
 
         except ValueError:
             raise ValueError(

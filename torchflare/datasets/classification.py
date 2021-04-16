@@ -75,8 +75,8 @@ class ImageDataset(Dataset):
 
         if extension is None:
             return [os.path.join(path, x) for x in file_names]
-        else:
-            return [os.path.join(path, x + extension) for x in file_names]
+
+        return [os.path.join(path, x + extension) for x in file_names]
 
     @classmethod
     def from_df(
@@ -181,9 +181,9 @@ class ImageDataset(Dataset):
         images = apply_augmentations(images, augs=self.augmentations, mask=None)
         if self.label_list is None:
             return images
-        else:
-            labels = self.label_list[item]
-            return images, to_tensor(labels)
+
+        labels = self.label_list[item]
+        return images, to_tensor(labels)
 
 
 __all__ = ["ImageDataset"]
