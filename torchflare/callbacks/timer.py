@@ -15,11 +15,11 @@ class TimeCallback(Callbacks):
         super(TimeCallback, self).__init__(order=CallbackOrder.INTERNAL)
         self.time = None
 
-    def epoch_start(self, **kwargs):
+    def epoch_start(self, epoch, logs):
         """Method ot start measuring time at the start of epoch."""
         self.time = time.time()
 
-    def epoch_end(self, **kwargs):
+    def epoch_end(self, epoch, logs):
         """Method to stop measuring time at the end of epoch and format it."""
         end = time.time() - self.time
         end = format_time(end)

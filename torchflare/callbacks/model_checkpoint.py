@@ -63,7 +63,7 @@ class ModelCheckpoint(Callbacks, ABC):
                     "scheduler_state_dict": self.exp.scheduler_stepper.scheduler.state_dict(),
                     "Epoch": epoch,
                 },
-                self.exp._path,
+                self.exp.path,
             )
         else:
             torch.save(
@@ -72,7 +72,7 @@ class ModelCheckpoint(Callbacks, ABC):
                     "optimizer_state_dict": self.exp.optimizer.state_dict(),
                     "Epoch": epoch,
                 },
-                self.exp._path,
+                self.exp.path,
             )
 
     def epoch_end(self, epoch: int, logs: Dict):

@@ -6,7 +6,7 @@ from fastprogress.fastprogress import master_bar
 class DummyPipeline:
     def __init__(self, cbs):
 
-        self._stop_training = False
+        self.stop_training = False
         self._model_state = None
         self.cb = CallbackRunner(cbs)
 
@@ -55,7 +55,7 @@ class DummyPipeline:
             self._model_logs.update(logs)
             self.set_model_state = ExperimentStates.EPOCH_END
 
-            if self._stop_training:
+            if self.stop_training:
                 break
         self.set_model_state = ExperimentStates.EXP_END
 
@@ -68,7 +68,7 @@ def test_on_val_loss():
     trainer.fit()
 
     assert es.monitor == "val_loss"
-    assert trainer._stop_training == True
+    assert trainer.stop_training is True
 
 
 def test_on_metric():
@@ -77,4 +77,4 @@ def test_on_metric():
 
     trainer.fit()
     assert es.monitor == "val_acc"
-    assert trainer._stop_training == True
+    assert trainer.stop_training is True

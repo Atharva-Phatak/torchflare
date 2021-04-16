@@ -335,7 +335,7 @@ class Experiment(ExperimentState):
             self.set_state = ExperimentStates.EPOCH_END
             self._update_mbar(epoch=epoch)
 
-            if self._stop_training:
+            if self.stop_training:
                 break
 
     def run_experiment(

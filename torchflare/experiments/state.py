@@ -65,13 +65,13 @@ class ExperimentState:
         if not os.path.exists(self.save_dir):
             os.mkdir(self.save_dir)
 
-        self._path = os.path.join(self.save_dir, self.model_name)
+        self.path = os.path.join(self.save_dir, self.model_name)
         self.scaler = torch.cuda.amp.GradScaler() if self.fp16 else None
         self.history = History()
         self.model = None
         self.resume_checkpoint = None
-        self._main_metric = None
-        self._stop_training = None
+        self.main_metric = None
+        self.stop_training = None
         self.experiment_state = None
         self._step_after = None
         self._callback_runner = None
@@ -81,7 +81,7 @@ class ExperimentState:
         self._train_monitor = {}
         self._val_monitor = {}
         self.criterion = None
-        self._compute_metric_flag = True
+        self.compute_metric_flag = True
         self._metric_runner = None
         self.master_bar = None
         self.progress_bar = None
@@ -189,7 +189,7 @@ class ExperimentState:
 
     def _model_to_device(self):
         """Function to move model to device."""
-        if next(self.model.parameters()) != self.device:
+        if next(self.model.parameters()).is_cuda is False:
             self.model.to(self.device)
 
     def _reset_model_logs(self):

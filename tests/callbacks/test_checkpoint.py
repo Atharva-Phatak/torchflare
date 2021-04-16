@@ -25,7 +25,7 @@ class DummyPipeline:
         # if not os.path.exists(self.save_dir):
         # os.mkdir(self.save_dir)
 
-        self._path = os.path.join(self.save_dir, self.model_name)
+        self.path = os.path.join(self.save_dir, self.model_name)
         self.scheduler_stepper = None
 
         self.cb_lc = CallbackRunner([LoadCheckpoint()])  # callback runner for load_checkpoint. Since we test model only after training done.
@@ -78,7 +78,7 @@ class DummyPipeline:
 
     def check_checkpoints(self):
 
-        ckpt = torch.load(self._path)
+        ckpt = torch.load(self.path)
         model_dict = self.model.state_dict()
         self.cb_lc(current_state=ExperimentStates.EXP_START, epoch=None, logs=None)
         for layer_name, weight in ckpt["model_state_dict"].items():
@@ -96,7 +96,7 @@ def test_checkpoint_on_loss(tmpdir):
 
     trainer.fit()
     trainer.check_checkpoints()
-    assert os.path.exists(os.path.join(trainer.save_dir, trainer.model_name)) == True
+    assert os.path.exists(os.path.join(trainer.save_dir, trainer.model_name)) is True
 
 
 def test_checkpoint_on_acc(tmpdir):
@@ -107,7 +107,7 @@ def test_checkpoint_on_acc(tmpdir):
 
     trainer.fit()
     trainer.check_checkpoints()
-    assert os.path.exists(os.path.join(trainer.save_dir, trainer.model_name)) == True
+    assert os.path.exists(os.path.join(trainer.save_dir, trainer.model_name)) is True
 
 
 # test_checkpoint_on_acc()
