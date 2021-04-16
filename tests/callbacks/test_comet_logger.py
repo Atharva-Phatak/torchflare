@@ -1,0 +1,28 @@
+# flake8: noqa
+from torchflare.callbacks.logging.comet_logger import CometLogger
+import os
+import pytest
+
+
+@pytest.mark.skip(reason="Comet ML requires first import. Logic running properly but will fail CI Tests.")
+def test_comet():
+    params = {"bs": 16, "lr": 0.01}
+    logger = CometLogger(
+        project_name="dl-experiments",
+        workspace="notsogenius",
+        params=params,
+        tags=["Dummy", "test"],
+        api_token=os.environ.get("COMET_API_TOKEN"),
+    )
+
+    acc = 10
+    f1 = 10
+    loss = 100
+    for epoch in range(10):
+        d = {"acc": acc, "f1": f1, "loss": loss, "TTE": 5}
+        acc += 10
+        f1 += 10
+
+        loss = loss / 10
+        logger.epoch_end(epoch=epoch, logs=d)
+    logger.experiment_end()
