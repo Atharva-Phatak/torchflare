@@ -82,5 +82,5 @@ class TabularDataset(Dataset):
         if self.labels is not None:
             labels = self.labels[item]
             return to_tensor(feature), to_tensor(labels)
-        else:
-            return to_tensor(feature)
+
+        return to_tensor(feature)

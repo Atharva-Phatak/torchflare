@@ -84,8 +84,8 @@ class SegmentationDataset(Dataset):
 
         if extension is None:
             return [os.path.join(path, x) for x in file_names]
-        else:
-            return [os.path.join(path, x + extension) for x in file_names]
+
+        return [os.path.join(path, x + extension) for x in file_names]
 
     @staticmethod
     def create_mask_list(df: pd.DataFrame, image_col: str, mask_cols: List[str]) -> List[List[str]]:

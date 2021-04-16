@@ -13,7 +13,6 @@ class LoadCheckpoint(Callbacks, ABC):
     def __init__(self):
         """Constructor method for LoadCheckpoint Class."""
         super(LoadCheckpoint, self).__init__(order=CallbackOrder.INTERNAL)
-        pass
 
     def experiment_start(self):
         """Load checkpoint before starting training."""

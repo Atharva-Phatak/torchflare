@@ -75,7 +75,7 @@ class CallbackRunner:
         """
         for cb in self.callbacks:
             if current_state.value in list(cb.__class__.__dict__):
-                if current_state == ExperimentStates.EXP_END or current_state == ExperimentStates.EXP_START:
+                if current_state in (ExperimentStates.EXP_END, ExperimentStates.EXP_START):
                     _ = getattr(cb, current_state.value)()
                 else:
                     _ = getattr(cb, current_state.value)(epoch=epoch, logs=logs)
