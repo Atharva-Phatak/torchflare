@@ -78,7 +78,7 @@ class LRScheduler:
         self.step_on_batch = scheduler_step[scheduler]
         self.exp = None
 
-    def _set_experiment(self, exp):
+    def set_experiment(self, exp):  # noqa
 
         self.exp = exp
 

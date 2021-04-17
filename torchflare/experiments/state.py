@@ -148,7 +148,7 @@ class ExperimentState:
     def _set_scheduler(self, scheduler, scheduler_params):
         if scheduler is not None:
             self.scheduler_stepper = LRScheduler(scheduler=scheduler, optimizer=self.optimizer, **scheduler_params)
-            self.scheduler_stepper._set_experiment(self)
+            self.scheduler_stepper.set_experiment(self)
 
     def _set_criterion(self, criterion):
 
