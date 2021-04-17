@@ -17,7 +17,7 @@ def test_experiment(tmpdir):
     def _test(device):
 
         seed_all(42)
-        num_samples, num_features, num_classes = int(1e4), int(1e1), 4
+        num_samples, num_features, num_classes = int(1e4), int(100), 4
         X = torch.rand(num_samples, num_features)
         y = torch.randint(0, num_classes, size=(num_samples,))
 
