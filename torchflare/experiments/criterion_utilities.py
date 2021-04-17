@@ -20,7 +20,8 @@ def get_criterion(criterion):
     if isinstance(criterion, str):
         try:
             idx = loss_fns.index(criterion.lower())
-            return getattr(F, dir(F)[idx])
+            crit = getattr(F, dir(F)[idx])
+            return crit
         except ValueError:
             raise ValueError("Invalid loss string input - must match pytorch function in torch.nn.functional")
 
