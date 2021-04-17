@@ -3,8 +3,8 @@ site_author: Atharva Phatak
 
 theme:
   name: material
-  favicon: ./static/images/logo_pink_circle_big.svg
-  logo: ./static/images/logo_pink_circle_big.svg
+  favicon: ./static/images/logo.svg
+  logo: ./static/images/logo.svg
   palette:
     primary: white
     accent: black

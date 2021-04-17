@@ -6,7 +6,7 @@
 /* Indenting docstrings */
 div.doc-contents:not(.first) {
   padding-left: 25px;
-  border-left: 4px solid #e6e6e6;
+  border-left: 4px solid;
   margin-bottom: 80px;
 }
 
@@ -15,13 +15,22 @@ div.doc-contents:not(.first) {
   --md-primary-bg-color: #111111;
   --md-footer-bg-color: #111111;
 }
+body {
+  background-color: #EEEEFF;
+}
 .md-typeset table:not([class]) th {
   background-color: #111111;
   font-weight: bold;
   font-size: 0.65rem;
 }
+.md-typeset table:not([class]) {
+  background-color: #FFFFFF;
+}
 .md-typeset code {
-  background-color: #c1ffb6;
+  background-color: #F8F8FF;
+  font-family: "Ubuntu Mono";
+  font-weight: bold;
+  font-size: 1em;
 }
 .md-typeset h1 {
   color: #e92063;
@@ -38,18 +47,16 @@ div.doc-contents:not(.first) {
   font-size: 0.8rem;
   text-transform: none !important;
 }
-.md-typeset code, .md-typeset kbd, .md-typeset pre {
+.md-typeset kbd, .md-typeset pre {
   font-style: normal;
   word-break: normal;
   font-size: 1em;
 }
-.md-typeset code {
-  font-family: "Ubuntu Mono";
-}
 
 .md-header {
   font-weight: bolder;
-  color: #111111;
+  color: #FFFFFF;
+  background-color: #e92063;
 }
 .md-header__title {
   font-size: 1.25rem;
@@ -62,18 +69,28 @@ div.doc-contents:not(.first) {
     fill: currentColor;
 }
 
+.md-tabs {
+  background-color: #e92063;
+}
 .md-tabs__link {
   font-size: 0.75rem;
   font-weight: bold;
-  color: #111111;
+  color: #FFFFFF;
   opacity: 1;
 
 }
 
 .md-tabs__link--active, .md-tabs__link:focus, .md-tabs__link:hover {
-  color: #111111;
+  color: #FFFFFF;
   text-decoration: underline;
 }
+.md-nav__item .md-nav__link--active {
+  color: #4166f5;
+}
+.md-nav__link[data-md-state="blur"]{
+  color: #111111;
+}
+
 /*
 .md-tabs {
   color: #111111;
@@ -81,6 +98,7 @@ div.doc-contents:not(.first) {
 }
 */
 /* Code highlights (custom) */
+
 .highlight .hll { background-color: #FFFFFF }
 .highlight .c { color: #408080; font-style: italic } /* Comment */
 .highlight .err { border: 1px solid #FF0000 } /* Error */
