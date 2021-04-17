@@ -20,7 +20,7 @@ class DummyPipeline:
         self.cb = CallbackRunner(cbs)
 
         self.device = "cpu"
-        self.cb._set_experiment(self)
+        self.cb.set_experiment(self)
         self._model_logs = {}
         # if not os.path.exists(self.save_dir):
         # os.mkdir(self.save_dir)
@@ -29,7 +29,7 @@ class DummyPipeline:
         self.scheduler_stepper = None
 
         self.cb_lc = CallbackRunner([LoadCheckpoint()])  # callback runner for load_checkpoint. Since we test model only after training done.
-        self.cb_lc._set_experiment(self)
+        self.cb_lc.set_experiment(self)
 
     @property
     def set_model_state(self):
