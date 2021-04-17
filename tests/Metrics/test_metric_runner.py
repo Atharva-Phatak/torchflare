@@ -1,7 +1,9 @@
 # flake8: noqa
 import torch
 
-from torchflare.metrics import Accuracy, MetricAndLossContainer, Precision
+from torchflare.metrics.accuracy_meter import Accuracy
+from torchflare.metrics.metric_utils import MetricAndLossContainer
+from torchflare.metrics.precision_meter import Precision
 
 torch.manual_seed(42)
 outputs = torch.randn(100, 1)
@@ -29,7 +31,7 @@ class DummyPipe:
 
         metrics = self._metric_runner.compute(prefix="train_")
         loss_bool = "train_loss" in metrics
-        assert loss_bool == True
+        assert loss_bool is True
 
     def val_fn(self):
 

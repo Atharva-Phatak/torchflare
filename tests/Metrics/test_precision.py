@@ -6,7 +6,8 @@ import torch
 from sklearn.exceptions import UndefinedMetricWarning
 from sklearn.metrics import precision_score
 
-from torchflare.metrics import Precision, _BaseInputHandler
+from torchflare.metrics.precision_meter import Precision
+from torchflare.metrics.meters import _BaseInputHandler
 
 torch.manual_seed(42)
 

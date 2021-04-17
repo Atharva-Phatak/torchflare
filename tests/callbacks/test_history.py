@@ -1,7 +1,8 @@
 # flake8: noqa
 import time
-
-from torchflare.callbacks import CallbackRunner, ExperimentStates, History
+from torchflare.callbacks.callback import CallbackRunner
+from torchflare.callbacks.states import ExperimentStates
+from torchflare.callbacks.model_history import History
 
 
 class DummyPipeline:
@@ -72,4 +73,4 @@ def test_history(tmpdir):
     trainer.save_dir = tmpdir.mkdir('/callbacks')
     trainer.fit()
     #print(trainer.history.history)
-    assert isinstance(trainer.history.history, dict) == True
+    assert isinstance(trainer.history.history, dict) is True

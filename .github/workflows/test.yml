@@ -2,11 +2,7 @@ name: Test
 
 on:
   push:
-    branches:
-      - master
   pull_request:
-    branches:
-      - master
     types:
       - opened
       - synchronize
@@ -33,4 +29,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Test
-        run: pytest
+        run: |
+          pip install -e .
+          pytest
