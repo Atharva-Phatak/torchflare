@@ -85,12 +85,6 @@ def test_multiclass_inputs():
 
 def test_multilabel_inputs():
 
-    def _reshape(y):
-        y = y.transpose(1, 0).cpu().numpy()
-        num_classes = y.shape[0]
-        y = y.reshape((num_classes, -1)).transpose(1, 0)
-        return y
-
     def _test(num_classes, threshold, multilabel):
 
         acc = Accuracy(num_classes=num_classes, threshold=threshold, multilabel=multilabel)

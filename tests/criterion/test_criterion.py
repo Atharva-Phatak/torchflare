@@ -64,4 +64,4 @@ def test_forward_passes(criterion):
     targets = torch.empty(3, dtype=torch.long).random_(5)
 
     loss = criterion(output, targets)
-    assert torch.is_tensor(loss) == True
+    assert torch.is_tensor(loss) is True
