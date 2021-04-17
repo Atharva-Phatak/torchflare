@@ -13,7 +13,7 @@ class DummyPipeline:
         self.history = cbs[0]
         self.cb = CallbackRunner(cbs)
 
-        self.cb._set_experiment(self)
+        self.cb.set_experiment(self)
         self._model_logs = {}
 
     @property

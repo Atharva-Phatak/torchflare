@@ -14,7 +14,7 @@ class DummyPipe:
         self.train_metric = train
         self.val_metrics = True
         self._metric_runner = MetricAndLossContainer(metrics=metrics)
-        self._metric_runner._set_experiment(self)
+        self._metric_runner.set_experiment(self)
         self.compute_metric_flag = None
 
     def train_fn(self):

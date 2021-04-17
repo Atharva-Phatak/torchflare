@@ -10,7 +10,7 @@ class DummyPipeline:
         self._model_state = None
         self.cb = CallbackRunner(cbs)
 
-        self.cb._set_experiment(self)
+        self.cb.set_experiment(self)
         self._model_logs = {}
         self.master_bar = master_bar(range(10))
 

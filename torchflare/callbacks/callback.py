@@ -30,7 +30,7 @@ class Callbacks:
         self.exp = None
         self.order = order
 
-    def _set_experiment(self, exp):
+    def set_experiment(self, exp):  # noqa
         self.exp = exp
 
     def epoch_start(self, epoch, logs):
@@ -61,9 +61,9 @@ class CallbackRunner:
         """
         self.callbacks = callbacks
 
-    def _set_experiment(self, exp):
+    def set_experiment(self, exp):  # noqa
         for cb in self.callbacks:
-            cb._set_experiment(exp)
+            cb.set_experiment(exp)
 
     def __call__(self, current_state: Enum, epoch: int = None, logs: Dict = None):
         """Runs callbacks depending on the current experiment state.

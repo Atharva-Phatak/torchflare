@@ -23,7 +23,7 @@ class MetricAndLossContainer:
         self.exp = None
         self.loss_meter = AverageMeter()
 
-    def _set_experiment(self, exp):
+    def set_experiment(self, exp):  # noqa
         self.exp = exp
 
     def reset(self):

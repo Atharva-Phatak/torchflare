@@ -120,12 +120,12 @@ class ExperimentState:
 
         callbacks = sort_callbacks(callbacks)
         self._callback_runner = CallbackRunner(callbacks=callbacks)
-        self._callback_runner._set_experiment(self)
+        self._callback_runner.set_experiment(self)
 
     def _set_metrics(self, metrics):
 
         self._metric_runner = metric_utils.MetricAndLossContainer(metrics=metrics)
-        self._metric_runner._set_experiment(self)
+        self._metric_runner.set_experiment(self)
         self.header = self._create_metric_lists(metrics=metrics)
 
     def _set_params(self, optimizer_params):
