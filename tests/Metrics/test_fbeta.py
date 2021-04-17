@@ -6,7 +6,7 @@ import torch
 from sklearn.exceptions import UndefinedMetricWarning
 from sklearn.metrics import f1_score, fbeta_score
 
-from torchflare.metrics import F1Score, FBeta, _BaseInputHandler
+from torchflare.metrics.fbeta_meter import F1Score, FBeta, _BaseInputHandler
 
 torch.manual_seed(42)
 

@@ -6,7 +6,7 @@ import torch
 from sklearn.exceptions import UndefinedMetricWarning
 from sklearn.metrics import accuracy_score
 
-from torchflare.metrics import Accuracy
+from torchflare.metrics.accuracy_meter import Accuracy
 
 torch.manual_seed(42)
 def test_binary_inputs():

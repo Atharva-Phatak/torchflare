@@ -1,5 +1,7 @@
 # flake8: noqa
-from torchflare.callbacks import CallbackRunner, EarlyStopping, ExperimentStates
+from torchflare.callbacks.callback import CallbackRunner
+from torchflare.callbacks.states import ExperimentStates
+from torchflare.callbacks.early_stopping import  EarlyStopping
 from fastprogress.fastprogress import master_bar
 
 

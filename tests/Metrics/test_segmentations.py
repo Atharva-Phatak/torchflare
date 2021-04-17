@@ -2,7 +2,8 @@
 import pytest
 import torch
 
-from torchflare.metrics import IOU, DiceScore
+from torchflare.metrics.iou_meter import IOU
+from torchflare.metrics.dice_meter import DiceScore
 
 base_outputs = torch.tensor([[0.8, 0.1, 0], [0, 0.4, 0.3], [0, 0, 1]])
 base_targets = torch.tensor([[1.0, 0, 0], [0, 1, 0], [1, 1, 0]])

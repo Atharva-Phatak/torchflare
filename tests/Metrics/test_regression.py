@@ -5,7 +5,7 @@ import pytest
 import sklearn.metrics as skm
 import torch
 
-from torchflare.metrics import MAE, MSE, MSLE, R2Score
+from torchflare.metrics.regression import MAE, MSE, MSLE, R2Score
 
 torch.manual_seed(42)
 

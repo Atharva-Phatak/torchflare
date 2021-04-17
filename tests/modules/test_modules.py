@@ -1,5 +1,10 @@
 import torch
-import torchflare.modules as modules
+from torchflare.modules.arcface import ArcFace
+from torchflare.modules.airface import LiArcFace
+from torchflare.modules.cosface import CosFace
+from torchflare.modules.am_softmax import AMSoftmax
+from torchflare.modules.se_modules import SSE , CSE , SCSE
+
 
 # To-do: Add more handcrafted tests.
 
@@ -24,23 +29,23 @@ def check_se_blocks(block, in_channels):
 
 
 def test_arcface():
-    check_layer(modules.ArcFace(5, 10, s=1.31, m=0.5))
+    check_layer(ArcFace(5, 10, s=1.31, m=0.5))
 
 
 def test_cosface():
-    check_layer(modules.CosFace(5, 10, s=1.31, m=0.5))
+    check_layer(CosFace(5, 10, s=1.31, m=0.5))
 
 
 def test_airface():
-    check_layer(modules.LiArcFace(5, 10, s=1.31, m=0.5))
+    check_layer(LiArcFace(5, 10, s=1.31, m=0.5))
 
 
 def test_amsoftmax():
-    check_layer(modules.AMSoftmax(5, 10, s=1.31, m=0.5))
+    check_layer(AMSoftmax(5, 10, s=1.31, m=0.5))
 
 
 def test_se_blocks():
     in_channels = 64
-    check_se_blocks(modules.CSE(in_channels=in_channels), in_channels=in_channels)
-    check_se_blocks(modules.SSE(in_channels=in_channels), in_channels=in_channels)
-    check_se_blocks(modules.SCSE(in_channels=in_channels, r=8), in_channels=in_channels)
+    check_se_blocks(CSE(in_channels=in_channels), in_channels=in_channels)
+    check_se_blocks(SSE(in_channels=in_channels), in_channels=in_channels)
+    check_se_blocks(SCSE(in_channels=in_channels, r=8), in_channels=in_channels)

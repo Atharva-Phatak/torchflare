@@ -1,4 +1,4 @@
-import torchflare.batch_mixers as bm
+from torchflare.batch_mixers.mixers import cutmix , mixup , get_collate_fn
 import torch
 
 
@@ -12,7 +12,7 @@ dl = torch.utils.data.DataLoader(ds, batch_size=2)
 def test_mixup():
 
     batch = next(iter(dl))
-    op, y = bm.mixup(batch=batch, alpha=0.35)
+    op, y = mixup(batch=batch, alpha=0.35)
 
     assert torch.is_tensor(op) == True
     assert isinstance(y, (tuple, list)) == True
@@ -26,7 +26,7 @@ def test_mixup():
 def test_cutmix():
 
     batch = next(iter(dl))
-    op, y = bm.cutmix(batch=batch, alpha=0.35)
+    op, y = cutmix(batch=batch, alpha=0.35)
 
     assert torch.is_tensor(op) == True
     assert isinstance(y, (tuple, list)) == True
@@ -39,7 +39,7 @@ def test_cutmix():
 
 def test_collate_fn_mixup():
 
-    mixup_collate_fn = bm.get_collate_fn(mixer_name="mixup", alpha=0.35)
+    mixup_collate_fn = get_collate_fn(mixer_name="mixup", alpha=0.35)
     dl = torch.utils.data.DataLoader(ds, batch_size=2, collate_fn=mixup_collate_fn)
     x, y = next(iter(dl))
 
@@ -53,7 +53,7 @@ def test_collate_fn_mixup():
 
 
 def test_collate_fn_cutmix():
-    mixup_collate_fn = bm.get_collate_fn(mixer_name="cutmix", alpha=0.35)
+    mixup_collate_fn = get_collate_fn(mixer_name="cutmix", alpha=0.35)
     dl = torch.utils.data.DataLoader(ds, batch_size=2, collate_fn=mixup_collate_fn)
     x, y = next(iter(dl))
 

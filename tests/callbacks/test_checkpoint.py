@@ -4,7 +4,10 @@ import os
 
 import torch
 
-from torchflare.callbacks import CallbackRunner, ExperimentStates, ModelCheckpoint, LoadCheckpoint
+from torchflare.callbacks.callback import CallbackRunner
+from torchflare.callbacks.states import ExperimentStates
+from torchflare.callbacks.load_checkpoint import LoadCheckpoint
+from torchflare.callbacks.model_checkpoint import ModelCheckpoint
 
 
 class DummyPipeline:

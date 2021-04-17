@@ -6,7 +6,8 @@ import torch
 from sklearn.exceptions import UndefinedMetricWarning
 from sklearn.metrics import recall_score
 
-from torchflare.metrics import Recall, _BaseInputHandler
+from torchflare.metrics.recall_meter import Recall
+from torchflare.metrics.meters import _BaseInputHandler
 
 torch.manual_seed(42)
 
