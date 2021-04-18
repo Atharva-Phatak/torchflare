@@ -2,6 +2,7 @@
 from typing import Tuple
 
 import albumentations as A
+import matplotlib.pyplot as plt
 import numpy as np
 import PIL
 import torch
@@ -214,10 +215,20 @@ def to_tensor(x):
         return x
 
 
-# def show_batch(dl, bs):
-#  fig, ax = plt.subplots(figsize=(12, 12))
-#  ax.set_xticks([])
-#  ax.set_yticks([])
-#  for x, _ in dl:
-#      ax.imshow(make_grid((x.detach()[:bs]), nrow=8).permute(1, 2, 0).numpy().astype("uint8"))
-#     break
+def show_batch(dl, **kwargs):
+    """Method to visualize the batch for image data.
+
+    Args:
+        dl : The pytorch dataloader.
+
+    Note:
+        Only use for classification and segmentations tasks.
+    """
+    op = next(iter(dl))
+    if isinstance(op, (list, tuple)):
+        x, _ = op
+    else:
+        x = op
+    grid_images = torchvision.utils.make_grid(x, **kwargs)
+    grid_images = grid_images.numpy()
+    plt.imshow(np.transpose(grid_images, (1, 2, 0)), interpolation="nearest")
