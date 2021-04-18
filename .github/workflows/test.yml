@@ -32,3 +32,7 @@ jobs:
         run: |
           pip install -e .
           pytest
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # Secret token since repo is private.
