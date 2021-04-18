@@ -31,7 +31,7 @@ jobs:
       - name: Test
         run: |
           pip install -e .
-          pytest
+          pytest --cov=./
       - name: Upload coverage
         uses: codecov/codecov-action@v1
         with:
