@@ -82,7 +82,7 @@ train_dl = SimpleDataloader.image_data_from_df(
     df=train_df,
     extension=".png",
     convert_mode="RGB",
-).get_loader(batch_size=32, shuffle=True)
+).get_loader(batch_size=32, shuffle=True, num_workers = 0)
 
 # Creating Validation Dataloader.
 
