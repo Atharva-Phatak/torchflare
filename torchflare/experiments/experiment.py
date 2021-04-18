@@ -394,7 +394,7 @@ class Experiment(ExperimentState):
     def perform_sanity_check(self, dl):
         """Method to check if the model forward pass and loss_computation is working or not."""
         x, y = next(iter(dl))
-        op = self.model(x)
+        op = self._model_forward_pass(x=x)
         loss = self.criterion(op, y)
         print("Sanity Check Completed. Model Forward Pass and Loss Computation Successful")
         print(f"Output Shape : {op.shape}")
