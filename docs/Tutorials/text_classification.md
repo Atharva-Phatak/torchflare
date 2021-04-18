@@ -76,7 +76,7 @@ test_dl = SimpleDataloader.text_data_from_df(
                         max_len = 128).get_loader(batch_size = 16 , shuffle = False)
 ```
 
-* ### Defining callbacks and metrics
+* ### Defining callbacks, metrics and some params.
 ``` python
 metric_list = [metrics.Accuracy(num_classes=len(classes), multilabel=False)]
 
@@ -84,6 +84,26 @@ callbacks = [
     cbs.EarlyStopping(monitor=acc.handle(), patience=5),
     cbs.ModelCheckpoint(monitor=acc.handle()),
 ]
+
+# I want to define some custom weight decay to model paramters.
+# We will use model_params as an argument in optimizer_params to tell torchflare that, hey we are using custom optimizer params for model.
+# If model_params arguments is not used, torchflare by default will use model.parameters() as default params to optimizer.
+param_optimizer = list(model.named_parameters())
+no_decay = ["bias", "LayerNorm.bias"]
+optimizer_parameters = [
+        {
+            "params": [
+                p for n, p in param_optimizer if not any(nd in n for nd in no_decay)
+            ],
+            "weight_decay": 0.001,
+            },
+            {
+                "params": [
+                    p for n, p in param_optimizer if any(nd in n for nd in no_decay)
+                ],
+                "weight_decay": 0.0,
+            },
+        ]
 ```
 
 * ### Setting up the Experiment
@@ -104,7 +124,7 @@ exp = Experiment(
 exp.compile_experiment(
     model=model,
     optimizer="Adam",
-    optimizer_params=dict(lr=3e-4),
+    optimizer_params=dict(model_params = optimizer_params, lr=3e-4), # used model_params argument for custom optimizer params.
     callbacks=callbacks,
     scheduler="ReduceLROnPlateau",
     scheduler_params=dict(mode="max", patience=5),
