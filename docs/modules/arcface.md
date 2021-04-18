@@ -1,5 +1,6 @@
 ::: torchflare.modules.arcface
-
+    rendering:
+         show_root_toc_entry: false
 ``` python
 import torch.nn as nn
 from torchflare.modules import ArcFace

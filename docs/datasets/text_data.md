@@ -3,6 +3,8 @@
     selection:
       members:
         - from_df
+    rendering:
+         show_root_toc_entry: false
 
 
 ## Examples

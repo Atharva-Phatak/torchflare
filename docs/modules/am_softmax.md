@@ -1,4 +1,6 @@
 ::: torchflare.modules.am_softmax
+    rendering:
+         show_root_toc_entry: false
 
 ``` python
 import torch.nn as nn

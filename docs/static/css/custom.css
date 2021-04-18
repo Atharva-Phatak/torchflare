@@ -29,7 +29,7 @@ body {
 .md-typeset code {
   background-color: #F8F8FF;
   font-family: "Ubuntu Mono";
-  font-weight: bold;
+  font-weight: normal;
   font-size: 1em;
 }
 .md-typeset h1 {
@@ -91,6 +91,10 @@ body {
   color: #111111;
 }
 
+.md-typeset .quote > .admonition-title, .md-typeset .quote > summary {
+    background-color: #FFFFFF;
+    border-color: #111111;
+}
 /*
 .md-tabs {
   color: #111111;

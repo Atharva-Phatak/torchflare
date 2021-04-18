@@ -4,6 +4,8 @@
       members:
         - from_df
         - from_csv
+    rendering:
+         show_root_toc_entry: false
 
 
 ## Examples

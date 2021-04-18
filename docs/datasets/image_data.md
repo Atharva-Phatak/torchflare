@@ -4,6 +4,8 @@
       members:
         - from_df
         - from_folders
+    rendering:
+         show_root_toc_entry: false
 
 
 

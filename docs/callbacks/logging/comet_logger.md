@@ -1,4 +1,6 @@
 ::: torchflare.callbacks.logging.comet_logger.CometLogger
+    rendering:
+         show_root_toc_entry: false
 
 ## Examples
 

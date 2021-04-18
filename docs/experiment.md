@@ -6,6 +6,7 @@
         - compile_experiment
         - run_experiment
         - infer
+        - perform_sanity_check
     rendering:
       show_root_full_path: false
       show_root_toc_entry: false
@@ -72,6 +73,9 @@ exp.compile_experiment(
     scheduler_params=scheduler_params,
     criterion=criterion,
 )
+
+# Performing sanity check(optional)
+exp.perform_sanity_check(train_dl)
 
 # Running the experiment
 exp.run_experiment(train_dl=train_dl, valid_dl=valid_dl)

@@ -1,4 +1,6 @@
 ::: torchflare.callbacks.logging.neptune_logger.NeptuneLogger
+    rendering:
+         show_root_toc_entry: false
 
 
 ## Examples

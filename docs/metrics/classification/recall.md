@@ -1,4 +1,6 @@
 ::: torchflare.metrics.recall_meter.Recall
+    rendering:
+         show_root_toc_entry: false
 
 ## Examples
 
@@ -7,7 +9,7 @@
 from torchflare.metrics import Recall
 
 # Binary-Classification Problems
-acc = Recall(num_classes=1 , threshold=0.7 , multilabel=False , average = "macro")
+acc = Recall(num_classes=2 , threshold=0.7 , multilabel=False , average = "macro")
 
 # Mutliclass-Classification Problems
 multiclass_acc = Recall(num_classes=4 , multilabel=False , average = "macro")

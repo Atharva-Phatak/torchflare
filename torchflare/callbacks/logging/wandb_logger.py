@@ -11,7 +11,7 @@ from torchflare.callbacks.states import CallbackOrder
 class WandbLogger(Callbacks, ABC):
     """Callback to log your metrics and loss values to  wandb platform.
 
-    For mode information about wandb take a look at [Weights and Biases](https://wandb.ai/)
+    For more information about wandb take a look at [Weights and Biases](https://wandb.ai/)
     """
 
     def __init__(

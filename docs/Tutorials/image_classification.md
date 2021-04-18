@@ -124,7 +124,7 @@ callbacks = [
 
 * ### Setting up the experiment and Training our model.
 ***
-1. **The first step is to setup some constants and params for the experiment.**
+**1. The first step is to setup some constants and params for the experiment.**
 
 ``` python
 exp = Experiment(
@@ -139,7 +139,7 @@ exp = Experiment(
 )
 ```
 
-2. **We will compile our experiment where we will define our optimizer, scheduler,etc**
+**2. We will compile our experiment where we will define our optimizer, scheduler,etc**
 
 ``` python
 exp.compile_experiment(
@@ -155,23 +155,23 @@ exp.compile_experiment(
 )
 ```
 
-3. **This step is optional but its good to perform a check to see if the
+**3. This step is optional but its good to perform a check to see if the
        defined model's forward pass is working or not and check if loss computation
-       is working.***
+       is working.**
 
 ``` python
 exp.perform_sanity_check(train_dl)
 ```
 
 
-4. **Now we run our experiment with our training and validation dataloaders. We use fastprogress as our progress bar hence the output will be like fast.ai,
+**4. Now we run our experiment with our training and validation dataloaders. We use fastprogress as our progress bar hence the output will be like fast.ai,
        a nice table with our metrics, loss and time.**
 
 ``` python
 exp.run_experiment(train_dl=train_dl, valid_dl=valid_dl)
 ```
 
-5. **The infer method yields output of every batch so that you can perform any kind of post-processing
+**5. The infer method yields output of every batch so that you can perform any kind of post-processing
            on your outputs.**
 
 ``` python

@@ -10,6 +10,8 @@
          - tabular_data_from_csv
          - text_classification_data_from_df
          - get_loaders
+    rendering:
+         show_root_toc_entry: false
 
 ## Examples
 

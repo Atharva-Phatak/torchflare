@@ -391,8 +391,12 @@ class Experiment(ExperimentState):
             yield op
 
     # Perform a sanity check for the forward pass of them model. Ensuring model is defined correctly.
-    def perform_sanity_check(self, dl):
-        """Method to check if the model forward pass and loss_computation is working or not."""
+    def perform_sanity_check(self, dl: DataLoader):
+        """Method to check if the model forward pass and loss_computation is working or not.
+
+        Args:
+            dl: A PyTorch dataloader.
+        """
         x, y = next(iter(dl))
         op = self._model_forward_pass(x=x)
         loss = self.criterion(op, y)

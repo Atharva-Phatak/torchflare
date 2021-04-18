@@ -1,4 +1,6 @@
 ::: torchflare.callbacks.notifiers.message_notifiers.DiscordNotifierCallback
+    rendering:
+         show_root_toc_entry: false
 
 ## Examples
 

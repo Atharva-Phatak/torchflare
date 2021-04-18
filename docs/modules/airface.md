@@ -1,5 +1,6 @@
 ::: torchflare.modules.airface
-
+    rendering:
+         show_root_toc_entry: false
 ## Examples
 
 ``` python

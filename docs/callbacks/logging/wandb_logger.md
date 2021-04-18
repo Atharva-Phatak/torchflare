@@ -1,4 +1,6 @@
 ::: torchflare.callbacks.logging.wandb_logger.WandbLogger
+    rendering:
+         show_root_toc_entry: false
 
 ## Examples
 

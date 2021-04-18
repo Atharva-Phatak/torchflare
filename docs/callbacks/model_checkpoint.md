@@ -1,4 +1,6 @@
 ::: torchflare.callbacks.model_checkpoint.ModelCheckpoint
+    rendering:
+         show_root_toc_entry: false
 
 ## Examples
 
