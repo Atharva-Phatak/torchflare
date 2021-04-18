@@ -25,14 +25,14 @@ from torchflare.datasets import SimpleDataloader
 train_df = pd.read_csv('Train.csv')
 valid_df = pd.read_csv('Valid.csv')
 test_df = pd.read_csv('Test.csv')
-num_classes = 2
+
 
 ```
 * ### Defining Model
 ``` python
 class Model(torch.nn.Module):
 
-    def __init__(self , num_classes = 2):
+    def __init__(self):
 
         super(Model , self).__init__()
         self.bert = transformers.BertModel.from_pretrained(
@@ -48,7 +48,7 @@ class Model(torch.nn.Module):
         output = self.out(b_o)
         return output
 
-model = Model(num_classes=2)
+model = Model()
 ```
 * ### Creating the dataloaders
 ``` python
@@ -78,7 +78,7 @@ test_dl = SimpleDataloader.text_data_from_df(
 
 * ### Defining callbacks, metrics and some params.
 ``` python
-metric_list = [metrics.Accuracy(num_classes=len(classes), multilabel=False)]
+metric_list = [metrics.Accuracy(num_classes=2, multilabel=False)]
 
 callbacks = [
     cbs.EarlyStopping(monitor=acc.handle(), patience=5),
@@ -90,20 +90,20 @@ callbacks = [
 # If model_params arguments is not used, torchflare by default will use model.parameters() as default params to optimizer.
 param_optimizer = list(model.named_parameters())
 no_decay = ["bias", "LayerNorm.bias"]
+param_optimizer = list(model.named_parameters())
+no_decay = ["bias", "LayerNorm.bias"]
 optimizer_parameters = [
-        {
-            "params": [
-                p for n, p in param_optimizer if not any(nd in n for nd in no_decay)
-            ],
-            "weight_decay": 0.001,
-            },
-            {
-                "params": [
-                    p for n, p in param_optimizer if any(nd in n for nd in no_decay)
-                ],
-                "weight_decay": 0.0,
-            },
-        ]
+    {
+        "params": [
+            p for n, p in param_optimizer if not any(nd in n for nd in no_decay)
+        ],
+        "weight_decay": 0.001,
+    },
+    {
+        "params": [p for n, p in param_optimizer if any(nd in n for nd in no_decay)],
+        "weight_decay": 0.0,
+    },
+]
 ```
 
 * ### Setting up the Experiment

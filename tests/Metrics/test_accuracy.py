@@ -41,7 +41,7 @@ def test_binary_inputs():
         assert acc_skm == pytest.approx(m_acc.item())
 
     for _ in range(10):
-        _test(num_classes=1, threshold=0.5, multilabel=False)
+        _test(num_classes=2, threshold=0.5, multilabel=False)
 
 
 def test_multiclass_inputs():

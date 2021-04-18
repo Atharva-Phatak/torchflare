@@ -17,9 +17,6 @@ class Accuracy(_BaseMetric, MetricMeter):
             num_classes: The number of num_classes.
             threshold: The threshold value to transform probability predictions to binary values(0,1)
             multilabel: Set it to True if your problem is  multilabel classification.
-
-        Note:
-            In case of binary classification, set num_classes = 1
         """
         super(Accuracy, self).__init__(multilabel=multilabel)
 

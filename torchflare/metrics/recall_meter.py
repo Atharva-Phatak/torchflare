@@ -22,9 +22,6 @@ class Recall(_BaseInputHandler, MetricMeter):
                 micro: calculate metrics globally for each sample and class.
             threshold: The threshold value to transform probability predictions to binary values(0,1)
             multilabel: Set it to True if your problem is  multilabel classification.
-
-        Note:
-            In case of binary classification, set num_classes = 1
         """
         super(Recall, self).__init__(
             num_classes=num_classes, threshold=threshold, multilabel=multilabel, average=average,

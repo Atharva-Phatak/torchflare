@@ -99,9 +99,6 @@ class F1Score(_BaseInputHandler, MetricMeter):
             threshold: The value of threshold for masking. Input is raw logits.
             average : One of "micro" or "macro".
             multilabel: Whether the problem is multilabel or not.
-
-        Note:
-            In case of binary classification, set num_classes = 1
         """
         super(F1Score, self).__init__(
             num_classes=num_classes, multilabel=multilabel, threshold=threshold, average=average,

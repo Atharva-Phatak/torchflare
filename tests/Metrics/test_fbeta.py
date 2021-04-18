@@ -63,8 +63,8 @@ def test_binary_inputs():
         assert fbeta_skm == pytest.approx(fbeta_m.item())
 
     for _ in range(10):
-        _test(num_classes=1, threshold=0.5, multilabel=False, average="macro")
-        _test(num_classes=1, threshold=0.5, multilabel=False, average="micro")
+        _test(num_classes=2, threshold=0.5, multilabel=False, average="macro")
+        _test(num_classes=2, threshold=0.5, multilabel=False, average="micro")
 
 
 def test_multiclass_inputs():

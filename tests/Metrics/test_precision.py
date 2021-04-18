@@ -45,8 +45,8 @@ def test_binary_inputs():
         assert pr_skm == pytest.approx(m_pr.item())
 
     for _ in range(10):
-        _test(out_features=1, threshold=0.5, multilabel=False, average="macro")
-        _test(out_features=1, threshold=0.5, multilabel=False, average="micro")
+        _test(out_features=2, threshold=0.5, multilabel=False, average="macro")
+        _test(out_features=2, threshold=0.5, multilabel=False, average="micro")
 
 
 def test_multiclass_inputs():
