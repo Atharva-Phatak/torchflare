@@ -4,9 +4,8 @@ from __future__ import annotations
 from typing import List, Union
 
 import pandas as pd
+import torch
 from torch.utils.data import Dataset
-
-from torchflare.datasets.utils import to_tensor
 
 
 class TabularDataset(Dataset):
@@ -78,9 +77,9 @@ class TabularDataset(Dataset):
         Returns:
             Tensors of features , labels if labels is not None else returns Tensors of features.
         """
-        feature = self.features[item]
+        feature = torch.tensor(self.features[item], dtype=torch.long)
         if self.labels is not None:
-            labels = self.labels[item]
-            return to_tensor(feature), to_tensor(labels)
+            labels = torch.tensor(self.labels[item], dtype=torch.long)
+            return feature, labels
 
-        return to_tensor(feature)
+        return feature
