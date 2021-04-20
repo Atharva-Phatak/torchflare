@@ -27,7 +27,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Deploy docs
+        run : |
           pip install -e .
           pip install -r requirements/docs_requirements.txt
-      - name: Deploy docs
-        run : mkdocs gh-deploy --force
+          mkdocs gh-deploy --force
