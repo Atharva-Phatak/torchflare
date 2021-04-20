@@ -239,12 +239,13 @@ class ExperimentState:
     def _run_event(self, event: str, **kwargs):
         _ = getattr(self, event)(**kwargs)
 
-    def plot_history(self, key: str, save_fig: bool = False):
+    def plot_history(self, key: str, save_fig: bool = False, plot_fig: bool = True):
         """Method to plot model history.
 
         Args:
             key : A key value in lower case. Ex accuracy or loss
             save_fig: Set to True if you want to save_fig.
+            plot_fig: Whether to plot the figure.
         """
         plt.figure(figsize=(10, 10))
         for k, v in self.history.history.items():
@@ -258,7 +259,8 @@ class ExperimentState:
         if save_fig is not None:
             save_path = os.path.join(self.save_dir, f"{key}-vs-{self.epoch_key}.jpg")
             plt.savefig(save_path, dpi=150)
-        plt.show()
+        if plot_fig:
+            plt.show()
 
 
 __all__ = ["ExperimentState"]

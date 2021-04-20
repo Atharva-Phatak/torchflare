@@ -194,5 +194,5 @@ for op in exp.infer(path="./models/cifar10.bin", test_loader=test_dl):
 
 ``` python
 # I want to visualize train_accuracy/valid_accuracy against epochs.
-exp.plot_history(key = "accuracy" , save_fig = False)
+exp.plot_history(key = "accuracy" , save_fig = False , plot_fig = True)
 ```
