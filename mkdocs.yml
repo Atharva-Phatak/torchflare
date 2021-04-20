@@ -117,8 +117,9 @@ nav:
         - AMSoftmax: './modules/am_softmax.md'
         - Sqeeze and Excitation Blocks: './modules/se_modules.md'
   - Tutorials:
-      - Image Classification: './Tutorials/image_classification.md'
-      - Text Classification: './Tutorials/text_classification.md'
+      - Image Data: './Tutorials/image_classification.md'
+      - Text Data: './Tutorials/text_classification.md'
+      - Tabular Data: './Tutorials/tabular_data.md'
 
 # Extra CSS
 extra_css:

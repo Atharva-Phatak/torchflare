@@ -2,6 +2,7 @@
 
 Hey there, this tutorial will guide on how to do image classification using torchflare.
 
+Dataset: https://www.kaggle.com/c/cifar-10
 * ### Importing Libraries
 ``` python
 import numpy as np
@@ -13,7 +14,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.transforms as transforms
 
-from torchflare.datasets import SimpleDataloader
+from torchflare.datasets import SimpleDataloader, show_batch
 from torchflare.experiments import Experiment
 import torchflare.callbacks as cbs
 from torchflare.metrics import Accuracy
@@ -109,6 +110,12 @@ test_dl = SimpleDataloader.image_data_from_df(
 ).get_loader(batch_size=16, num_workers=0)
 ```
 
+Visualizing a batch from train dataloader.
+``` python
+show_batch(train_dl)
+```
+![batch](./images/cifar10-batch.png)
+
 * ### Defining Callbacks and metrics.
 
 We will be using callbacks and metrics defined in torchflare library.
@@ -170,14 +177,22 @@ exp.perform_sanity_check(train_dl)
 ``` python
 exp.run_experiment(train_dl=train_dl, valid_dl=valid_dl)
 ```
+![progress bar](./images/progress-bar.png)
 
 **5. The infer method yields output of every batch so that you can perform any kind of post-processing
            on your outputs.**
 
 ``` python
-l = []
+ops = []
 # Since infer method yeilds we use a for loop.
 for op in exp.infer(path="./models/cifar10.bin", test_loader=test_dl):
     op = post_process_func(op)
-    l.extend(y_pred)
+    ops.extend(y_pred)
+```
+
+**6. Want to visualize model history ?**
+
+``` python
+# I want to visualize train_accuracy/valid_accuracy against epochs.
+exp.plot_history(key = "accuracy" , save_fig = False)
 ```

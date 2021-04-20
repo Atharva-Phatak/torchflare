@@ -3,6 +3,7 @@ import os
 import warnings
 from typing import List
 
+import matplotlib.pyplot as plt
 import torch
 from fastprogress.fastprogress import master_bar, progress_bar
 from torch.utils.data import DataLoader
@@ -61,6 +62,7 @@ class ExperimentState:
         self.seed = seed
         self.train_key = "train_"
         self.val_key = "val_"
+        self.epoch_key = "Epoch"
 
         if not os.path.exists(self.save_dir):
             os.mkdir(self.save_dir)
@@ -157,7 +159,7 @@ class ExperimentState:
             self.criterion = special_augs.MixCriterion(criterion=self.criterion)
 
     def _create_metric_lists(self, metrics):
-        train_l = ["Epoch", self.train_key + "loss"]
+        train_l = [self.epoch_key, self.train_key + "loss"]
         val_l = [self.val_key + "loss"]
         if metrics is not None:
             metric_names = wrap_metric_names(metric_list=metrics)
@@ -184,7 +186,7 @@ class ExperimentState:
 
         self.experiment_state = state
         # Run callbacks on state change
-        epoch = self.exp_logs.pop("Epoch") if "Epoch" in self.exp_logs.keys() else None
+        epoch = self.exp_logs.pop(self.epoch_key) if self.epoch_key in self.exp_logs.keys() else None
         self._callback_runner(current_state=self.experiment_state, epoch=epoch, logs=self.exp_logs)
 
     def _model_to_device(self):
@@ -236,6 +238,27 @@ class ExperimentState:
 
     def _run_event(self, event: str, **kwargs):
         _ = getattr(self, event)(**kwargs)
+
+    def plot_history(self, key: str, save_fig: bool = False):
+        """Method to plot model history.
+
+        Args:
+            key : A key value in lower case. Ex accuracy or loss
+            save_fig: Set to True if you want to save_fig.
+        """
+        plt.figure(figsize=(10, 10))
+        for k, v in self.history.history.items():
+            if key in k:
+                plt.plot(v, label=k)
+        plt.title(f"{key}/{self.epoch_key}")
+        plt.ylabel(f"{key}")
+        plt.xlabel(self.epoch_key)
+        plt.legend(loc="upper left")
+
+        if save_fig is not None:
+            save_path = os.path.join(self.save_dir, f"{key}-vs-{self.epoch_key}.jpg")
+            plt.savefig(save_path, dpi=150)
+        plt.show()
 
 
 __all__ = ["ExperimentState"]
