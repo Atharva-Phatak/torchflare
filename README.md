@@ -8,7 +8,8 @@
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 
 # ***TorchFlare***
-***TorchFlare**** is a simple, beginner-friendly and an easy-to-use PyTorch Framework train your models without much effort.
+
+***TorchFlare*** is a simple, beginner-friendly and an easy-to-use PyTorch Framework train your models without much effort.
 It provides an almost Keras-like experience for training
 your models with all the callbacks, metrics, etc
 
