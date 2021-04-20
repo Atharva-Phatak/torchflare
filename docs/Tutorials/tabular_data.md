@@ -2,7 +2,7 @@
 
 Let's learn how to perform classification for tasks involving tabular data.
 
-Dataset: https://www.kaggle.com/c/cat-in-the-dat-ii/overview
+Dataset: <https://www.kaggle.com/c/cat-in-the-dat-ii/overview>
 
 * ### Importing Libraries
 ``` python
