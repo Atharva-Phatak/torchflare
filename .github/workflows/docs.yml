@@ -31,4 +31,4 @@ jobs:
           pip install -r requirements/docs_requirements.txt
       - name: Deploy docs
         run : |
-          mkdocs gh-deploy
+          git pull mkdocs gh-deploy
