@@ -88,7 +88,7 @@ nav:
         - SegmentationDataset: './datasets/segmentation_data.md'
         - TabularDataset: './datasets/tabular_data.md'
         - TextClassificationDataset: './datasets/text_data.md'
-    - SimpleDataloader: './dataloader.md'
+    - SimpleDataloader: './datasets//dataloader.md'
     - Metrics:
         - Classification:
             - Accuracy: './metrics/classification/accuracy.md'
