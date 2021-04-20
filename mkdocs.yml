@@ -29,6 +29,9 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
+          setup_commands:
+            - import sys
+            - sys.path.append("torchflare")
           rendering:
             show_root_heading: false
             show_source: true
