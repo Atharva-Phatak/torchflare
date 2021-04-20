@@ -2,7 +2,9 @@
 
 Hey there, this tutorial will guide on how to do image classification using torchflare.
 
-Dataset: https://www.kaggle.com/c/cifar-10
+Dataset: <https://www.kaggle.com/c/cifar-10>
+
+
 * ### Importing Libraries
 ``` python
 import numpy as np
