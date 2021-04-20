@@ -13,6 +13,4 @@ neptune_client>=0.9.4
 comet_ml>=3.2.9
 wandb>=0.10.17
 scikit_learn>=0.24.1
-pytest>=5.3.1
-pytest-cov>=2.11.1
 tensorboard>=2.4.1
