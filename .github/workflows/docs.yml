@@ -32,4 +32,4 @@ jobs:
         run : |
           pip install -e .
           pip install -r requirements/docs_requirements.txt
-          mkdocs gh-deploy
+          mkdocs gh-deploy --force
