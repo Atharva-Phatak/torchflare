@@ -2,7 +2,13 @@ name: Test
 
 on:
   push:
+    branches:
+      - main
+      - master
   pull_request:
+    branches:
+      - main
+      - master
     types:
       - opened
       - synchronize
@@ -30,7 +36,7 @@ jobs:
           pip install -r requirements.txt
       - name: Test
         run: |
-          pip install -e .
+          pip install -r requirements/test_requirements.txt
           pytest --cov=./
       - name: Upload coverage
         uses: codecov/codecov-action@v1
