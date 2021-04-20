@@ -16,7 +16,7 @@ class Experiment(ExperimentState):
     def __init__(
         self,
         num_epochs: int,
-        save_dir: str,
+        save_dir: str = "./exp_outputs",
         model_name: str = "model.bin",
         fp16: bool = False,
         device: str = "cuda",
@@ -397,7 +397,9 @@ class Experiment(ExperimentState):
         Args:
             dl: A PyTorch dataloader.
         """
+        self._model_to_device()
         x, y = next(iter(dl))
+        x, y = self.process_inputs(x=x, y=y)
         op = self._model_forward_pass(x=x)
         loss = self.criterion(op, y)
         print("Sanity Check Completed. Model Forward Pass and Loss Computation Successful")
