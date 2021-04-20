@@ -31,6 +31,7 @@ body {
   font-family: "Ubuntu Mono";
   font-weight: normal;
   font-size: 1em;
+  word-break: normal;
 }
 .md-typeset h1 {
   color: #e92063;
