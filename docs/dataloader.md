@@ -11,7 +11,10 @@
          - text_classification_data_from_df
          - get_loaders
     rendering:
-         show_root_toc_entry: false
+      show_root_full_path: false
+      show_root_toc_entry: false
+      show_root_heading: false
+      show_source: false
 
 ## Examples
 
