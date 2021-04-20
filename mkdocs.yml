@@ -1,5 +1,13 @@
 site_name: TorchFlare
 site_author: Atharva Phatak
+site_url: https://atharva-phatak.github.io/torchflare/
+
+# Repository
+repo_url: https://github.com/Atharva-Phatak/torchflare
+repo_name: Atharva-Phatak/torchflare
+
+# Copyright
+copyright: Copyright &copy; 2021
 
 theme:
   name: material
