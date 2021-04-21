@@ -8,7 +8,7 @@ NAME = "torchflare"
 URL = "https://github.com/Atharva-Phatak/torchflare"
 EMAIL = "athp456@gmail.com"
 AUTHOR = "Atharva Phatak"
-REQUIRES_PYTHON = ">=3.8.0"
+REQUIRES_PYTHON = ">=3.7.0"
 DESCRIPTION = (
     "TorchFlare is a simple, beginner-friendly, and easy-to-use PyTorch Framework train your models effortlessly."
 )
