@@ -17,11 +17,11 @@ def test_data():
         )
 
         x, y = ds[0]
-        assert isinstance(x, dict) == True
-        assert torch.is_tensor(y) == True
+        assert isinstance(x, dict) is True
+        assert torch.is_tensor(y) is True
 
         for key, item in x.items():
-            assert torch.is_tensor(item) == True
+            assert torch.is_tensor(item) is True
 
     def test_inference():
 
@@ -30,10 +30,10 @@ def test_data():
         )
 
         x = ds[0]
-        assert isinstance(x, dict) == True
+        assert isinstance(x, dict) is True
 
         for key, item in x.items():
-            assert torch.is_tensor(item) == True
+            assert torch.is_tensor(item) is True
 
     def test_dataloader():
 
@@ -42,11 +42,11 @@ def test_data():
         ).get_loader(batch_size=2 , shuffle=False)
 
         x, y = next(iter(dl))
-        assert isinstance(x, dict) == True
-        assert torch.is_tensor(y) == True
+        assert isinstance(x, dict) is True
+        assert torch.is_tensor(y) is True
 
         for key, item in x.items():
-            assert torch.is_tensor(item) == True
+            assert torch.is_tensor(item) is True
 
     test_train()
     test_inference()

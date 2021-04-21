@@ -48,8 +48,8 @@ def test_from_df():
 
         x, y = ds[0]
 
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(x) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(x) is True
         assert x.shape == (3, 256, 256)
         assert y.shape == (df_inputs.num_classes, 256, 256)
 
@@ -71,8 +71,8 @@ def test_from_df():
 
         x, y = ds[0]
 
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(x) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(x) is True
         assert x.shape == (3, 256, 256)
         assert y.shape == (df_inputs.num_classes, 256, 256)
 
@@ -91,7 +91,7 @@ def test_from_df():
         )
         x = ds[0]
 
-        assert torch.is_tensor(x) == True
+        assert torch.is_tensor(x) is True
         assert len(x.shape) == 3
 
     test_torchvision_augs()
@@ -116,8 +116,8 @@ def test_from_folders():
 
         x, y = ds[0]
 
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(x) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(x) is True
         assert x.shape == (1, 256, 256)
         assert y.shape == (1, 256, 256)
 
@@ -134,8 +134,8 @@ def test_from_folders():
 
         x, y = ds[0]
 
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(x) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(x) is True
         assert x.shape == (1, 256, 256)
         assert y.shape == (1, 256, 256)
 
@@ -144,7 +144,6 @@ def test_from_folders():
 
 
 def test_segmentation_dataloaders():
-
     def test_segmentation_data_from_rle():
         augmentations = A.Compose([A.Resize(256, 256)])
 
@@ -176,14 +175,14 @@ def test_segmentation_dataloaders():
             augmentations=augmentations,
             image_convert_mode="L",
             mask_convert_mode="L",
-        ).get_loader(batch_size=2 , shuffle= False)
+        ).get_loader(batch_size=2, shuffle=False)
 
-        x , y = next(iter(dl))
+        x, y = next(iter(dl))
 
         assert torch.is_tensor(x) is True
         assert torch.is_tensor(x) is True
         assert x.shape == (2, 1, 256, 256)
-        assert y.shape == (2,1, 256, 256)
+        assert y.shape == (2, 1, 256, 256)
 
     test_segmentation_data_from_folders()
     test_segmentation_data_from_rle()

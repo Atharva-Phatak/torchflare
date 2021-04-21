@@ -17,8 +17,8 @@ def test_data():
 
         x, y = ds[0]
 
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(y) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         assert x.shape[0] == len(input_cols)
 
         # Inference
@@ -27,7 +27,7 @@ def test_data():
 
         x = ds[0]
 
-        assert torch.is_tensor(x) == True
+        assert torch.is_tensor(x) is True
         assert x.shape[0] == len(input_cols)
 
     def test_from_csv():
@@ -36,8 +36,8 @@ def test_data():
 
         x, y = ds[0]
 
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(y) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         assert x.shape[0] == len(input_cols)
 
         # Inference
@@ -46,7 +46,7 @@ def test_data():
 
         x = ds[0]
 
-        assert torch.is_tensor(x) == True
+        assert torch.is_tensor(x) is True
         assert x.shape[0] == len(input_cols)
 
     def test_dataloaders():
@@ -67,8 +67,8 @@ def test_data():
 
         x, y = next(iter(dl_path))
 
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(y) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         assert x.shape == (2, len(input_cols))
 
     test_from_df()
