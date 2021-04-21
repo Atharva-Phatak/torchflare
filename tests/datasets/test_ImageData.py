@@ -7,6 +7,7 @@ import torch
 import torchvision
 
 from torchflare.datasets.classification import ImageDataset
+from torchflare.datasets.dataloaders import SimpleDataloader
 
 inputs = collections.namedtuple("inputs", ["path", "extension", "label_cols", "df", "image_col"])
 df = pd.read_csv("tests/datasets/data/image_classification/csv_data/train.csv")
@@ -40,8 +41,8 @@ def test_data_from_df():
         )
         x, y = ds[0]
 
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(y) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         assert x.shape == (3, 256, 256)
         assert y.shape[0] == 4
         # print(type(df.loc[: , 'image_id'].values[0]))
@@ -64,8 +65,8 @@ def test_data_from_df():
         )
         x, y = ds[0]
 
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(y) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         # print(x.shape)
         assert x.shape == (3, 256, 256)
         assert y.shape[0] == 4
@@ -84,8 +85,8 @@ def test_data_from_df():
         )
         x, y = ds[0]
 
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(y) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         assert x.shape == (3, 256, 256)
         assert y.shape[0] == 4
 
@@ -102,11 +103,7 @@ def test_data_from_df():
         )
         x = ds[0]
 
-        assert torch.is_tensor(x) == True
-        # assert torch.is_tensor(y) == True
-        # assert x.shape == (3, 256, 256)
-        # assert y.shape[0] == 4
-        # print(y)
+        assert torch.is_tensor(x) is True
 
     test_with_albumentations()
     test_with_torchvision()
@@ -121,17 +118,52 @@ def test_from_folders():
         ds = ImageDataset.from_folders(path=folder_inputs.train_path, augmentations=augmentations, convert_mode="RGB",)
 
         x, y = ds[0]
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(y) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         assert x.shape == (3, 256, 256)
-        assert torch.is_tensor(y) == True
 
     def test_inference():
         ds = ImageDataset.from_folders(path=folder_inputs.test_path, augmentations=None, convert_mode="RGB")
         x = ds[0]
 
-        assert torch.is_tensor(x) == True
+        assert torch.is_tensor(x) is True
         assert len(x.shape) == 3
 
     test_inference()
     test_training()
+
+
+def test_image_dataloaders():
+    def test_image_data_from_df():
+        augmentations = A.Compose([A.Resize(256, 256)])
+
+        dl = SimpleDataloader.image_data_from_df(
+            path=constants_df.path,
+            df=constants_df.df,
+            augmentations=augmentations,
+            image_col=constants_df.image_col,
+            label_cols=constants_df.label_cols,
+            extension=constants_df.extension,
+            convert_mode="RGB",
+        ).get_loader(batch_size=2, shuffle=True)
+
+        x, y = next(iter(dl))
+
+        assert x.shape == (2, 3, 256, 256)
+        assert y.shape == (2, 4)
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
+
+    def test_image_data_from_folders():
+        augmentations = A.Compose([A.Resize(256, 256)])
+        dl = SimpleDataloader.image_data_from_folders(
+            path=folder_inputs.train_path, augmentations=augmentations, convert_mode="RGB",
+        ).get_loader(batch_size=2, shuffle=True)
+        x, y = next(iter(dl))
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
+        assert x.shape == (2, 3, 256, 256)
+        assert y.shape[0] == 2
+
+    test_image_data_from_df()
+    test_image_data_from_folders()
