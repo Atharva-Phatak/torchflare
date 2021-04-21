@@ -16,33 +16,24 @@ DESCRIPTION = (
 current_file_path = os.path.abspath(os.path.dirname(__file__))
 
 
-def get_readme():
-    """Reads the README.md file."""
-    readme_file_path = os.path.join(current_file_path, "README.md")
-    with open(readme_file_path, "r", encoding="utf-8") as f:
-        return f.read()
+readme_file_path = os.path.join(current_file_path, "README.md")
+with open(readme_file_path, "r", encoding="utf-8") as f:
+    readme = f.read()
 
 
-def get_version():
-    """Get the version."""
-    version_file_path = os.path.join(current_file_path, "version.txt")
-    with open(version_file_path, "r", encoding="utf-8") as f:
-        version = f.read().strip()
+version_file_path = os.path.join(current_file_path, "version.txt")
+with open(version_file_path, "r", encoding="utf-8") as f:
+    version = f.read().strip()
 
-    return version
-
-
-def load_requirements(filename):
-    """Reads the file for requirements."""
-    with open(os.path.join(current_file_path, filename), "r") as f:
-        return f.read().splitlines()
+with open(os.path.join(current_file_path, "requirements.txt"), "r") as f:
+    requirements = f.read().splitlines()
 
 
 setup(
     name=NAME,
-    version=get_version(),
+    version=version,
     description=DESCRIPTION,
-    long_description=get_readme(),
+    long_description=readme,
     long_description_content_type="text/markdown",
     author=AUTHOR,
     author_email=EMAIL,
@@ -54,7 +45,7 @@ setup(
         "Documentation": "https://atharva-phatak.github.io/torchflare/",
         "Source Code": "https://github.com/Atharva-Phatak/torchflare",
     },
-    install_requires=load_requirements("requirements.txt"),
+    install_requires=requirements,
     include_package_data=True,
     zip_safe=False,
     license="Apache License 2.0",
