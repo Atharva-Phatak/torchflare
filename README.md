@@ -26,7 +26,7 @@ Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU
 
 **Note :**  ***This library is in its nascent stage. So, there might be breaking changes.***
 
-###***Installation***
+### ***Installation***
 
     pip install torchflare
 
