@@ -41,8 +41,8 @@ def test_data_from_df():
         )
         x, y = ds[0]
 
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(y) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         assert x.shape == (3, 256, 256)
         assert y.shape[0] == 4
         # print(type(df.loc[: , 'image_id'].values[0]))
@@ -65,8 +65,8 @@ def test_data_from_df():
         )
         x, y = ds[0]
 
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(y) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         # print(x.shape)
         assert x.shape == (3, 256, 256)
         assert y.shape[0] == 4
@@ -85,8 +85,8 @@ def test_data_from_df():
         )
         x, y = ds[0]
 
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(y) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         assert x.shape == (3, 256, 256)
         assert y.shape[0] == 4
 
@@ -118,15 +118,15 @@ def test_from_folders():
         ds = ImageDataset.from_folders(path=folder_inputs.train_path, augmentations=augmentations, convert_mode="RGB",)
 
         x, y = ds[0]
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(y) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         assert x.shape == (3, 256, 256)
 
     def test_inference():
         ds = ImageDataset.from_folders(path=folder_inputs.test_path, augmentations=None, convert_mode="RGB")
         x = ds[0]
 
-        assert torch.is_tensor(x) == True
+        assert torch.is_tensor(x) is True
         assert len(x.shape) == 3
 
     test_inference()
@@ -160,8 +160,8 @@ def test_image_dataloaders():
             path=folder_inputs.train_path, augmentations=augmentations, convert_mode="RGB",
         ).get_loader(batch_size=2, shuffle=True)
         x, y = next(iter(dl))
-        assert torch.is_tensor(x) == True
-        assert torch.is_tensor(y) == True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         assert x.shape == (2, 3, 256, 256)
         assert y.shape[0] == 2
 
