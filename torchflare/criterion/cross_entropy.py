@@ -75,7 +75,7 @@ class SymmetricCE(nn.Module):
     Paper: https://arxiv.org/abs/1908.06112
     """
 
-    def __init__(self, alpha, beta, num_classes):
+    def __init__(self, num_classes, alpha: float = 1.0, beta: float = 1.0):
         """Constructor method for symmetric CE.
 
         Args:

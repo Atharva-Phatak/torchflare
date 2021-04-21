@@ -1,10 +1,11 @@
-import torch
-from torchflare.criterion.focal_loss import FocalLoss , FocalCosineLoss , BCEFocalLoss
-from torchflare.criterion.cross_entropy import BCEFlat , BCEWithLogitsFlat , LabelSmoothingCrossEntropy
-from torchflare.criterion.triplet_loss import TripletLoss
 import numpy as np
 import pytest
+import torch
 import torch.nn.functional as F
+
+from torchflare.criterion.cross_entropy import BCEFlat, BCEWithLogitsFlat, LabelSmoothingCrossEntropy, SymmetricCE
+from torchflare.criterion.focal_loss import BCEFocalLoss, FocalCosineLoss, FocalLoss
+from torchflare.criterion.triplet_loss import TripletLoss
 
 
 def test_focal_loss():
@@ -56,7 +57,7 @@ def test_label_smoothing_ce():
 
 
 @pytest.mark.parametrize(
-    "criterion", [TripletLoss(), FocalCosineLoss()],
+    "criterion", [TripletLoss(), TripletLoss(hard_mining = False), FocalCosineLoss() , SymmetricCE(num_classes = 5)],
 )
 def test_forward_passes(criterion):
 
