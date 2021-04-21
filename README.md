@@ -17,21 +17,22 @@ your models with all the callbacks, metrics, etc
 
 ### ***Features***
 * _A high-level module for Keras-like training._
-* _Off-the-shelf Dataloaders for standard tasks(Classification, Regression, etc)_
-* _Callbacks for model checkpoints, early stopping, and much more!_
-* _Metrics and much more._
+* _Off-the-shelf Pytorch style Datasets/Dataloaders for standard tasks such as **Image classification, Image segmentation,
+  Text Classification**, etc_
+* _**Callbacks** for model checkpoints, early stopping, and much more!_
+* _**Metrics** and much more._
 
 Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU support will be coming soon!
 
-This library is in its nascent stage. So, there might be breaking changes.
+**Note :**  ***This library is in its nascent stage. So, there might be breaking changes.***
 ### ***Getting Started***
 
 The core idea around TorchFlare is the [Experiment](/torchflare/experiments/experiment.py)
 class. It handles all the internal stuff like boiler plate code for training,
 calling callbacks,metrics,etc. The only thing you need to focus on is creating you PyTorch Model.
 
-Also, there are off-the-shelf dataloaders available for standard tasks, so that you don't
-have to worry about creating Pytorch Datasets.
+Also, there are off-the-shelf pytorch style datasets/dataloaders available for standard tasks, so that you don't
+have to worry about creating Pytorch Datasets/Dataloaders.
 
 Here is an easy-to-understand example to show how Experiment class works.
 
