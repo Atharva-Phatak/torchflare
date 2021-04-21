@@ -10,7 +10,7 @@ EMAIL = "athp456@gmail.com"
 AUTHOR = "Atharva Phatak"
 REQUIRES_PYTHON = ">=3.7.0"
 DESCRIPTION = (
-    "TorchFlare is a simple, beginner-friendly, and easy-to-use PyTorch Framework train your models with ease."
+    "TorchFlare is a simple, beginner-friendly, and easy-to-use PyTorch Framework train your models effortlessly."
 )
 
 current_file_path = os.path.abspath(os.path.dirname(__file__))
