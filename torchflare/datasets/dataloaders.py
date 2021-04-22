@@ -31,7 +31,7 @@ class SimpleDataloader:
         path: str,
         df: pd.DataFrame,
         image_col: str,
-        label_cols: List[str] = None,
+        label_cols: Union[str, List[str]] = None,
         augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
         convert_mode: str = "RGB",
         extension: str = None,
@@ -189,7 +189,7 @@ class SimpleDataloader:
 
     @classmethod
     def tabular_data_from_df(
-        cls, df: pd.DataFrame, feature_cols: Union[str, List[str]], label_cols: Optional[Union[str, List[str]]] = None,
+        cls, df: pd.DataFrame, feature_cols: Union[str, List[str]], label_cols: Union[str, List[str]] = None,
     ) -> SimpleDataloader:
         """Classmethod to create dataset for tabular data from dataframe.
 
@@ -205,7 +205,7 @@ class SimpleDataloader:
 
     @classmethod
     def tabular_data_from_csv(
-        cls, csv_path: str, feature_cols: Union[str, List[str]], label_cols: Optional[Union[str, List[str]]] = None,
+        cls, csv_path: str, feature_cols: Union[str, List[str]], label_cols: Union[str, List[str]] = None,
     ) -> SimpleDataloader:
         """Classmethod to create a dataset for tabular data from csv.
 
