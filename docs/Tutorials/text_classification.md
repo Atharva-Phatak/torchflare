@@ -1,4 +1,4 @@
-# Text Classification Tutorial
+# Text Classification with torchflare
 
 Let's learn how to use tinybert and torchflare for text classification.
 
@@ -138,3 +138,5 @@ exp.compile_experiment(
 # Training the models.
 exp.run_experiment(train_dl = train_dl , valid_dl = valid_dl)
 ```
+
+* ***[Notebook](/examples/text_classification.ipynb) is available in examples folder.***
