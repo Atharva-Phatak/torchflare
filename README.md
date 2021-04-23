@@ -35,6 +35,10 @@ Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU
 
     pip install torchflare
 
+### ***Documentation***
+
+The Documentation is available [here](https://atharva-phatak.github.io/torchflare/)
+
 ### ***Getting Started***
 
 The core idea around TorchFlare is the [Experiment](/torchflare/experiments/experiment.py)
@@ -129,3 +133,5 @@ history = exp.history.history # This will return a dict
 
 exp.plot_history(key = "accuracy" , save_fig = False , plot_fig = True)
 ```
+
+#### ***You can check out examples in examples/***
