@@ -1,4 +1,4 @@
-# Tabular Data Tutorial
+# Classification on Tabular data with torchflare
 
 Let's learn how to perform classification for tasks involving tabular data.
 
@@ -247,3 +247,6 @@ exp.run_experiment(train_dl=train_dl, valid_dl=valid_dl)
 
 Here is a snapshot of how progress bar looks(Same as fastai, since we are using fastprogess).
 ![progress](./images/tabular_progress.png)
+
+
+* ***[Notebook](/examples/tabular_classification.ipynb) is available in examples folder.***

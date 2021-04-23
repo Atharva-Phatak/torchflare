@@ -1,4 +1,4 @@
-# Image Classification Tutorial
+# Image Classification with torchflare
 
 Hey there, this tutorial will guide on how to do image classification using torchflare.
 
@@ -164,7 +164,7 @@ exp.compile_experiment(
 )
 ```
 
-**3. This step is optional but its good to perform a check to see if the
+**3. This step is optional, but it's good to perform a check to see if the
        defined model's forward pass is working or not and check if loss computation
        is working.**
 
@@ -198,3 +198,5 @@ for op in exp.infer(path="./models/cifar10.bin", test_loader=test_dl):
 # I want to visualize train_accuracy/valid_accuracy against epochs.
 exp.plot_history(key = "accuracy" , save_fig = False , plot_fig = True)
 ```
+
+* ***[Notebook](/examples/image_classification.ipynb) is available in examples folder.***

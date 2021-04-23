@@ -134,6 +134,7 @@ nav:
       - Image Data: './Tutorials/image_classification.md'
       - Text Data: './Tutorials/text_classification.md'
       - Tabular Data: './Tutorials/tabular_data.md'
+      - hydra: './Tutorials/hydra.md'
 
 # Extra CSS
 extra_css:
