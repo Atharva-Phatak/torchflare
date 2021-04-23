@@ -139,4 +139,4 @@ exp.compile_experiment(
 exp.run_experiment(train_dl = train_dl , valid_dl = valid_dl)
 ```
 
-* ***[Notebook](/examples/text_classification.ipynb) is available in examples folder.***
+* ***[Notebook](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/text_classification.ipynb) is available in examples folder.***

@@ -199,4 +199,4 @@ for op in exp.infer(path="./models/cifar10.bin", test_loader=test_dl):
 exp.plot_history(key = "accuracy" , save_fig = False , plot_fig = True)
 ```
 
-* ***[Notebook](/examples/image_classification.ipynb) is available in examples folder.***
+* ***[Notebook](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification.ipynb) is available in examples folder.***

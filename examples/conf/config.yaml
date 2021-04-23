@@ -1,0 +1,43 @@
+shared_data_params: #Common parameters for train and validation data
+ path: ./train
+ image_col: id
+ label_cols: label
+ extension: .png
+ convert_mode: RGB
+
+callbacks:
+ early_stopping:
+  _target_: torchflare.callbacks.EarlyStopping
+  monitor: accuracy
+  patience: 5
+
+ model_checkpoint:
+  _target_: torchflare.callbacks.ModelCheckpoint
+  monitor: accuracy
+
+metric:
+ _target_: torchflare.metrics.Accuracy
+ num_classes: 10
+ multilabel: False
+
+experiment:
+ constant_params:
+  num_epochs: 5
+  save_dir: ./models
+  model_name: hydra_cifar10.bin
+  fp16: True
+  using_batch_mixers: False
+  device: cuda
+  compute_train_metrics: True
+  seed: 42
+
+ compile_params:
+  optimizer: Adam
+  optimizer_params:
+   lr: 3e-4
+  scheduler: ReduceLROnPlateau
+  scheduler_params:
+   mode: max
+   patience: 5
+  criterion: cross_entropy
+  main_metric: accuracy
