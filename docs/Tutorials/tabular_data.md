@@ -249,4 +249,4 @@ Here is a snapshot of how progress bar looks(Same as fastai, since we are using 
 ![progress](./images/tabular_progress.png)
 
 
-* ***[Notebook](/examples/tabular_classification.ipynb) is available in examples folder.***
+* ***[Notebook](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/tabular_classification.ipynb) is available in examples folder.***

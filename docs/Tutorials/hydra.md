@@ -135,4 +135,4 @@ for metric in plot_metrics:
     exp.plot_history(key=metric, save_fig=False, plot_fig=True)
 ```
 
-* ***[Notebook](/examples/image_classification_hydra.ipynb) is available in examples folder.***
+* ***[Notebook](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification_hydra.ipynb) is available in examples folder.***

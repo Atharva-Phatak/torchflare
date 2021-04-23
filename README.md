@@ -111,7 +111,7 @@ exp.compile_experiment(
 exp.run_experiment(train_dl=train_dl, valid_dl= valid_dl)
 ```
 
-For inference you can use infer method, which yields output per batch. You can use it as follows
+For inference, you can use infer method, which yields output per batch. You can use it as follows
 ``` python
 outputs = []
 
