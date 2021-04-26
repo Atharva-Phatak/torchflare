@@ -125,10 +125,6 @@ class Experiment(ExperimentState):
     def update_val_monitor(self, metrics: Dict):
         self._val_monitor.update(metrics)
 
-    def _update_mbar(self, epoch):
-        logs = [epoch] + list(self.exp_logs.values())
-        self._write_stdout(stats=logs)
-
     def _process_inputs(self, *args):
         args = to_device(args, self.device)
         return args
@@ -213,24 +209,26 @@ class Experiment(ExperimentState):
             A dictionary containing metrics and loss.
         """
         # create progress bar and set compute_flag
-        self._before_step(iterator=iterator, prefix=prefix)
+        self._iter_start(prefix=prefix)
 
         # reset metrics
         self._metric_runner.reset()
 
-        for x, y in self.progress_bar:
+        for batch_idx, (x, y) in enumerate(iterator):
             self.set_state = ExperimentStates.BATCH_START
 
             loss, op = func(x, y)
 
             # accumulate values for metric computation
             self._metric_runner.accumulate(op=op, y=y, loss=loss.item(), n=iterator.batch_size)
-            self._update_pbar(prefix=prefix, val=loss.item())
+            self._update_pbar(step=batch_idx, loss=loss.item())  # per batch loss.
 
             self.set_state = ExperimentStates.BATCH_END
 
         # compute metrics
         metrics = self._metric_runner.compute(prefix=prefix)
+        # Stdout  computed metrics
+        self._iter_end(values=metrics)
         return metrics
 
     def fp16_step(self, inputs: torch.Tensor, targets: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
@@ -326,14 +324,15 @@ class Experiment(ExperimentState):
 
     def _run(self):
         """Method to run experiment for full number of epochs."""
-        for epoch in self.master_bar:
+        for epoch in range(self.num_epochs):
+
+            self.progress_bar.display_epoch(current_epoch=epoch)
 
             self.set_state = ExperimentStates.EPOCH_START
             self._do_epoch(current_epoch=epoch)
 
             # RUNNING CALLBACKS AFTER EVERY EPOCH IS DONE
             self.set_state = ExperimentStates.EPOCH_END
-            self._update_mbar(epoch=epoch)
 
             if self.stop_training:
                 break
