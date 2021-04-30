@@ -30,7 +30,11 @@ def test_experiment(tmpdir):
             metrics.F1Score(num_classes=num_classes, multilabel=False),
         ]
 
-        callbacks = [cbs.EarlyStopping(monitor="accuracy", mode="max"), cbs.ModelCheckpoint(monitor="accuracy")]
+        callbacks = [
+            cbs.EarlyStopping(monitor="accuracy", mode="max"),
+            cbs.ModelCheckpoint(monitor="accuracy"),
+            cbs.CosineAnnealingWarmRestarts(T_0=2),
+        ]
 
         exp = Experiment(
             num_epochs=10,
@@ -50,8 +54,6 @@ def test_experiment(tmpdir):
             main_metric="accuracy",
             optimizer=optimizer,
             optimizer_params=optimizer_params,
-            scheduler=scheduler,
-            scheduler_params=scheduler_params,
             criterion=criterion,
         )
         exp.perform_sanity_check(dl=loader)

@@ -74,7 +74,8 @@ class Accuracy(_BaseMetric, MetricMeter):
         self._outputs.append(outputs)
         self._targets.append(targets)
 
-    def compute(self) -> torch.Tensor:
+    @property
+    def value(self) -> torch.Tensor:
         """Computes the Accuracy per epoch.
 
         Returns:

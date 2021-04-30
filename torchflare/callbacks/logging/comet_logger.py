@@ -34,7 +34,10 @@ class CometLogger(Callbacks, ABC):
         self.workspace = workspace
         self.params = params
         self.tags = tags
+        self.experiment = None
 
+    def experiment_start(self):
+        """Start of experiment."""
         self.experiment = comet_ml.Experiment(
             project_name=self.project_name,
             api_key=self.api_token,
@@ -49,16 +52,12 @@ class CometLogger(Callbacks, ABC):
         if self.params is not None:
             self.experiment.log_parameters(self.params)
 
-    def epoch_end(self, epoch: int, logs: dict):
-        """Function to log your metrics and values at the end of very epoch.
-
-        Args:
-            logs : A dictionary containing metrics and loss values.
-            epoch: The current epoch
-        """
-        _ = logs.pop("Time")
-        self.experiment.log_metrics(logs, step=epoch)
+    def epoch_end(self):
+        """Function to log your metrics and values at the end of very epoch."""
+        logs = {k: v for k, v in self.exp.exp_logs.items() if k != self.exp.epoch_key}
+        self.experiment.log_metrics(logs, step=self.exp.exp_logs[self.exp.epoch_key])
 
     def experiment_end(self):
         """Function to close the experiment when training ends."""
         self.experiment.end()
+        self.experiment = None

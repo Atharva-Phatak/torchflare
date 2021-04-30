@@ -3,8 +3,8 @@
 
 import os
 
-from torchflare.callbacks.logging.wandb_logger import  WandbLogger
-from torchflare.callbacks.logging.tensorboard_logger import  TensorboardLogger
+from torchflare.callbacks.logging.wandb_logger import WandbLogger
+from torchflare.callbacks.logging.tensorboard_logger import TensorboardLogger
 from torchflare.callbacks.logging.neptune_logger import NeptuneLogger
 from unittest.mock import patch
 
@@ -17,6 +17,7 @@ os.environ["WB_API_TOKEN"] = "Dummy_wandb_token"
 def test_neptune_mock(neptune):
     """Simple to check if same experiment is created."""
     logger = NeptuneLogger(api_token="test", project_dir="namespace/project")
+    logger.experiment_start()
     created_experiment = neptune.init(name="namespace/project", api_token="test")
     assert logger.experiment is not None
     assert created_experiment.name == logger.experiment.name
@@ -27,6 +28,7 @@ def test_neptune_mock(neptune):
 def test_wandb_mock(wandb):
     """Simple test to check if same experiment is created or not."""
     logger = WandbLogger(project="test", entity="project")
+    logger.experiment_start()
     wandb.init.assert_called_once()
     wandb_exp = wandb.init(project="test", entity="project")
     assert logger.experiment is not None
@@ -90,17 +92,30 @@ def test_wandb(tmpdir):
 """
 
 
+class DummyExp:
+    def __init__(self, logger):
+        self.epoch_key = "epoch"
+        self.exp_logs = None
+        self.logger = logger
+        self.logger.set_experiment(self)
+        self.logger.experiment_start()
+
+    def start_log(self):
+        acc = 10
+        f1 = 10
+        loss = 100
+        for epoch in range(10):
+            self.exp_logs = {"epoch": epoch, "acc": acc, "f1": f1, "loss": loss, "Time": 5}
+            acc += 10
+            f1 += 10
+
+            loss = loss / 10
+            self.logger.epoch_end()
+
+        self.logger.experiment_end()
+
+
 def test_tensorboard(tmpdir):
-    logger = TensorboardLogger(log_dir=tmpdir.mkdir("/callbacks"))
-    acc = 10
-    f1 = 10
-    loss = 100
-    for epoch in range(10):
-        d = {"acc": acc, "f1": f1, "loss": loss, "Time": 5}
-        acc += 10
-        f1 += 10
-
-        loss = loss / 10
-        logger.epoch_end(epoch=epoch, logs=d)
-
-    logger.experiment_end()
+    l = TensorboardLogger(log_dir=tmpdir.mkdir("/callbacks"))
+    ob = DummyExp(logger=l)
+    ob.start_log()

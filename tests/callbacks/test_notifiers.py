@@ -21,7 +21,7 @@ def test_slack():
 
         loss = loss / 10
 
-        slack_n.epoch_end(epoch=epoch, logs=d)
+        slack_n.epoch_end()
 
     print("Slack testing completed")
 
@@ -41,6 +41,6 @@ def test_discord():
 
         loss = loss / 10
 
-        discord_n.epoch_end(epoch=epoch, logs=d)
+        discord_n.epoch_end()
 
     print("Discord Testing Completed")

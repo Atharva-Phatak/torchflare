@@ -1,11 +1,10 @@
-"""Implements Experiment State."""
+"""Implements Base State."""
 import os
 import warnings
 from typing import List
 
 import matplotlib.pyplot as plt
 import torch
-from torch.utils.data import DataLoader
 
 import torchflare.batch_mixers as special_augs
 import torchflare.metrics.metric_utils as metric_utils
@@ -14,12 +13,10 @@ from torchflare.callbacks.load_checkpoint import LoadCheckpoint
 from torchflare.callbacks.model_history import History
 from torchflare.experiments.criterion_utilities import get_criterion
 from torchflare.experiments.optim_utilities import get_optimizer
-from torchflare.experiments.scheduler_utilities import LRScheduler
-from torchflare.utils.progress_bar import ProgressBar
-from torchflare.utils.seeder import seed_all
+from torchflare.experiments.simple_utils import AvgLoss
 
 
-class ExperimentState:
+class BaseState:
     """Class to set user and internal variables along with some utility functions."""
 
     def __init__(
@@ -67,7 +64,7 @@ class ExperimentState:
 
         self.path = os.path.join(self.save_dir, self.model_name)
         self.scaler = torch.cuda.amp.GradScaler() if self.fp16 else None
-        self.history = History()
+        self.history = None
         self.model = None
         self.resume_checkpoint = None
         self.main_metric = None
@@ -76,10 +73,9 @@ class ExperimentState:
         self._step_after = None
         self._callback_runner = None
         self.optimizer = None
-        self.scheduler_stepper = None
         self.exp_logs = {}
-        self._train_monitor = {}
-        self._val_monitor = {}
+        self._train_monitor = None
+        self._val_monitor = None
         self.criterion = None
         self.compute_metric_flag = True
         self._metric_runner = None
@@ -94,31 +90,42 @@ class ExperimentState:
             self.compute_train_metrics = False
 
         self._compute_val_metrics = True
-        self._train_dl = None
-        self._valid_dl = None
+        self.train_dl = None
+        self.valid_dl = None
+        self.loss = None
+        self.x = None
+        self.y = None
+        self.preds = None
+        self.is_training = None
+        self.metrics = None
+        self.batch_idx = None
+        self.current_epoch = None
 
         if not os.path.exists(self.save_dir):
             os.mkdir(self.save_dir)
 
-    def _set_callbacks(self, callbacks: List):
-        if callbacks is None:
-            if self.resume_checkpoint:
-                callbacks = [self.history, LoadCheckpoint()]
-            else:
-                callbacks = [self.history]
-        else:
-            if self.resume_checkpoint:
-                callbacks = [self.history, LoadCheckpoint()] + callbacks
-            else:
-                callbacks = [self.history] + callbacks
+    def get_prefix(self):
+        """Generates the prefix for training and validation.
 
-        callbacks = sort_callbacks(callbacks)
-        self._callback_runner = CallbackRunner(callbacks=callbacks)
+        Returns:
+            The prefix for training or validation.
+        """
+        return self.train_key if self.is_training else self.val_key
+
+    def _set_callbacks(self, callbacks: List):
+        default_callbacks = [History()]
+        if self.resume_checkpoint:
+            default_callbacks.append(LoadCheckpoint())
+        if callbacks is not None:
+            default_callbacks.extend(callbacks)
+
+        default_callbacks = sort_callbacks(default_callbacks)
+        self._callback_runner = CallbackRunner(callbacks=default_callbacks)
         self._callback_runner.set_experiment(self)
 
     def _set_metrics(self, metrics):
 
-        self._metric_runner = metric_utils.MetricAndLossContainer(metrics=metrics)
+        self._metric_runner = metric_utils.MetricContainer(metrics=metrics)
         self._metric_runner.set_experiment(self)
 
     def _set_params(self, optimizer_params):
@@ -138,16 +145,13 @@ class ExperimentState:
         else:
             self.optimizer = optimizer
 
-    def _set_scheduler(self, scheduler, scheduler_params):
-        if scheduler is not None:
-            self.scheduler_stepper = LRScheduler(scheduler=scheduler, optimizer=self.optimizer, **scheduler_params)
-            self.scheduler_stepper.set_experiment(self)
-
     def _set_criterion(self, criterion):
 
         self.criterion = get_criterion(criterion=criterion)
         if self._using_batch_mixers:
             self.criterion = special_augs.MixCriterion(criterion=self.criterion)
+        self.loss_meter = AvgLoss()
+        self.loss_meter.set_experiment(self)
 
     @property
     def set_state(self):
@@ -163,8 +167,7 @@ class ExperimentState:
 
         self.experiment_state = state
         # Run callbacks on state change
-        epoch = self.exp_logs.pop(self.epoch_key) if self.epoch_key in self.exp_logs.keys() else None
-        self._callback_runner(current_state=self.experiment_state, epoch=epoch, logs=self.exp_logs)
+        self._callback_runner(current_state=self.experiment_state)
 
     def _model_to_device(self):
         """Function to move model to device."""
@@ -175,42 +178,6 @@ class ExperimentState:
         if bool(self.exp_logs):
             self.exp_logs = {}
 
-    def initialize(self, train_dl: DataLoader, valid_dl: DataLoader):
-        """Function to move model to device and seed everything.
-
-        Args:
-            train_dl : The training dataloader.
-            valid_dl : The validation dataloader.
-        """
-        seed_all(self.seed)
-        self._model_to_device()
-        self._reset_model_logs()
-        self._train_dl = train_dl
-        self._valid_dl = valid_dl
-        self.progress_bar = ProgressBar(num_epochs=self.num_epochs, train_dl=self._train_dl, valid_dl=self._valid_dl)
-
-    def _update_pbar(self, step, loss):
-        self.progress_bar.update(current_step=step, values={"loss": loss})
-
-    def _iter_start(self, prefix):
-        # before every train/val step create progress bar.
-        self.progress_bar.set_steps(prefix=prefix)
-        self.compute_metric_flag = self.compute_train_metrics if "train_" in prefix else self._compute_val_metrics
-
-    def _iter_end(self, values):
-        """Method to print final metrics and reset state of progress bar."""
-        self.progress_bar.add(n=1, values=values)
-        self.progress_bar.reset()
-
-    def cleanup(self):
-        """Function to reset the states of monitors and model."""
-        self._train_monitor, self._val_monitor, self.exp_logs = {}, {}, {}
-        self.experiment_state = None
-        self.progress_bar = None
-
-    def _run_event(self, event: str, **kwargs):
-        _ = getattr(self, event)(**kwargs)
-
     def plot_history(self, key: str, save_fig: bool = False, plot_fig: bool = True):
         """Method to plot model history.
 
@@ -219,20 +186,22 @@ class ExperimentState:
             save_fig: Set to True if you want to save_fig.
             plot_fig: Whether to plot the figure.
         """
-        plt.figure(figsize=(10, 10))
-        for k, v in self.history.history.items():
+        plt.style.use("seaborn")
+        plt.figure()
+        for k, v in self.history.items():
             if key in k:
-                plt.plot(v, label=k)
-        plt.title(f"{key}/{self.epoch_key}")
-        plt.ylabel(f"{key}")
-        plt.xlabel(self.epoch_key)
+                plt.plot(v, "-o", label=k)
+        plt.title(f"{key.upper()}/{self.epoch_key.upper()}", fontweight="bold")
+        plt.ylabel(f"{key.upper()}", fontweight="bold")
+        plt.xlabel(self.epoch_key.upper(), fontweight="bold")
+        plt.grid(True)
         plt.legend(loc="upper left")
 
         if save_fig is not None:
-            save_path = os.path.join(self.save_dir, f"{key}-vs-{self.epoch_key}.jpg")
+            save_path = os.path.join(self.save_dir, f"{key}-vs-{self.epoch_key.lower()}.jpg")
             plt.savefig(save_path, dpi=150)
         if plot_fig:
             plt.show()
 
 
-__all__ = ["ExperimentState"]
+__all__ = ["BaseState"]

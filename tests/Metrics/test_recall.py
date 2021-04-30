@@ -23,7 +23,7 @@ def test_binary_inputs():
 
         np_outputs, np_targets = bs._compute(outputs=outputs, targets=targets)
         rc.accumulate(outputs=outputs, targets=targets)
-        rec_val = rc.compute()
+        rec_val = rc.value
         assert rc.case_type == "binary"
 
         rec_skm = recall_score(np_targets.numpy(), np_outputs.numpy(), average="binary")
@@ -38,7 +38,7 @@ def test_binary_inputs():
             idx = i * bs
             rc.accumulate(outputs=outputs[idx : idx + bs], targets=targets[idx : idx + bs])
 
-        m_rc = rc.compute()
+        m_rc = rc.value
         assert rec_skm == pytest.approx(m_rc.item())
 
     for _ in range(10):
@@ -59,7 +59,7 @@ def test_multiclass_inputs():
         np_outputs, np_targets = bs._compute(outputs=outputs, targets=targets)
 
         rc.accumulate(outputs=outputs, targets=targets)
-        rec_val = rc.compute()
+        rec_val = rc.value
         assert rc.case_type == "multiclass"
 
         with warnings.catch_warnings():
@@ -77,7 +77,7 @@ def test_multiclass_inputs():
             idx = i * bs
             rc.accumulate(outputs=outputs[idx : idx + bs], targets=targets[idx : idx + bs])
 
-        rec_m = rc.compute()
+        rec_m = rc.value
         assert rec_skm == pytest.approx(rec_m.item())
 
     for _ in range(10):
@@ -98,7 +98,7 @@ def test_multilabel_inputs():
         np_outputs, np_targets = bs._compute(outputs=outputs, targets=targets)
 
         rc.accumulate(outputs=outputs, targets=targets)
-        rec_val = rc.compute()
+        rec_val = rc.value
 
         assert rc.case_type == "multilabel"
         with warnings.catch_warnings():
@@ -117,7 +117,7 @@ def test_multilabel_inputs():
                 outputs=outputs[idx : idx + bs], targets=targets[idx : idx + bs],
             )
 
-        m_rc = rc.compute()
+        m_rc = rc.value
         assert rec_skm == pytest.approx(m_rc.item())
 
     for _ in range(10):

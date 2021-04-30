@@ -28,8 +28,8 @@ def test_binary_inputs():
         fbeta.accumulate(outputs=outputs, targets=targets)
         f1.accumulate(outputs=outputs, targets=targets)
 
-        fbeta_val = fbeta.compute()
-        f1_val = f1.compute()
+        fbeta_val = fbeta.value
+        f1_val = f1.value
 
         assert fbeta.case_type == "binary"
         assert f1.case_type == "binary"
@@ -55,8 +55,8 @@ def test_binary_inputs():
                 outputs=outputs[idx : idx + bs], targets=targets[idx : idx + bs],
             )
 
-        f1_m = f1.compute()
-        fbeta_m = fbeta.compute()
+        f1_m = f1.value
+        fbeta_m = fbeta.value
 
         assert f1_skm == pytest.approx(f1_m.item())
 
@@ -84,8 +84,8 @@ def test_multiclass_inputs():
         fbeta.accumulate(outputs=outputs, targets=targets)
         f1.accumulate(outputs=outputs, targets=targets)
 
-        fbeta_val = fbeta.compute()
-        f1_val = f1.compute()
+        fbeta_val = fbeta.value
+        f1_val = f1.value
 
         assert fbeta.case_type == "multiclass"
         assert f1.case_type == "multiclass"
@@ -113,8 +113,8 @@ def test_multiclass_inputs():
                 outputs=outputs[idx : idx + bs], targets=targets[idx : idx + bs],
             )
 
-        f1_m = f1.compute()
-        fbeta_m = fbeta.compute()
+        f1_m = f1.value
+        fbeta_m = fbeta.value
 
         assert f1_skm == pytest.approx(f1_m.item())
 
@@ -142,8 +142,8 @@ def test_multilabel_inputs():
         fbeta.accumulate(outputs=outputs, targets=targets)
         f1.accumulate(outputs=outputs, targets=targets)
 
-        fbeta_val = fbeta.compute()
-        f1_val = f1.compute()
+        fbeta_val = fbeta.value
+        f1_val = f1.value
 
         assert fbeta.case_type == "multilabel"
         assert f1.case_type == "multilabel"
@@ -170,8 +170,8 @@ def test_multilabel_inputs():
                 outputs=outputs[idx : idx + bs], targets=targets[idx : idx + bs],
             )
 
-        f1_m = f1.compute()
-        fbeta_m = fbeta.compute()
+        f1_m = f1.value
+        fbeta_m = fbeta.value
 
         assert f1_skm == pytest.approx(f1_m.item())
 

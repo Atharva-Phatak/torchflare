@@ -1,4 +1,5 @@
 """Implementation of Progress Bar."""
+import math
 import sys
 import time
 from typing import Dict
@@ -166,20 +167,18 @@ class ProgressBar:
         Returns:
             The number of steps.
         """
-        return len(dl.dataset) // dl.batch_size
+        steps = len(dl.dataset) / dl.batch_size
+        return math.ceil(steps)
 
-    def set_steps(self, prefix: str):
+    def set_steps(self, is_training: bool):
         """Method to set the number of steps and prefix.
 
         Args:
-            prefix: One of "train" or "valid". Prefix indicates whether training is performed or validation.
+            is_training: Whether training is in progress or validation.
         """
-        if "train" in prefix:
-            self.num_steps = self.calculate_steps(dl=self.train_dl)
-            self.prefix = "Train"
-        else:
-            self.num_steps = self.calculate_steps(dl=self.valid_dl)
-            self.prefix = "Valid"
+        dl = self.train_dl if is_training else self.valid_dl
+        self.prefix = "Train" if is_training else "Valid"
+        self.num_steps = self.calculate_steps(dl=dl)
 
     def reset(self):
         """Method to reset internal variables."""

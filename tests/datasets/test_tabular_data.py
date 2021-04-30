@@ -2,7 +2,7 @@
 from torchflare.datasets.tabular import TabularDataset
 import pandas as pd
 import torch
-from torchflare.datasets.dataloaders import SimpleDataloader
+from torchflare.datasets.tabular_dataloader import TabularDataloader
 
 
 def test_data():
@@ -51,7 +51,7 @@ def test_data():
 
     def test_dataloaders():
 
-        dl = SimpleDataloader.tabular_data_from_df(df=df, feature_cols=input_cols, label_cols=label_col).get_loader(
+        dl = TabularDataloader.from_df(df=df, feature_cols=input_cols, label_cols=label_col).get_loader(
             batch_size=2, shuffle=True
         )
 
@@ -61,9 +61,9 @@ def test_data():
         assert torch.is_tensor(y) is True
         assert x.shape == (2, len(input_cols))
 
-        dl_path = SimpleDataloader.tabular_data_from_csv(
-            csv_path=path, feature_cols=input_cols, label_cols=label_col
-        ).get_loader(batch_size=2, shuffle=False)
+        dl_path = TabularDataloader.from_csv(csv_path=path, feature_cols=input_cols, label_cols=label_col).get_loader(
+            batch_size=2, shuffle=False
+        )
 
         x, y = next(iter(dl_path))
 

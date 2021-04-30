@@ -51,7 +51,8 @@ class Precision(_BaseInputHandler, MetricMeter):
         self._outputs.append(outputs)
         self._targets.append(targets)
 
-    def compute(self) -> torch.Tensor:
+    @property
+    def value(self) -> torch.Tensor:
         """Computes the Precision Score.
 
         Returns:

@@ -15,7 +15,7 @@ class DummyPipeline:
         self.cb = CallbackRunner(cbs)
 
         self.cb.set_experiment(self)
-        self._model_logs = {}
+        self.exp_logs = {}
 
     @property
     def set_model_state(self):
@@ -26,9 +26,8 @@ class DummyPipeline:
     def set_model_state(self, state):
 
         self._model_state = state
-        epoch = self._model_logs.pop("Epoch") if "Epoch" in self._model_logs.keys() else None
         if self.cb is not None:
-            self.cb(current_state=self._model_state, epoch=epoch, logs=self._model_logs)
+            self.cb(current_state=self._model_state)
 
     def fit(self):
 
@@ -58,7 +57,7 @@ class DummyPipeline:
                 "Time": (time.time() - start),
             }
 
-            self._model_logs.update(logs)
+            self.exp_logs.update(logs)
             self.set_model_state = ExperimentStates.EPOCH_END
 
             if self._stop_training:
@@ -70,7 +69,7 @@ def test_history(tmpdir):
 
     hist = History()
     trainer = DummyPipeline(cbs=[hist])
-    trainer.save_dir = tmpdir.mkdir('/callbacks')
+    trainer.save_dir = tmpdir.mkdir("/callbacks")
     trainer.fit()
-    #print(trainer.history.history)
-    assert isinstance(trainer.history.history, dict) is True
+    # print(trainer.history.history)
+    assert isinstance(trainer.history, dict) is True

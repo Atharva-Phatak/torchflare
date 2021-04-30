@@ -1,8 +1,6 @@
 """Implementation of Callbacks and CallbackRunner."""
 from enum import Enum
-from typing import Dict, List
-
-from torchflare.callbacks.states import ExperimentStates
+from typing import List
 
 
 def sort_callbacks(callbacks: List) -> List:
@@ -33,21 +31,21 @@ class Callbacks:
     def set_experiment(self, exp):  # noqa
         self.exp = exp
 
-    def epoch_start(self, epoch, logs):
+    def epoch_start(self):
         """Start of Epoch."""
-        raise NotImplementedError
+        pass
 
-    def epoch_end(self, epoch, logs):
+    def epoch_end(self):
         """End of epoch."""
-        raise NotImplementedError
+        pass
 
     def experiment_start(self):
         """Start of experiment."""
-        raise NotImplementedError
+        pass
 
     def experiment_end(self):
         """End of experiment."""
-        raise NotImplementedError
+        pass
 
 
 class CallbackRunner:
@@ -65,17 +63,10 @@ class CallbackRunner:
         for cb in self.callbacks:
             cb.set_experiment(exp)
 
-    def __call__(self, current_state: Enum, epoch: int = None, logs: Dict = None):
-        """Runs callbacks depending on the current experiment state.
-
-        Args:
-            current_state : The current model state while training
-            logs : A dict containing all the metrics and loss values
-            epoch: The current epoch.
-        """
+    def __call__(self, current_state: Enum):
+        """Runs callbacks depending on the current experiment state."""
         for cb in self.callbacks:
-            if current_state.value in list(cb.__class__.__dict__):
-                if current_state in (ExperimentStates.EXP_END, ExperimentStates.EXP_START):
-                    _ = getattr(cb, current_state.value)()
-                else:
-                    _ = getattr(cb, current_state.value)(epoch=epoch, logs=logs)
+            try:
+                _ = getattr(cb, current_state.value)()
+            except AttributeError:
+                pass

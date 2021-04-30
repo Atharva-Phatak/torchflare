@@ -24,14 +24,18 @@ class DummyPipeline:
 
         self.device = "cpu"
         self.cb.set_experiment(self)
-        self._model_logs = {}
+        self.exp_logs = {}
+        self.epoch_key = "Epoch"
         # if not os.path.exists(self.save_dir):
         # os.mkdir(self.save_dir)
 
         self.path = os.path.join(self.save_dir, self.model_name)
+        assert os.path.exists(self.save_dir)
         self.scheduler_stepper = None
-
-        self.cb_lc = CallbackRunner([LoadCheckpoint()])  # callback runner for load_checkpoint. Since we test model only after training done.
+        # print(type(self.path))
+        self.cb_lc = CallbackRunner(
+            [LoadCheckpoint()]
+        )  # callback runner for load_checkpoint. Since we test model only after training done.
         self.cb_lc.set_experiment(self)
 
     @property
@@ -43,9 +47,8 @@ class DummyPipeline:
     def set_model_state(self, state):
 
         self._model_state = state
-        epoch = self._model_logs.pop("Epoch") if "Epoch" in self._model_logs.keys() else None
         if self.cb is not None:
-            self.cb(current_state=self._model_state, epoch=epoch, logs=self._model_logs)
+            self.cb(current_state=self._model_state)
 
     def fit(self):
 
@@ -72,18 +75,20 @@ class DummyPipeline:
                 "train_acc": train_acc,
             }
 
-            self._model_logs.update(logs)
+            self.exp_logs.update(logs)
             self.set_model_state = ExperimentStates.EPOCH_END
 
             if self._stop_training:
                 break
         self.set_model_state = ExperimentStates.EXP_END
+        assert os.path.exists(self.path)
 
     def check_checkpoints(self):
 
+        assert os.path.exists(self.path)
         ckpt = torch.load(self.path)
         model_dict = self.model.state_dict()
-        self.cb_lc(current_state=ExperimentStates.EXP_START, epoch=None, logs=None)
+        self.cb_lc(current_state=ExperimentStates.EXP_START)
         for layer_name, weight in ckpt["model_state_dict"].items():
             assert layer_name in model_dict
             assert torch.all(model_dict[layer_name] == weight)

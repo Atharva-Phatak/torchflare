@@ -3,7 +3,7 @@ from torchflare.modules.arcface import ArcFace
 from torchflare.modules.airface import LiArcFace
 from torchflare.modules.cosface import CosFace
 from torchflare.modules.am_softmax import AMSoftmax
-from torchflare.modules.se_modules import SSE , CSE , SCSE
+from torchflare.modules.se_modules import SSE, CSE, SCSE
 
 
 # To-do: Add more handcrafted tests.

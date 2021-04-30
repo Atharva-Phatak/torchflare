@@ -1,6 +1,5 @@
 """Implementation of Early stopping."""
 from abc import ABC
-from typing import Dict
 
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.states import CallbackOrder
@@ -48,14 +47,10 @@ class EarlyStopping(Callbacks, ABC):
 
         self.stopping_counter = 0
 
-    def epoch_end(self, epoch: int, logs: Dict):
+    def epoch_end(self):
         """Function which will determine when to stop the training depending on the score.
-
-        Args:
-            logs: A dictionary containing metrics and loss values.
-            epoch : The current epoch
         """
-        epoch_score = logs.get(self.monitor)
+        epoch_score = self.exp.exp_logs.get(self.monitor)
         if self.best_score is None or self.improvement(score=epoch_score, best_score=self.best_score):
 
             self.best_score = epoch_score
@@ -67,3 +62,9 @@ class EarlyStopping(Callbacks, ABC):
         if self.stopping_counter >= self.patience:
             print("Early Stopping !")
             self.exp.stop_training = True
+
+    def experiment_end(self):
+        """Reset to defaults."""
+        self.stopping_counter = 0
+        self.best_score = None
+        self.improvement = None

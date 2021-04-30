@@ -1,5 +1,5 @@
-"""Implements Experiment class."""
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+"""Implements Base class."""
+from typing import Any, Callable, Dict, List, Optional, Union
 
 import torch
 import torch.nn as nn
@@ -7,11 +7,13 @@ from torch.utils.data import DataLoader
 
 from torchflare.callbacks.states import ExperimentStates
 from torchflare.experiments.simple_utils import to_device
-from torchflare.experiments.state import ExperimentState
+from torchflare.experiments.state import BaseState
+from torchflare.utils.progress_bar import ProgressBar
+from torchflare.utils.seeder import seed_all
 
 
-class Experiment(ExperimentState):
-    """Simple Experiment for handling boilerplate code for training, validation and Inference."""
+class Experiment(BaseState):
+    """Simple class for handling boilerplate code for training, validation and Inference."""
 
     def __init__(
         self,
@@ -58,8 +60,6 @@ class Experiment(ExperimentState):
         optimizer: Union[torch.optim.Optimizer, str, Any],
         optimizer_params: Dict[str, Union[int, float]],
         criterion: Union[Callable[[torch.Tensor], torch.Tensor], str],
-        scheduler: Optional[str] = None,
-        scheduler_params: Dict[str, Union[int, float, str]] = None,
         callbacks: List = None,
         metrics: List = None,
         main_metric: Optional[str] = None,
@@ -72,10 +72,6 @@ class Experiment(ExperimentState):
             optimizer: The optimizer to be used or name of optimizer.
                         If you pass in the name of the optimizer, only optimizers available in pytorch are supported.
             optimizer_params: The parameters to be used for the optimizer.
-            scheduler: The scheduler or the name of the scheduler.
-                    If you pass in the name of the scheduler, only scheduler available in
-                    pytorch/transformers can be supported.
-            scheduler_params: The parameters to be used for the scheduler.
             criterion: The loss function to optimize or name of the loss function.
                     If you pass in the name of the loss function,
                     only loss functions available in pytorch can be supported.
@@ -94,36 +90,9 @@ class Experiment(ExperimentState):
         self.main_metric = main_metric
 
         self._set_optimizer(optimizer=optimizer, optimizer_params=optimizer_params)
-        self._set_scheduler(scheduler=scheduler, scheduler_params=scheduler_params)
         self._set_metrics(metrics=metrics)
         self._set_callbacks(callbacks=callbacks)
         self._set_criterion(criterion=criterion)
-
-    @property
-    def update_train_monitor(self):
-        """Returns the train monitor dictionary.
-
-        Returns:
-            Training monitor dictionary.
-        """
-        return self._train_monitor
-
-    @update_train_monitor.setter
-    def update_train_monitor(self, metrics: Dict):
-        self._train_monitor.update(metrics)
-
-    @property
-    def update_val_monitor(self):
-        """Returns the validation  monitor dictionary.
-
-        Returns:
-            Validation monitor dictionary.
-        """
-        return self._val_monitor
-
-    @update_val_monitor.setter
-    def update_val_monitor(self, metrics: Dict):
-        self._val_monitor.update(metrics)
 
     def _process_inputs(self, *args):
         args = to_device(args, self.device)
@@ -135,53 +104,57 @@ class Experiment(ExperimentState):
         Args:
             x: The input to the model.
             y: The targets. Defaults to None.
-
-        Returns:
-            The input and targets if targets are present else returns inputs
         """
         if y is not None:
             x, y = self._process_inputs(x, y)
-            return x, y
+            self.x, self.y = x, y
 
         else:
             x = self._process_inputs(x)
-            return x[0] if len(x) == 1 else x
+            self.x = x[0] if len(x) == 1 else x
 
-    def _update_model_logs(self, epoch: int = None):
+    def _update_model_logs(self):
 
         # To-do : Better logs updating
-        self.exp_logs.update({"Epoch": epoch, **self._train_monitor, **self._val_monitor})
+        self.exp_logs.update({"Epoch": self.current_epoch, **self._train_monitor, **self._val_monitor})
 
-    def _compute_loss(self, op: torch.Tensor, y: Union[torch.Tensor, List[torch.Tensor]]) -> torch.Tensor:
-        """Computes loss given the inputs and targets.
+    # def _step_scheduler(self):
+    # if self.scheduler_stepper is not None:
+    # self.scheduler_stepper.step(current_state=self.experiment_state)
 
-        Args:
-            op: The output of the net
-            y: The targets
-
-        Returns:
-            Computed loss
-        """
-        if isinstance(op, (list, tuple)):
-            vals = [self.criterion(ele, y) for ele in op]
-            loss = sum(vals)
+    def _update_monitors(self, metrics):
+        if self.is_training:
+            self._train_monitor = metrics
         else:
-            loss = self.criterion(op, y)
+            self._val_monitor = metrics
 
-        return loss
-
-    def _model_forward_pass(self, x):
-
-        if isinstance(x, (list, tuple)):
-            op = self.model(*x)
-        elif isinstance(x, dict):
-            op = self.model(**x)
+    def _create_metric_dict(self):
+        if self._metric_runner.metrics is not None:
+            self.metrics = self._metric_runner.value
         else:
-            op = self.model(x)
+            self.metrics = {}
 
-        return op
+        metrics = {**self.loss_meter.value, **self.metrics}
+        return metrics
 
-    def _calculate_loss(self, x: torch.Tensor, y: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+    def _compute_loss(self) -> None:
+        """Computes loss given the inputs and targets."""
+        if isinstance(self.preds, (list, tuple)):
+            vals = [self.criterion(ele, self.y) for ele in self.preds]
+            self.loss = sum(vals)
+        else:
+            self.loss = self.criterion(self.preds, self.y)
+
+    def _model_forward_pass(self):
+
+        if isinstance(self.x, (list, tuple)):
+            self.preds = self.model(*self.x)
+        elif isinstance(self.x, dict):
+            self.preds = self.model(**self.x)
+        else:
+            self.preds = self.model(self.x)
+
+    def _calculate_loss(self, x: torch.Tensor, y: torch.Tensor) -> None:
         """Function to calculate loss and update metric states.
 
         Args:
@@ -191,188 +164,205 @@ class Experiment(ExperimentState):
         Returns:
               The computed loss and output
         """
-        x, y = self.process_inputs(x, y)
-        op = self._model_forward_pass(x=x)
-        loss = self._compute_loss(op=op, y=y)
+        self.process_inputs(x, y)
+        self._model_forward_pass()
+        self._compute_loss()
 
-        return loss, op
+    def _update_pbar(self):
+        self.progress_bar.update(current_step=self.batch_idx, values={"loss": self.loss.item()})
 
-    def run_batches(self, iterator, prefix: str, func: Callable):
+    def set_dataloaders(self, train_dl, valid_dl):
+        """Setup dataloader variables."""
+        self.train_dl = train_dl
+        self.valid_dl = valid_dl
+
+    def on_experiment_start(self):
+        """Event on experiment start."""
+        seed_all(self.seed)
+        self._model_to_device()
+        self._reset_model_logs()
+        self.progress_bar = ProgressBar(num_epochs=self.num_epochs, train_dl=self.train_dl, valid_dl=self.valid_dl)
+        self.set_state = ExperimentStates.EXP_START
+
+    def on_experiment_end(self):
+        """Event on experiment end."""
+        self.set_state = ExperimentStates.EXP_END
+        self._train_monitor, self._val_monitor, self.exp_logs = None, None, {}
+        self.experiment_state = None
+        self.progress_bar = None
+        self.loss, self.x, self.y, self.preds = None, None, None, None
+
+    def on_batch_start(self):
+        """Event on batch start."""
+        self.set_state = ExperimentStates.BATCH_START
+
+    def on_batch_end(self):
+        """Event on batch end."""
+        self.loss_meter.accumulate()
+        # accumulate values for metric computation
+        if self._metric_runner.metrics is not None:
+            self._metric_runner.accumulate()
+        self._update_pbar()  # per batch loss.
+        self.set_state = ExperimentStates.BATCH_END
+
+    def on_loader_start(self):
+        """Event on batch end."""
+        # before every train/val step create progress bar.
+        self.progress_bar.set_steps(is_training=self.is_training)
+        if self._metric_runner.metrics is not None:
+            self.compute_metric_flag = self.compute_train_metrics if self.is_training else self._compute_val_metrics
+
+    def on_loader_end(self):
+        """Method to print final metrics and reset state of progress bar."""
+        # compute metrics
+        metrics = self._create_metric_dict()
+        self.progress_bar.add(n=1, values=metrics)
+        self.progress_bar.reset()
+        self._update_monitors(metrics=metrics)
+
+    def on_epoch_start(self):
+        """Event on epoch start."""
+        self.progress_bar.display_epoch(current_epoch=self.current_epoch)
+        self.set_state = ExperimentStates.EPOCH_START
+
+    def on_epoch_end(self):
+        """Event on epoch end."""
+        self._update_model_logs()
+        # self._step_scheduler()
+        # RUNNING CALLBACKS AFTER EVERY EPOCH IS DONE
+        self.set_state = ExperimentStates.EPOCH_END
+
+    def _run_event(self, event: str):
+        """Method to run events."""
+        getattr(self, event)()
+
+    def run_loader(self, func: Callable):
         """Function to iterate the dataloader through all the batches.
 
         Args:
-            iterator: The dataloader or any iterator which will yield the inputs and targets.
-            prefix: The prefix for training/validation. .
             func: The function which will compute the loss , outputs and return them.
-
-        Returns:
-            A dictionary containing metrics and loss.
         """
         # create progress bar and set compute_flag
-        self._iter_start(prefix=prefix)
+        self._run_event("on_loader_start")
+        iterator = self.train_dl if self.is_training else self.valid_dl
 
-        # reset metrics
-        self._metric_runner.reset()
+        for self.batch_idx, (x, y) in enumerate(iterator):
+            self._run_event("on_batch_start")
+            func(x, y)
+            self._run_event("on_batch_end")
 
-        for batch_idx, (x, y) in enumerate(iterator):
-            self.set_state = ExperimentStates.BATCH_START
+        # Stdout  computed metrics/update monitors.
+        self._run_event("on_loader_end")
 
-            loss, op = func(x, y)
-
-            # accumulate values for metric computation
-            self._metric_runner.accumulate(op=op, y=y, loss=loss.item(), n=iterator.batch_size)
-            self._update_pbar(step=batch_idx, loss=loss.item())  # per batch loss.
-
-            self.set_state = ExperimentStates.BATCH_END
-
-        # compute metrics
-        metrics = self._metric_runner.compute(prefix=prefix)
-        # Stdout  computed metrics
-        self._iter_end(values=metrics)
-        return metrics
-
-    def fp16_step(self, inputs: torch.Tensor, targets: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+    def fp16_step(self, inputs: torch.Tensor, targets: torch.Tensor) -> None:
         """Method to perform mixed precision type update.
 
         Args:
             inputs : The inputs obtained from the dataloader
             targets: The targets obtained from the dataloader
-
-        Returns:
-            The computed loss and outputs
         """
         self.optimizer.zero_grad()
 
         with torch.cuda.amp.autocast():
-            loss, op = self._calculate_loss(x=inputs, y=targets)
+            self._calculate_loss(x=inputs, y=targets)
 
-        self.scaler.scale(loss).backward()
+        self.scaler.scale(self.loss).backward()
         self.scaler.step(self.optimizer)
         self.scaler.update()
 
-        return loss, op
-
-    def standard_step(self, inputs: torch.Tensor, targets: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+    def standard_step(self, inputs: torch.Tensor, targets: torch.Tensor) -> None:
         """Method to perform the standard update.
 
         Args:
             inputs : The inputs obtained from the dataloader
             targets: The targets obtained from the dataloader
-
-        Returns:
-            The computed loss and outputs
         """
         self.optimizer.zero_grad()
-        loss, op = self._calculate_loss(x=inputs, y=targets)
-        loss.backward()
+        self._calculate_loss(x=inputs, y=targets)
+        self.loss.backward()
         self.optimizer.step()
 
-        return loss, op
-
-    def train_step(self, inputs: torch.Tensor, targets: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+    def train_step(self, inputs: torch.Tensor, targets: torch.Tensor) -> None:
         """Method to perform the train step and step scheduler.
 
         Args:
             inputs: The input to the model.
             targets: The targets.
-
-        Returns:
-            Return loss and model output.
         """
-        func = "fp16_step" if self.fp16 else "standard_step"
-        loss, op = getattr(self, func)(inputs=inputs, targets=targets)
-        if self.scheduler_stepper is not None:
-            self.scheduler_stepper.step(current_state=self.experiment_state)
-        return loss, op
+        if self.fp16:
+            self.fp16_step(inputs, targets)
+        else:
+            self.standard_step(inputs, targets)
+        # self._step_scheduler()
 
-    def val_step(self, inputs: torch.Tensor, targets: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+    def val_step(self, inputs: torch.Tensor, targets: torch.Tensor) -> None:
         """Method to perform validation step.
 
         Args:
             inputs: The input to the model.
             targets: The targets.
-
-        Returns:
-            Return loss and model outputs.
         """
         with torch.no_grad():
-            loss, op = self._calculate_loss(x=inputs, y=targets)
-        return loss, op
+            self._calculate_loss(x=inputs, y=targets)
 
     def _do_train_epoch(self):
         """Method to train the model for one epoch."""
         self.model.train()
-        metrics = self.run_batches(iterator=self._train_dl, prefix=self.train_key, func=self.train_step)
-
-        # GENERATE AND UPDATE METRIC MONITORS
-        self.update_train_monitor = metrics
+        self.is_training = True
+        self.run_loader(func=self.train_step)
 
     def _do_val_epoch(self):
         """Method to validate model for one epoch."""
         self.model.eval()
-        metrics = self.run_batches(iterator=self._valid_dl, prefix=self.val_key, func=self.val_step)
+        self.is_training = False
+        self.run_loader(func=self.val_step)
 
-        # GENERATE AND UPDATE THE MONITORS
-        self.update_val_monitor = metrics
-
-    def _do_epoch(self, current_epoch):
+    def _do_epoch(self):
         self._do_train_epoch()
         self._do_val_epoch()
-        self._update_model_logs(epoch=current_epoch)
-        if self.scheduler_stepper is not None:
-            self.scheduler_stepper.step(current_state=self.experiment_state)
 
     def _run(self):
         """Method to run experiment for full number of epochs."""
-        for epoch in range(self.num_epochs):
+        for self.current_epoch in range(self.num_epochs):
 
-            self.progress_bar.display_epoch(current_epoch=epoch)
-
-            self.set_state = ExperimentStates.EPOCH_START
-            self._do_epoch(current_epoch=epoch)
-
-            # RUNNING CALLBACKS AFTER EVERY EPOCH IS DONE
-            self.set_state = ExperimentStates.EPOCH_END
-
+            self._run_event("on_epoch_start")
+            self._do_epoch()
+            self._run_event("on_epoch_end")
             if self.stop_training:
                 break
 
-    def run_experiment(
-        self, train_dl: DataLoader, valid_dl: DataLoader,
-    ):
+    def run_experiment(self, train_dl: DataLoader, valid_dl: DataLoader):
         """Method to train and validate the model for fixed number of epochs.
 
         Args:
             train_dl : The training dataloader.
             valid_dl : The validation dataloader.
 
+        Returns:
+            Experiment history if specified.
+
         Note:
             Model will only be saved when ModelCheckpoint callback is used.
         """
-        # Seed and move to model to device
-        self._run_event(event="initialize", train_dl=train_dl, valid_dl=valid_dl)
-        # Set the state to TRAIN START
-        self.set_state = ExperimentStates.EXP_START
+        self.set_dataloaders(train_dl=train_dl, valid_dl=valid_dl)
+        self._run_event("on_experiment_start")
         self._run()
-        # Set the state to TRAIN END and run callbacks to ensure everything is completed
-        self.set_state = ExperimentStates.EXP_END
-        # Perform cleanup , set monitors and logs to empty dicts
-        self._run_event(event="cleanup")
+        self._run_event("on_experiment_end")
 
     @torch.no_grad()
     def _infer_on_batch(self, inp):
 
-        inp = self.process_inputs(x=inp, y=None)
-        op = self._model_forward_pass(x=inp)
+        self.process_inputs(x=inp, y=None)
+        self._model_forward_pass()
 
-        return op.detach().cpu()
+        return self.preds.detach().cpu()
 
     @torch.no_grad()
-    def infer(self, test_loader: torch.utils.data.DataLoader, path: str, device: str = "cuda") -> torch.Tensor:
+    def infer(self, test_dl: torch.utils.data.DataLoader, path: str, device: str = "cuda") -> torch.Tensor:
         """Method to perform inference on test dataloader.
 
         Args:
-            test_loader: The dataloader to be use for testing.
+            test_dl: The dataloader to be use for testing.
             device: The device on which you want to perform inference.
             path: The path where the '.bin' or '.pt' or '.pth' file is saved.
                 example: path = "/output/model.bin"
@@ -385,7 +375,7 @@ class Experiment(ExperimentState):
         ckpt = torch.load(path, map_location=torch.device(device))
         self.model.load_state_dict(ckpt["model_state_dict"])
 
-        for inp in test_loader:
+        for inp in test_dl:
             op = self._infer_on_batch(inp=inp)
             yield op
 
@@ -398,9 +388,7 @@ class Experiment(ExperimentState):
         """
         self._model_to_device()
         x, y = next(iter(dl))
-        x, y = self.process_inputs(x=x, y=y)
-        op = self._model_forward_pass(x=x)
-        loss = self.criterion(op, y)
+        self._calculate_loss(x=x, y=y)
         print("Sanity Check Completed. Model Forward Pass and Loss Computation Successful")
-        print(f"Output Shape : {op.shape}")
-        print(f"Loss for a batch :{loss.item()}")
+        print(f"Output Shape : {self.preds.shape}")
+        print(f"Loss for a batch :{self.loss.item()}")

@@ -167,9 +167,7 @@ class _BaseInputHandler(_BaseMetric):
         return outputs, targets
 
 
-def calculate_segmentation_statistics(
-    outputs: torch.Tensor, targets: torch.Tensor, class_dim: int = 1, threshold=None
-):
+def calculate_segmentation_statistics(outputs: torch.Tensor, targets: torch.Tensor, class_dim: int = 1, threshold=None):
     """Compute calculate segmentation statistics.
 
     Args:
@@ -204,10 +202,6 @@ class MetricMeter:
 
     def accumulate(self, outputs, targets):
         """Method to accumulate outputs and targets per the batch."""
-        raise NotImplementedError
-
-    def compute(self):
-        """Method to compute the metric on epoch end."""
         raise NotImplementedError
 
     def reset(self):

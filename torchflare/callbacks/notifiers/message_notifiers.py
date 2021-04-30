@@ -1,7 +1,6 @@
 """Implements notifiers for slack and discord."""
 import json
 from abc import ABC
-from typing import Dict
 
 import requests
 
@@ -35,18 +34,13 @@ class SlackNotifierCallback(Callbacks, ABC):
         super(SlackNotifierCallback, self).__init__(order=CallbackOrder.EXTERNAL)
         self.webhook_url = webhook_url
 
-    def epoch_end(self, epoch: int, logs: Dict):
+    def epoch_end(self):
         """This function will dispatch messages to your Slack channel.
-
-        Args:
-            epoch : The current epoch
-            logs : a str, list of strings, dictionary
 
         Raises:
             ValueError: If connection to slack channel could not be established.
         """
-        logs = {"Epoch": epoch, **logs}
-        data = {"text": prepare_data(logs)}
+        data = {"text": prepare_data(self.exp.exp_logs)}
 
         response = requests.post(self.webhook_url, json.dumps(data), headers={"Content-Type": "application/json"})
 
@@ -72,17 +66,11 @@ class DiscordNotifierCallback(Callbacks, ABC):
         self.exp_name = exp_name
         self.webhook_url = webhook_url
 
-    def epoch_end(self, epoch: int, logs: Dict):
-        """This function will dispatch messages to your discord server/channel.
-
-        Args:
-            epoch : The current epoch
-            logs : a str, list of strings, dictionary
-        """
-        logs = {"Epoch": epoch, **logs}
+    def epoch_end(self):
+        """This function will dispatch messages to your discord server/channel."""
         data = {
             "username": self.exp_name,
-            "embeds": [{"description": prepare_data(logs)}],
+            "embeds": [{"description": prepare_data(self.exp.exp_logs)}],
         }
         response = requests.post(self.webhook_url, json.dumps(data), headers={"Content-Type": "application/json"})
 

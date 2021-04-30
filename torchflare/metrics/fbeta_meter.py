@@ -62,7 +62,8 @@ class FBeta(_BaseInputHandler, MetricMeter):
         self._outputs = []
         self._targets = []
 
-    def compute(self) -> torch.Tensor:
+    @property
+    def value(self) -> torch.Tensor:
         """Computes the FBeta Score.
 
         Returns:
@@ -118,8 +119,9 @@ class F1Score(_BaseInputHandler, MetricMeter):
         """
         return self.__class__.__name__.lower()
 
-    def compute(self) -> torch.Tensor:
-        """Method to compute FBeta Score.
+    @property
+    def value(self) -> torch.Tensor:
+        """Value of FBeta Score.
 
         Returns:
             The computed F1-score

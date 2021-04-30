@@ -26,7 +26,7 @@ def test_mse():
 
         mse.accumulate(outputs=single_target_inputs.outputs, targets=single_target_inputs.targets)
 
-        assert skm.mean_squared_error(np_targets, np_outputs) == pytest.approx(mse.compute().item())
+        assert skm.mean_squared_error(np_targets, np_outputs) == pytest.approx(mse.value.item())
 
     def _test_multiple_target():
         np_outputs = multi_target_inputs.outputs.view(-1, n_targets).numpy()
@@ -36,7 +36,7 @@ def test_mse():
 
         mse.accumulate(outputs=multi_target_inputs.outputs, targets=multi_target_inputs.targets)
 
-        assert skm.mean_squared_error(np_targets, np_outputs) == pytest.approx(mse.compute().item())
+        assert skm.mean_squared_error(np_targets, np_outputs) == pytest.approx(mse.value.item())
 
     for _ in range(10):
         _test_single_target()
@@ -52,7 +52,7 @@ def test_mae():
 
         mae.accumulate(outputs=single_target_inputs.outputs, targets=single_target_inputs.targets)
 
-        assert skm.mean_absolute_error(np_targets, np_outputs) == pytest.approx(mae.compute().item())
+        assert skm.mean_absolute_error(np_targets, np_outputs) == pytest.approx(mae.value.item())
 
     def _test_multiple_target():
         np_outputs = multi_target_inputs.outputs.view(-1, n_targets).numpy()
@@ -62,7 +62,7 @@ def test_mae():
 
         mae.accumulate(outputs=multi_target_inputs.outputs, targets=multi_target_inputs.targets)
 
-        assert skm.mean_absolute_error(np_targets, np_outputs) == pytest.approx(mae.compute().item())
+        assert skm.mean_absolute_error(np_targets, np_outputs) == pytest.approx(mae.value.item())
 
     for _ in range(10):
         _test_single_target()
@@ -78,7 +78,7 @@ def test_msle():
 
         msle.accumulate(outputs=single_target_inputs.outputs, targets=single_target_inputs.targets)
 
-        assert skm.mean_squared_log_error(np_targets, np_outputs) == pytest.approx(msle.compute().item())
+        assert skm.mean_squared_log_error(np_targets, np_outputs) == pytest.approx(msle.value.item())
 
     def _test_multiple_target():
         np_outputs = multi_target_inputs.outputs.view(-1, n_targets).numpy()
@@ -88,7 +88,7 @@ def test_msle():
 
         msle.accumulate(outputs=multi_target_inputs.outputs, targets=multi_target_inputs.targets)
 
-        assert skm.mean_squared_log_error(np_targets, np_outputs) == pytest.approx(msle.compute().item())
+        assert skm.mean_squared_log_error(np_targets, np_outputs) == pytest.approx(msle.value.item())
 
     for _ in range(10):
         _test_single_target()
@@ -108,7 +108,7 @@ def test_r2score():
 
         m.reset()
         m.accumulate(preds, targets)
-        assert skm.r2_score(np_y, np_y_pred) == pytest.approx(m.compute().item(), abs=1e-4)
+        assert skm.r2_score(np_y, np_y_pred) == pytest.approx(m.value.item(), abs=1e-4)
 
     for _ in range(10):
         _test()

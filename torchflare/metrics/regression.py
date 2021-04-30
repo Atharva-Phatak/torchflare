@@ -65,7 +65,8 @@ class MAE(MetricMeter):
         self._n_obs = torch.tensor(0)
         self._abs_error_sum = torch.tensor(0.0)
 
-    def compute(self) -> torch.Tensor:
+    @property
+    def value(self) -> torch.Tensor:
         """Computes the MAE.
 
         Returns:
@@ -109,7 +110,8 @@ class MSE(MetricMeter):
         self._n_obs = torch.tensor(0)
         self._squared_error_sum = torch.tensor(0.0)
 
-    def compute(self) -> torch.Tensor:
+    @property
+    def value(self) -> torch.Tensor:
         """Computes the MSE.
 
         Returns:
@@ -153,7 +155,8 @@ class MSLE(MetricMeter):
         self._n_obs = torch.tensor(0)
         self._log_squared_error_sum = torch.tensor(0.0)
 
-    def compute(self) -> torch.Tensor:
+    @property
+    def value(self) -> torch.Tensor:
         """Computes the MSLE.
 
         Returns:
@@ -171,6 +174,7 @@ class R2Score(MetricMeter):
         self._sum_of_errors = None
         self._y_sq_sum = None
         self._y_sum = None
+        self.reset()
 
     def reset(self) -> None:
         """Reset the output and target lists."""
@@ -200,7 +204,8 @@ class R2Score(MetricMeter):
         self._y_sum += torch.sum(targets)
         self._y_sq_sum += torch.sum(torch.pow(targets, 2))
 
-    def compute(self) -> torch.Tensor:
+    @property
+    def value(self) -> torch.Tensor:
         """Computes the R2Score.
 
         Raises:

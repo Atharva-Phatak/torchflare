@@ -7,7 +7,7 @@ import torch
 import torchvision
 
 from torchflare.datasets.classification import ImageDataset
-from torchflare.datasets.dataloaders import SimpleDataloader
+from torchflare.datasets.image_dataloader import ImageDataloader
 
 inputs = collections.namedtuple("inputs", ["path", "extension", "label_cols", "df", "image_col"])
 df = pd.read_csv("tests/datasets/data/image_classification/csv_data/train.csv")
@@ -137,7 +137,7 @@ def test_image_dataloaders():
     def test_image_data_from_df():
         augmentations = A.Compose([A.Resize(256, 256)])
 
-        dl = SimpleDataloader.image_data_from_df(
+        dl = ImageDataloader.from_df(
             path=constants_df.path,
             df=constants_df.df,
             augmentations=augmentations,
@@ -156,7 +156,7 @@ def test_image_dataloaders():
 
     def test_image_data_from_folders():
         augmentations = A.Compose([A.Resize(256, 256)])
-        dl = SimpleDataloader.image_data_from_folders(
+        dl = ImageDataloader.from_folders(
             path=folder_inputs.train_path, augmentations=augmentations, convert_mode="RGB",
         ).get_loader(batch_size=2, shuffle=True)
         x, y = next(iter(dl))

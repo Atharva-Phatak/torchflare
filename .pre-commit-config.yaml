@@ -10,12 +10,7 @@ repos:
     rev: v2.4.1
     hooks:
       - id: pyupgrade
-  - repo: https://github.com/python/black
-    rev: 19.10b0
-    hooks:
-      - id: black
-        exclude: ^tests/
-        args: [ --safe, --quiet ]
+
   - repo: https://github.com/asottile/seed-isort-config
     rev: v2.1.1
     hooks:
@@ -25,7 +20,12 @@ repos:
     hooks:
       - id: isort
         exclude: ^tests/
-
+  - repo: https://github.com/python/black
+    rev: 19.10b0
+    hooks:
+      - id: black
+        exclude: ^tests/
+        args: [ --safe, --quiet ]
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.8.1
     hooks:
