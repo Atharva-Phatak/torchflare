@@ -39,45 +39,38 @@ class Callbacks:
 
     # skipcq: PTC-W0049
     def batch_end(self):
-        # skipcq: PYL-W0107
         """End of Batch."""
-        pass
+        pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
     def loader_start(self):
-        # skipcq: PYL-W0107
         """Start of loader."""
-        pass
+        pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
     def loader_end(self):
-        # skipcq: PYL-W0107
         """End of loader."""
-        pass
+        pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
     def epoch_start(self):
-        # skipcq: PYL-W0107
         """Start of Epoch."""
-        pass
+        pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
     def epoch_end(self):
-        # skipcq: PYL-W0107
         """End of epoch."""
-        pass
+        pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
     def experiment_start(self):
-        # skipcq: PYL-W0107
         """Start of experiment."""
-        pass
+        pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
     def experiment_end(self):
-        # skipcq: PYL-W0107
         """End of experiment."""
-        pass
+        pass  # skipcq: PYL-W0107
 
 
 class CallbackRunner:
