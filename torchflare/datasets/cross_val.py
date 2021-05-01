@@ -47,14 +47,14 @@ class CVSplit:
 
     def _get_inputs(self):
         """Creates X,y for cross validation depending upon dataset."""
-        if isinstance(self.dataset, SegmentationDataset):
-            raise ValueError("Segmentation data is not supported")
-
-        elif isinstance(self.dataset, ImageDataset):
+        if isinstance(self.dataset, ImageDataset):
             self.X, self.y = self.dataset.image_list, self.dataset.label_list
 
         elif isinstance(self.dataset, (TabularDataset, TextClassificationDataset)):
             self.X, self.y = self.dataset.inputs, self.dataset.labels
+
+        elif isinstance(self.dataset, SegmentationDataset):
+            raise ValueError("Segmentation data is not supported")
 
     def _get_fold(self):
         """Generated fold dictionary for given cross validation scheme."""

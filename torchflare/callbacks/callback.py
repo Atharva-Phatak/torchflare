@@ -31,35 +31,51 @@ class Callbacks:
     def set_experiment(self, exp):  # noqa
         self.exp = exp
 
+    # skipcq: PTC-W0049
     def batch_start(self):
         """Start of batch."""
+        # skipcq: PYL-W0107
         pass
 
+    # skipcq: PTC-W0049
     def batch_end(self):
+        # skipcq: PYL-W0107
         """End of Batch."""
         pass
 
+    # skipcq: PTC-W0049
     def loader_start(self):
+        # skipcq: PYL-W0107
         """Start of loader."""
         pass
 
+    # skipcq: PTC-W0049
     def loader_end(self):
+        # skipcq: PYL-W0107
         """End of loader."""
         pass
 
+    # skipcq: PTC-W0049
     def epoch_start(self):
+        # skipcq: PYL-W0107
         """Start of Epoch."""
         pass
 
+    # skipcq: PTC-W0049
     def epoch_end(self):
+        # skipcq: PYL-W0107
         """End of epoch."""
         pass
 
+    # skipcq: PTC-W0049
     def experiment_start(self):
+        # skipcq: PYL-W0107
         """Start of experiment."""
         pass
 
+    # skipcq: PTC-W0049
     def experiment_end(self):
+        # skipcq: PYL-W0107
         """End of experiment."""
         pass
 

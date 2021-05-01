@@ -80,6 +80,7 @@ class BaseState:
         self.train_dl = None
         self.valid_dl = None
         self.loss = None
+        self.loss_meter = None
         self.x = None
         self.y = None
         self.preds = None
