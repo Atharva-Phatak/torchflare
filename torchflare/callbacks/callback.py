@@ -31,6 +31,22 @@ class Callbacks:
     def set_experiment(self, exp):  # noqa
         self.exp = exp
 
+    def batch_start(self):
+        """Start of batch."""
+        pass
+
+    def batch_end(self):
+        """End of Batch."""
+        pass
+
+    def loader_start(self):
+        """Start of loader."""
+        pass
+
+    def loader_end(self):
+        """End of loader."""
+        pass
+
     def epoch_start(self):
         """Start of Epoch."""
         pass

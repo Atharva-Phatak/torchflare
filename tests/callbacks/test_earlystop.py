@@ -63,7 +63,7 @@ class DummyPipeline:
 
 def test_on_val_loss():
 
-    es = EarlyStopping()
+    es = EarlyStopping(mode = "min")
     trainer = DummyPipeline(cbs=[es])
 
     trainer.fit()

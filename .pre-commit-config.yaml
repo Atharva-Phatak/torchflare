@@ -21,7 +21,7 @@ repos:
       - id: isort
         exclude: ^tests/
   - repo: https://github.com/python/black
-    rev: 19.10b0
+    rev: 21.4b2
     hooks:
       - id: black
         exclude: ^tests/

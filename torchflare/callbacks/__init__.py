@@ -23,9 +23,10 @@ from torchflare.callbacks.model_history import History  # isort: skip
 from torchflare.callbacks.notifiers.message_notifiers import DiscordNotifierCallback  # isort: skip
 from torchflare.callbacks.notifiers.message_notifiers import SlackNotifierCallback
 from torchflare.callbacks.states import CallbackOrder, ExperimentStates  # isort: skip
-from torchflare.callbacks.timer import TimeCallback  # isort: skip
+from torchflare.callbacks.extra_utils import init_improvement  # isort: skip
 
 from torchflare.callbacks.lr_schedulers import CosineAnnealingLR  # isort: skip; isort: skip
+
 
 __all__ = [
     "Callbacks",
@@ -38,7 +39,7 @@ __all__ = [
     "DiscordNotifierCallback",
     "CometLogger",
     "NeptuneLogger",
-    "TimeCallback",
+    "init_improvement",
     "TensorboardLogger",
     "WandbLogger",
     "ModelCheckpoint",

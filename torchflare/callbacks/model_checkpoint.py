@@ -6,12 +6,13 @@ import torch
 
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.states import CallbackOrder
+from torchflare.callbacks.extra_utils import init_improvement
 
 
 class ModelCheckpoint(Callbacks, ABC):
     """Callback for Checkpointing your model."""
 
-    def __init__(self, mode: str = "min", monitor: str = "val_loss"):
+    def __init__(self, mode: str, monitor: str = "val_loss"):
         """Constructor for ModelCheckpoint class.
 
         Args:
@@ -40,12 +41,7 @@ class ModelCheckpoint(Callbacks, ABC):
         else:
             self.monitor = monitor
 
-        if self.mode == "max":
-            self.best_val = -np.inf
-            self.improvement = lambda val, best_val: val >= best_val + self.eps
-        else:
-            self.best_val = np.inf
-            self.improvement = lambda val, best_val: val <= best_val + self.eps
+        self.improvement, self.best_val = init_improvement(mode=self.mode, min_delta=self.eps)
 
     def checkpoint(self, epoch: int):
         """Method to save the state dictionaries of model, optimizer,etc.
@@ -63,11 +59,10 @@ class ModelCheckpoint(Callbacks, ABC):
         )
 
     def epoch_end(self):
-        """Method to save best model depending on the monitored quantity.
-        """
+        """Method to save best model depending on the monitored quantity."""
         val = self.exp.exp_logs.get(self.monitor)
 
-        if self.improvement(val=val, best_val=self.best_val):
+        if self.improvement(score=val, best=self.best_val):
 
             self.checkpoint(epoch=self.exp.exp_logs.get(self.exp.epoch_key))
 

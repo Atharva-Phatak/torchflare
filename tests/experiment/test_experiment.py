@@ -32,7 +32,7 @@ def test_experiment(tmpdir):
 
         callbacks = [
             cbs.EarlyStopping(monitor="accuracy", mode="max"),
-            cbs.ModelCheckpoint(monitor="accuracy"),
+            cbs.ModelCheckpoint(monitor="accuracy", mode = "max"),
             cbs.CosineAnnealingWarmRestarts(T_0=2),
         ]
 
@@ -43,7 +43,6 @@ def test_experiment(tmpdir):
             fp16=fp16,
             device=device,
             seed=42,
-            using_batch_mixers=False,
             compute_train_metrics=True,
         )
 

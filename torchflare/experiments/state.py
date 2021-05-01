@@ -1,12 +1,10 @@
 """Implements Base State."""
 import os
-import warnings
 from typing import List
 
 import matplotlib.pyplot as plt
 import torch
 
-import torchflare.batch_mixers as special_augs
 import torchflare.metrics.metric_utils as metric_utils
 from torchflare.callbacks.callback import CallbackRunner, sort_callbacks
 from torchflare.callbacks.load_checkpoint import LoadCheckpoint
@@ -27,7 +25,6 @@ class BaseState:
         fp16: bool,
         device: str,
         compute_train_metrics: bool,
-        using_batch_mixers: bool,
         seed: int = 42,
     ):
         """Init method to set up important variables for training and validation.
@@ -40,7 +37,6 @@ class BaseState:
             fp16 : Set this to True if you want to use mixed precision training(Default : False)
             device : The device where you want train your model.
             compute_train_metrics: Whether to compute metrics on training data as well
-            using_batch_mixers : Whether using special batch_mixers like cutmix or mixup.
             seed: The seed to ensure reproducibility.
 
         Note:
@@ -53,7 +49,6 @@ class BaseState:
         self.fp16 = fp16
         self.device = device
         self.compute_train_metrics = compute_train_metrics
-        self._using_batch_mixers = using_batch_mixers
         self.seed = seed
         self.train_key = "train_"
         self.val_key = "val_"
@@ -81,14 +76,6 @@ class BaseState:
         self._metric_runner = None
         self.progress_bar = None
         self.header = None
-        if self.compute_train_metrics is True and self._using_batch_mixers is True:
-            warnings.warn(
-                "Using special batch_mixers is set to True and compute train metrics is also set to true. "
-                "Setting  compute train metrics to False."
-            )
-
-            self.compute_train_metrics = False
-
         self._compute_val_metrics = True
         self.train_dl = None
         self.valid_dl = None
@@ -148,8 +135,6 @@ class BaseState:
     def _set_criterion(self, criterion):
 
         self.criterion = get_criterion(criterion=criterion)
-        if self._using_batch_mixers:
-            self.criterion = special_augs.MixCriterion(criterion=self.criterion)
         self.loss_meter = AvgLoss()
         self.loss_meter.set_experiment(self)
 

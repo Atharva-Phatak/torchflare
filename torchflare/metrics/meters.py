@@ -157,7 +157,7 @@ class _BaseInputHandler(_BaseMetric):
 
             # Handling multilabel and binary cases
 
-            outputs = torch.sigmoid(outputs)
+            outputs = torch.sigmoid(outputs).float()
 
             outputs = (outputs >= self.threshold).long()
 

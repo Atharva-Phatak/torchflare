@@ -46,7 +46,7 @@ class Accuracy(_BaseMetric, MetricMeter):
 
         else:
 
-            outputs = torch.sigmoid(outputs)
+            outputs = torch.sigmoid(outputs.float())
             outputs = (outputs >= self.threshold).float()
 
             if self.case_type == "binary":

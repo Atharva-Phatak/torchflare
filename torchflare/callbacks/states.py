@@ -11,7 +11,10 @@ class ExperimentStates(Enum):
     EXP_END = "experiment_end"
     BATCH_START = "batch_start"
     BATCH_END = "batch_end"
+    LOADER_START = "loader_start"
+    LOADER_END = "loader_end"
     STOP = "stop"
+
 
 
 class CallbackOrder(IntEnum):
