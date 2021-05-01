@@ -2,7 +2,6 @@
 from torchflare.callbacks.callback import CallbackRunner
 from torchflare.callbacks.states import ExperimentStates
 from torchflare.callbacks.early_stopping import EarlyStopping
-from fastprogress.fastprogress import master_bar
 
 
 class DummyPipeline:
@@ -14,7 +13,6 @@ class DummyPipeline:
 
         self.cb.set_experiment(self)
         self.exp_logs = {}
-        self.master_bar = master_bar(range(10))
 
     @property
     def set_model_state(self):
@@ -63,7 +61,7 @@ class DummyPipeline:
 
 def test_on_val_loss():
 
-    es = EarlyStopping(mode = "min")
+    es = EarlyStopping(mode="min")
     trainer = DummyPipeline(cbs=[es])
 
     trainer.fit()
