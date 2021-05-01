@@ -1,10 +1,10 @@
 """Implementation of Early stopping."""
+import math
 from abc import ABC
 
 from torchflare.callbacks.callback import Callbacks
-from torchflare.callbacks.states import CallbackOrder
 from torchflare.callbacks.extra_utils import init_improvement
-import math
+from torchflare.callbacks.states import CallbackOrder
 
 
 class EarlyStopping(Callbacks, ABC):
@@ -46,12 +46,12 @@ class EarlyStopping(Callbacks, ABC):
         self.stopping_counter = 0
 
     def experiment_start(self):
+        """Start of experiment."""
         self.stopping_counter = 0
         self.best_score = math.inf if self.mode == "min" else -math.inf
 
     def epoch_end(self):
         """Function which will determine when to stop the training depending on the score."""
-
         epoch_score = self.exp.exp_logs.get(self.monitor)
         if self.improvement(epoch_score, self.best_score):
             self.best_score = epoch_score

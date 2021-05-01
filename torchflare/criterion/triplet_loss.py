@@ -78,7 +78,10 @@ class TripletLoss(nn.Module):
     """Computes Triplet loss."""
 
     def __init__(
-        self, normalize_features: bool = True, margin: float = None, hard_mining: bool = True,
+        self,
+        normalize_features: bool = True,
+        margin: float = None,
+        hard_mining: bool = True,
     ):
         """Constructor method for TripletLoss.
 

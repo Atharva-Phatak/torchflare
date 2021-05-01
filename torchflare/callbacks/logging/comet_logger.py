@@ -16,7 +16,12 @@ class CometLogger(Callbacks, ABC):
     """
 
     def __init__(
-        self, api_token: str, params: dict, project_name: str, workspace: str, tags: List[str],
+        self,
+        api_token: str,
+        params: dict,
+        project_name: str,
+        workspace: str,
+        tags: List[str],
     ):
         """Constructor for CometLogger class.
 

@@ -23,7 +23,10 @@ class TabularDataset(Dataset):
 
     @classmethod
     def from_df(
-        cls, df: pd.DataFrame, feature_cols: Union[str, List[str]], label_cols: Union[str, List[str]] = None,
+        cls,
+        df: pd.DataFrame,
+        feature_cols: Union[str, List[str]],
+        label_cols: Union[str, List[str]] = None,
     ) -> TabularDataset:
         """Classmethod to create pytorch style dataset from dataframes.
 
@@ -44,7 +47,10 @@ class TabularDataset(Dataset):
 
     @classmethod
     def from_csv(
-        cls, csv_path, feature_cols: Union[str, List[str]], label_cols: Union[str, List[str]] = None,
+        cls,
+        csv_path,
+        feature_cols: Union[str, List[str]],
+        label_cols: Union[str, List[str]] = None,
     ) -> TabularDataset:
         """Classmethod to create pytorch style dataset from csv file.
 

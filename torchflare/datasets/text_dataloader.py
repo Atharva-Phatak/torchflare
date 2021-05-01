@@ -22,7 +22,12 @@ class TextDataloader:
 
     @classmethod
     def from_df(
-        cls, df: pd.DataFrame, input_col: str, label_cols: Optional[Union[str, List[str]]], tokenizer, max_len: int,
+        cls,
+        df: pd.DataFrame,
+        input_col: str,
+        label_cols: Optional[Union[str, List[str]]],
+        tokenizer,
+        max_len: int,
     ) -> TextDataloader:
         """Classmethod to create a dataset as required by transformers for text classification tasks.
 
@@ -38,7 +43,11 @@ class TextDataloader:
         """
         return cls(
             TextClassificationDataset.from_df(
-                df=df, input_col=input_col, label_cols=label_cols, tokenizer=tokenizer, max_len=max_len,
+                df=df,
+                input_col=input_col,
+                label_cols=label_cols,
+                tokenizer=tokenizer,
+                max_len=max_len,
             )
         )
 

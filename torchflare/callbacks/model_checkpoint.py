@@ -5,8 +5,8 @@ import numpy as np
 import torch
 
 from torchflare.callbacks.callback import Callbacks
-from torchflare.callbacks.states import CallbackOrder
 from torchflare.callbacks.extra_utils import init_improvement
+from torchflare.callbacks.states import CallbackOrder
 
 
 class ModelCheckpoint(Callbacks, ABC):

@@ -49,7 +49,12 @@ setup(
     include_package_data=True,
     zip_safe=False,
     license="Apache License 2.0",
-    keywords=["Deep Learning", "Computer Vision", "Natural Language Processing", "PyTorch",],
+    keywords=[
+        "Deep Learning",
+        "Computer Vision",
+        "Natural Language Processing",
+        "PyTorch",
+    ],
     packages=find_packages(exclude=["tests", "docs"]),
     classifiers=[
         "Environment :: Console",

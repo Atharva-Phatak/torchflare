@@ -51,8 +51,7 @@ class NeptuneLogger(Callbacks, ABC):
         self.experiment[name].log(value=value, step=epoch)
 
     def epoch_end(self):
-        """Method to log metrics and values at the end of very epoch.
-        """
+        """Method to log metrics and values at the end of very epoch."""
         for key, value in self.exp.exp_logs.items():
             if key != self.exp.epoch_key:
                 epoch = self.exp.exp_logs[self.exp.epoch_key]

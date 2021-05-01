@@ -3,6 +3,7 @@
 """Imports for callbacks."""
 from torchflare.callbacks.callback import CallbackRunner, Callbacks, sort_callbacks  # isort: skip
 from torchflare.callbacks.early_stopping import EarlyStopping  # isort: skip
+from torchflare.callbacks.extra_utils import init_improvement  # isort: skip
 from torchflare.callbacks.load_checkpoint import LoadCheckpoint  # isort: skip
 from torchflare.callbacks.logging.comet_logger import CometLogger  # isort: skip
 from torchflare.callbacks.logging.neptune_logger import NeptuneLogger  # isort: skip
@@ -23,7 +24,6 @@ from torchflare.callbacks.model_history import History  # isort: skip
 from torchflare.callbacks.notifiers.message_notifiers import DiscordNotifierCallback  # isort: skip
 from torchflare.callbacks.notifiers.message_notifiers import SlackNotifierCallback
 from torchflare.callbacks.states import CallbackOrder, ExperimentStates  # isort: skip
-from torchflare.callbacks.extra_utils import init_improvement  # isort: skip
 
 from torchflare.callbacks.lr_schedulers import CosineAnnealingLR  # isort: skip; isort: skip
 

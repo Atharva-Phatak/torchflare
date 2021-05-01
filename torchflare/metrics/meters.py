@@ -75,7 +75,11 @@ class _BaseInputHandler(_BaseMetric):
     """Class to handle shapes for various classification tasks."""
 
     def __init__(
-        self, num_classes: int, threshold: float = 0.5, multilabel: bool = False, average: str = "macro",
+        self,
+        num_classes: int,
+        threshold: float = 0.5,
+        multilabel: bool = False,
+        average: str = "macro",
     ):
         """Constructor method.
 
@@ -95,7 +99,10 @@ class _BaseInputHandler(_BaseMetric):
 
     @staticmethod
     def _calculate_stats(
-        true_preds: torch.Tensor, false_preds: torch.Tensor, pos_preds: torch.Tensor, neg_preds: torch.Tensor,
+        true_preds: torch.Tensor,
+        false_preds: torch.Tensor,
+        pos_preds: torch.Tensor,
+        neg_preds: torch.Tensor,
     ):
         tp = true_preds * pos_preds
         fp = false_preds * pos_preds
@@ -105,7 +112,9 @@ class _BaseInputHandler(_BaseMetric):
         return tp, fp, tn, fn
 
     def compute_stats(
-        self, outputs: torch.Tensor, targets: torch.Tensor,
+        self,
+        outputs: torch.Tensor,
+        targets: torch.Tensor,
     ):
         """Computes true_positives, false_positives, true_negatives, false_negatives.
 

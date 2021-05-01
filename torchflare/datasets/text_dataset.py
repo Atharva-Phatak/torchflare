@@ -12,7 +12,11 @@ class TextClassificationDataset(Dataset):
     """Class to create a dataset for text classification as required by transformers."""
 
     def __init__(
-        self, inputs: List[str], tokenizer, max_len: int, labels: [Union[str, List[str]]] = None,
+        self,
+        inputs: List[str],
+        tokenizer,
+        max_len: int,
+        labels: [Union[str, List[str]]] = None,
     ):
         """Constructor Method.
 
@@ -64,7 +68,12 @@ class TextClassificationDataset(Dataset):
 
     @classmethod
     def from_df(
-        cls, df: pd.DataFrame, input_col: str, tokenizer, max_len: int, label_cols: Union[str, List[str]] = None,
+        cls,
+        df: pd.DataFrame,
+        input_col: str,
+        tokenizer,
+        max_len: int,
+        label_cols: Union[str, List[str]] = None,
     ) -> TextClassificationDataset:
         """Classmethod to create the dataset from dataframe.
 

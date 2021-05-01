@@ -16,7 +16,6 @@ class ExperimentStates(Enum):
     STOP = "stop"
 
 
-
 class CallbackOrder(IntEnum):
     """Callback orders."""
 

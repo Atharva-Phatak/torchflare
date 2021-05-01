@@ -64,8 +64,7 @@ class WandbLogger(Callbacks, ABC):
         )
 
     def epoch_end(self):
-        """Method to log metrics and values at the end of very epoch.
-        """
+        """Method to log metrics and values at the end of very epoch."""
         logs = {k: v for k, v in self.exp.exp_logs.items() if k != self.exp.epoch_key}
         self.experiment.log(logs)
 

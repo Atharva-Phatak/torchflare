@@ -245,8 +245,7 @@ class Experiment(BaseState):
         self._run_event("on_loader_end")
 
     def fp16_step(self) -> None:
-        """Method to perform mixed precision type update.
-        """
+        """Method to perform mixed precision type update."""
         self.optimizer.zero_grad()
 
         with torch.cuda.amp.autocast():

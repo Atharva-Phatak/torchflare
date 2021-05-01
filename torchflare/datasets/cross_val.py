@@ -1,5 +1,6 @@
 """Utility for cross_validation."""
 from typing import Dict, Tuple
+
 import sklearn
 import torch
 from torch.utils.data import DataLoader, Dataset
@@ -13,7 +14,7 @@ from torchflare.datasets.text_dataset import TextClassificationDataset
 class CVSplit:
     """Class to perform cross validation on given dataset."""
 
-    def __init__(self, dataset: Dataset, cv: str, n_splits: int,  **kwargs):
+    def __init__(self, dataset: Dataset, cv: str, n_splits: int, **kwargs):
         """Constructor class for CVSplit class.
 
         Args:
@@ -29,8 +30,14 @@ class CVSplit:
             ValueError if cv strategy not in the specified ones.
 
         """
-        if cv not in ["KFold", "ShuffleSplit", "StratifiedKFold", "StratifiedShuffleSplit", "RepeatedKFold",
-                      "RepeatedStratifiedKFold"]:
+        if cv not in [
+            "KFold",
+            "ShuffleSplit",
+            "StratifiedKFold",
+            "StratifiedShuffleSplit",
+            "RepeatedKFold",
+            "RepeatedStratifiedKFold",
+        ]:
             raise ValueError(f"Does not support {cv}")
         self.X, self.y = None, None
         self.cv = getattr(sklearn.model_selection, cv)(n_splits=n_splits, **kwargs)
