@@ -46,7 +46,8 @@ class IOU(MetricMeter):
         self._outputs.append(outputs)
         self._targets.append(targets)
 
-    def compute(self) -> torch.Tensor:
+    @property
+    def value(self) -> torch.Tensor:
         """Method to Compute IOU.
 
         Returns:
@@ -56,7 +57,10 @@ class IOU(MetricMeter):
         self._targets = torch.cat(self._targets)
 
         tp, fp, fn = calculate_segmentation_statistics(
-            outputs=self._outputs, targets=self._targets, threshold=self.threshold, class_dim=self.class_dim,
+            outputs=self._outputs,
+            targets=self._targets,
+            threshold=self.threshold,
+            class_dim=self.class_dim,
         )
 
         union = tp + fp + fn

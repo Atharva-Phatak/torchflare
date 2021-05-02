@@ -1,5 +1,5 @@
 from torchflare.datasets.text_dataset import TextClassificationDataset
-from torchflare.datasets.dataloaders import SimpleDataloader
+from torchflare.datasets.text_dataloader import TextDataloader
 import transformers
 import pandas as pd
 import torch
@@ -37,9 +37,9 @@ def test_data():
 
     def test_dataloader():
 
-        dl = SimpleDataloader.text_data_from_df(
+        dl = TextDataloader.from_df(
             df=df, input_col="tweet", label_cols="label", tokenizer=tokenizer, max_len=max_len
-        ).get_loader(batch_size=2 , shuffle=False)
+        ).get_loader(batch_size=2, shuffle=False)
 
         x, y = next(iter(dl))
         assert isinstance(x, dict) is True

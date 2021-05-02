@@ -9,6 +9,8 @@ from sklearn.metrics import accuracy_score
 from torchflare.metrics.accuracy_meter import Accuracy
 
 torch.manual_seed(42)
+
+
 def test_binary_inputs():
     def _test(num_classes, threshold, multilabel):
 
@@ -23,7 +25,7 @@ def test_binary_inputs():
 
         acc.accumulate(outputs=outputs, targets=targets)
 
-        acc_val = acc.compute()
+        acc_val = acc.value
         assert acc.case_type == "binary"
         # print(acc_val)
         acc_skm = accuracy_score(np_targets, np_outputs)
@@ -37,7 +39,7 @@ def test_binary_inputs():
             idx = i * bs
             acc.accumulate(outputs=outputs[idx : idx + bs], targets=targets[idx : idx + bs])
 
-        m_acc = acc.compute()
+        m_acc = acc.value
         assert acc_skm == pytest.approx(m_acc.item())
 
     for _ in range(10):
@@ -62,7 +64,7 @@ def test_multiclass_inputs():
             warnings.simplefilter("ignore", category=UndefinedMetricWarning)
             acc_skm = accuracy_score(np_targets, np_outputs)
 
-        acc_val = acc.compute()
+        acc_val = acc.value
         assert acc.case_type == "multiclass"
 
         assert acc_skm == pytest.approx(acc_val.item())
@@ -76,7 +78,7 @@ def test_multiclass_inputs():
             idx = i * bs
             acc.accumulate(outputs=outputs[idx : idx + bs], targets=targets[idx : idx + bs])
 
-        m_acc = acc.compute()
+        m_acc = acc.value
         assert acc_skm == pytest.approx(m_acc.item())
 
     for _ in range(10):
@@ -84,7 +86,6 @@ def test_multiclass_inputs():
 
 
 def test_multilabel_inputs():
-
     def _test(num_classes, threshold, multilabel):
 
         acc = Accuracy(num_classes=num_classes, threshold=threshold, multilabel=multilabel)
@@ -101,7 +102,7 @@ def test_multilabel_inputs():
             warnings.simplefilter("ignore", category=UndefinedMetricWarning)
             acc_skm = accuracy_score(np_targets, np_outputs)
 
-        acc_val = acc.compute()
+        acc_val = acc.value
         assert acc.case_type == "multilabel"
 
         assert acc_skm == pytest.approx(acc_val.item())
@@ -114,7 +115,7 @@ def test_multilabel_inputs():
         for i in range(iters):
             idx = i * bs
             acc.accumulate(outputs=outputs[idx : idx + bs], targets=targets[idx : idx + bs])
-        m_acc = acc.compute()
+        m_acc = acc.value
         assert acc_skm == pytest.approx(m_acc.item())
 
     for _ in range(10):

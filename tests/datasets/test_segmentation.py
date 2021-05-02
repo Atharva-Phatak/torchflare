@@ -7,7 +7,7 @@ import torch
 import torchvision
 
 from torchflare.datasets.segmentation import SegmentationDataset
-from torchflare.datasets.dataloaders import SimpleDataloader
+from torchflare.datasets.segmentation_dataloader import SegmentationDataloader
 
 df = pd.read_csv("tests/datasets/data/image_segmentation/csv_data/dummy.csv")
 df_inputs = collections.namedtuple(
@@ -147,7 +147,7 @@ def test_segmentation_dataloaders():
     def test_segmentation_data_from_rle():
         augmentations = A.Compose([A.Resize(256, 256)])
 
-        dl = SimpleDataloader.segmentation_data_from_rle(
+        dl = SegmentationDataloader.from_rle(
             path=df_inputs.path,
             df=df,
             image_col=df_inputs.image_col,
@@ -169,7 +169,7 @@ def test_segmentation_dataloaders():
     def test_segmentation_data_from_folders():
         augmentations = A.Compose([A.Resize(256, 256)])
 
-        dl = SimpleDataloader.segmentation_data_from_folders(
+        dl = SegmentationDataloader.from_folders(
             image_path=folder_inputs.image_path,
             mask_path=folder_inputs.mask_path,
             augmentations=augmentations,

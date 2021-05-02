@@ -57,7 +57,7 @@ def test_label_smoothing_ce():
 
 
 @pytest.mark.parametrize(
-    "criterion", [TripletLoss(), TripletLoss(hard_mining = False), FocalCosineLoss() , SymmetricCE(num_classes = 5)],
+    "criterion", [TripletLoss(), TripletLoss(hard_mining=False), FocalCosineLoss(), SymmetricCE(num_classes=5)],
 )
 def test_forward_passes(criterion):
 

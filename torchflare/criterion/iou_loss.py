@@ -33,7 +33,7 @@ class IOULoss(nn.Module):
         """
         self.iou.reset()
         self.iou.accumulate(outputs=outputs, targets=targets)
-        return 1 - self.iou.compute()
+        return 1 - self.iou.value
 
 
 __all__ = ["IOULoss"]

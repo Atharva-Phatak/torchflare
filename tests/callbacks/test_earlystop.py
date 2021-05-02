@@ -1,8 +1,7 @@
 # flake8: noqa
 from torchflare.callbacks.callback import CallbackRunner
 from torchflare.callbacks.states import ExperimentStates
-from torchflare.callbacks.early_stopping import  EarlyStopping
-from fastprogress.fastprogress import master_bar
+from torchflare.callbacks.early_stopping import EarlyStopping
 
 
 class DummyPipeline:
@@ -13,8 +12,7 @@ class DummyPipeline:
         self.cb = CallbackRunner(cbs)
 
         self.cb.set_experiment(self)
-        self._model_logs = {}
-        self.master_bar = master_bar(range(10))
+        self.exp_logs = {}
 
     @property
     def set_model_state(self):
@@ -25,9 +23,8 @@ class DummyPipeline:
     def set_model_state(self, state):
 
         self._model_state = state
-        epoch = self._model_logs.pop("Epoch") if "Epoch" in self._model_logs.keys() else None
         if self.cb is not None:
-            self.cb(current_state=self._model_state, epoch = epoch ,logs=self._model_logs)
+            self.cb(current_state=self._model_state)
 
     def fit(self):
 
@@ -54,7 +51,7 @@ class DummyPipeline:
                 "train_acc": train_acc,
             }
 
-            self._model_logs.update(logs)
+            self.exp_logs.update(logs)
             self.set_model_state = ExperimentStates.EPOCH_END
 
             if self.stop_training:
@@ -64,7 +61,7 @@ class DummyPipeline:
 
 def test_on_val_loss():
 
-    es = EarlyStopping()
+    es = EarlyStopping(mode="min")
     trainer = DummyPipeline(cbs=[es])
 
     trainer.fit()

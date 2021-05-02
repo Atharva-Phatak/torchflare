@@ -11,7 +11,11 @@ class Precision(_BaseInputHandler, MetricMeter):
     """
 
     def __init__(
-        self, num_classes: int, average: str = "macro", threshold: float = 0.5, multilabel: bool = False,
+        self,
+        num_classes: int,
+        average: str = "macro",
+        threshold: float = 0.5,
+        multilabel: bool = False,
     ):
         """Constructor method for Precision Class.
 
@@ -24,7 +28,10 @@ class Precision(_BaseInputHandler, MetricMeter):
             multilabel: Set it to True if your problem is  multilabel classification.
         """
         super(Precision, self).__init__(
-            threshold=threshold, num_classes=num_classes, multilabel=multilabel, average=average,
+            threshold=threshold,
+            num_classes=num_classes,
+            multilabel=multilabel,
+            average=average,
         )
 
         self._outputs = None
@@ -51,7 +58,8 @@ class Precision(_BaseInputHandler, MetricMeter):
         self._outputs.append(outputs)
         self._targets.append(targets)
 
-    def compute(self) -> torch.Tensor:
+    @property
+    def value(self) -> torch.Tensor:
         """Computes the Precision Score.
 
         Returns:

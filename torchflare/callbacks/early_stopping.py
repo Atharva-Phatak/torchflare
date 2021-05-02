@@ -1,8 +1,9 @@
 """Implementation of Early stopping."""
+import math
 from abc import ABC
-from typing import Dict
 
 from torchflare.callbacks.callback import Callbacks
+from torchflare.callbacks.extra_utils import init_improvement
 from torchflare.callbacks.states import CallbackOrder
 
 
@@ -10,7 +11,11 @@ class EarlyStopping(Callbacks, ABC):
     """Implementation of Early Stopping Callback."""
 
     def __init__(
-        self, monitor: str = "val_loss", patience: int = 5, mode: str = "min", min_delta: float = 1e-7,
+        self,
+        mode: str,
+        monitor: str = "val_loss",
+        patience: int = 5,
+        min_delta: float = 1e-7,
     ):
         """Constructor for EarlyStopping class.
 
@@ -36,34 +41,30 @@ class EarlyStopping(Callbacks, ABC):
         self.mode = mode
         self.min_delta = min_delta
         self.stopping_counter = 0
-        self.best_score = None
-        self.improvement = None
-        if self.mode == "min":
-
-            self.improvement = lambda score, best_score: score <= (best_score - self.min_delta)
-
-        else:
-
-            self.improvement = lambda score, best_score: score >= (best_score + self.min_delta)
+        self.improvement, self.best_score = init_improvement(mode=self.mode, min_delta=self.min_delta)
 
         self.stopping_counter = 0
 
-    def epoch_end(self, epoch: int, logs: Dict):
-        """Function which will determine when to stop the training depending on the score.
+    def experiment_start(self):
+        """Start of experiment."""
+        self.stopping_counter = 0
+        self.best_score = math.inf if self.mode == "min" else -math.inf
 
-        Args:
-            logs: A dictionary containing metrics and loss values.
-            epoch : The current epoch
-        """
-        epoch_score = logs.get(self.monitor)
-        if self.best_score is None or self.improvement(score=epoch_score, best_score=self.best_score):
-
+    def epoch_end(self):
+        """Function which will determine when to stop the training depending on the score."""
+        epoch_score = self.exp.exp_logs.get(self.monitor)
+        if self.improvement(epoch_score, self.best_score):
             self.best_score = epoch_score
+            self.stopping_counter = 0
 
         else:
-
             self.stopping_counter += 1
+            if self.stopping_counter >= self.patience:
+                print("Early Stopping !")
+                self.exp.stop_training = True
 
-        if self.stopping_counter >= self.patience:
-            print("Early Stopping !")
-            self.exp.stop_training = True
+    def experiment_end(self):
+        """Reset to defaults."""
+        self.stopping_counter = 0
+        self.best_score = None
+        self.improvement = None

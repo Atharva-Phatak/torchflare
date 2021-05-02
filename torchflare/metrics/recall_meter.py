@@ -11,7 +11,11 @@ class Recall(_BaseInputHandler, MetricMeter):
     """
 
     def __init__(
-        self, num_classes: int, average: str = "macro", threshold: float = 0.5, multilabel: bool = False,
+        self,
+        num_classes: int,
+        average: str = "macro",
+        threshold: float = 0.5,
+        multilabel: bool = False,
     ):
         """Constructor method for Precision Class.
 
@@ -24,7 +28,10 @@ class Recall(_BaseInputHandler, MetricMeter):
             multilabel: Set it to True if your problem is  multilabel classification.
         """
         super(Recall, self).__init__(
-            num_classes=num_classes, threshold=threshold, multilabel=multilabel, average=average,
+            num_classes=num_classes,
+            threshold=threshold,
+            multilabel=multilabel,
+            average=average,
         )
 
         self._outputs = None
@@ -51,7 +58,8 @@ class Recall(_BaseInputHandler, MetricMeter):
         self._outputs.append(outputs)
         self._targets.append(targets)
 
-    def compute(self) -> torch.Tensor:
+    @property
+    def value(self) -> torch.Tensor:
         """Compute the recall score.
 
         Returns:

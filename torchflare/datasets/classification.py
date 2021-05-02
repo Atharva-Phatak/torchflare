@@ -116,7 +116,10 @@ class ImageDataset(Dataset):
         img_list = cls._join_paths(path=path, file_names=df.loc[:, image_col].values, extension=extension)
         label_list = cls._get_labels_from_df(df=df, label_cols=label_cols)
         return cls(
-            image_paths_list=img_list, label_list=label_list, augmentations=augmentations, convert_mode=convert_mode,
+            image_paths_list=img_list,
+            label_list=label_list,
+            augmentations=augmentations,
+            convert_mode=convert_mode,
         )
 
     @classmethod
@@ -157,7 +160,10 @@ class ImageDataset(Dataset):
             image_list, label_list = get_files(path), None
 
         return cls(
-            image_paths_list=image_list, label_list=label_list, augmentations=augmentations, convert_mode=convert_mode,
+            image_paths_list=image_list,
+            label_list=label_list,
+            augmentations=augmentations,
+            convert_mode=convert_mode,
         )
 
     def __len__(self):

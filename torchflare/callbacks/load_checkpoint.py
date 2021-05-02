@@ -20,7 +20,7 @@ class LoadCheckpoint(Callbacks, ABC):
         self.exp.model.load_state_dict(checkpoint["model_state_dict"])
         self.exp.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
 
-        if self.exp.scheduler is not None:
-            self.exp.scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
+        if self.exp.scheduler_stepper is not None:
+            self.exp.scheduler_stepper.scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
 
         print("Successfully loaded checkpoints.")

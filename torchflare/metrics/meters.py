@@ -75,7 +75,11 @@ class _BaseInputHandler(_BaseMetric):
     """Class to handle shapes for various classification tasks."""
 
     def __init__(
-        self, num_classes: int, threshold: float = 0.5, multilabel: bool = False, average: str = "macro",
+        self,
+        num_classes: int,
+        threshold: float = 0.5,
+        multilabel: bool = False,
+        average: str = "macro",
     ):
         """Constructor method.
 
@@ -95,7 +99,10 @@ class _BaseInputHandler(_BaseMetric):
 
     @staticmethod
     def _calculate_stats(
-        true_preds: torch.Tensor, false_preds: torch.Tensor, pos_preds: torch.Tensor, neg_preds: torch.Tensor,
+        true_preds: torch.Tensor,
+        false_preds: torch.Tensor,
+        pos_preds: torch.Tensor,
+        neg_preds: torch.Tensor,
     ):
         tp = true_preds * pos_preds
         fp = false_preds * pos_preds
@@ -105,7 +112,9 @@ class _BaseInputHandler(_BaseMetric):
         return tp, fp, tn, fn
 
     def compute_stats(
-        self, outputs: torch.Tensor, targets: torch.Tensor,
+        self,
+        outputs: torch.Tensor,
+        targets: torch.Tensor,
     ):
         """Computes true_positives, false_positives, true_negatives, false_negatives.
 
@@ -157,7 +166,7 @@ class _BaseInputHandler(_BaseMetric):
 
             # Handling multilabel and binary cases
 
-            outputs = torch.sigmoid(outputs)
+            outputs = torch.sigmoid(outputs).float()
 
             outputs = (outputs >= self.threshold).long()
 
@@ -167,9 +176,7 @@ class _BaseInputHandler(_BaseMetric):
         return outputs, targets
 
 
-def calculate_segmentation_statistics(
-    outputs: torch.Tensor, targets: torch.Tensor, class_dim: int = 1, threshold=None
-):
+def calculate_segmentation_statistics(outputs: torch.Tensor, targets: torch.Tensor, class_dim: int = 1, threshold=None):
     """Compute calculate segmentation statistics.
 
     Args:
@@ -204,10 +211,6 @@ class MetricMeter:
 
     def accumulate(self, outputs, targets):
         """Method to accumulate outputs and targets per the batch."""
-        raise NotImplementedError
-
-    def compute(self):
-        """Method to compute the metric on epoch end."""
         raise NotImplementedError
 
     def reset(self):

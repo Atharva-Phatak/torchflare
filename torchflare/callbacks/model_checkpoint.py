@@ -1,18 +1,18 @@
 """Implements Model Checkpoint Callback."""
 from abc import ABC
-from typing import Dict
 
 import numpy as np
 import torch
 
 from torchflare.callbacks.callback import Callbacks
+from torchflare.callbacks.extra_utils import init_improvement
 from torchflare.callbacks.states import CallbackOrder
 
 
 class ModelCheckpoint(Callbacks, ABC):
     """Callback for Checkpointing your model."""
 
-    def __init__(self, mode: str = "min", monitor: str = "val_loss"):
+    def __init__(self, mode: str, monitor: str = "val_loss"):
         """Constructor for ModelCheckpoint class.
 
         Args:
@@ -29,7 +29,6 @@ class ModelCheckpoint(Callbacks, ABC):
 
             1) 'model_state_dict' : The state dictionary of model
             2) 'optimizer_state_dict'  : The state dictionary of optimizer
-            3) 'scheduler_state_dict' : The state dictionary of scheduler.(If used)
             4) 'Epoch' : The epoch at which model was saved.
 
             Model checkpoint will be saved based on the values of metrics/loss obtained from validation set.
@@ -42,12 +41,7 @@ class ModelCheckpoint(Callbacks, ABC):
         else:
             self.monitor = monitor
 
-        if self.mode == "max":
-            self.best_val = -np.inf
-            self.improvement = lambda val, best_val: val >= best_val + self.eps
-        else:
-            self.best_val = np.inf
-            self.improvement = lambda val, best_val: val <= best_val + self.eps
+        self.improvement, self.best_val = init_improvement(mode=self.mode, min_delta=self.eps)
 
     def checkpoint(self, epoch: int):
         """Method to save the state dictionaries of model, optimizer,etc.
@@ -55,35 +49,26 @@ class ModelCheckpoint(Callbacks, ABC):
         Args:
             epoch : The epoch at which model is saved.
         """
-        if self.exp.scheduler_stepper is not None:
-            torch.save(
-                {
-                    "model_state_dict": self.exp.model.state_dict(),
-                    "optimizer_state_dict": self.exp.optimizer.state_dict(),
-                    "scheduler_state_dict": self.exp.scheduler_stepper.scheduler.state_dict(),
-                    "Epoch": epoch,
-                },
-                self.exp.path,
-            )
+        torch.save(
+            {
+                "model_state_dict": self.exp.model.state_dict(),
+                "optimizer_state_dict": self.exp.optimizer.state_dict(),
+                "Epoch": epoch,
+            },
+            self.exp.path,
+        )
+
+    def epoch_end(self):
+        """Method to save best model depending on the monitored quantity."""
+        val = self.exp.exp_logs.get(self.monitor)
+
+        if self.improvement(score=val, best=self.best_val):
+
+            self.checkpoint(epoch=self.exp.exp_logs.get(self.exp.epoch_key))
+
+    def experiment_end(self):
+        """Reset to default."""
+        if self.mode == "max":
+            self.best_val = -np.inf
         else:
-            torch.save(
-                {
-                    "model_state_dict": self.exp.model.state_dict(),
-                    "optimizer_state_dict": self.exp.optimizer.state_dict(),
-                    "Epoch": epoch,
-                },
-                self.exp.path,
-            )
-
-    def epoch_end(self, epoch: int, logs: Dict):
-        """Method to save best model depending on the monitored quantity.
-
-        Args:
-            epoch: The current epoch.
-            logs: A dictionary containing metrics and loss values.
-        """
-        val = logs.get(self.monitor)
-
-        if self.improvement(val=val, best_val=self.best_val):
-
-            self.checkpoint(epoch=epoch)
+            self.best_val = np.inf

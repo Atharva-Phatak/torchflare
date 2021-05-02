@@ -19,7 +19,7 @@ def test_dice():
     dc.reset()
     dc.accumulate(base_outputs, base_targets)
 
-    assert actual_dice == pytest.approx(dc.compute().item())
+    assert actual_dice == pytest.approx(dc.value.item())
 
 
 def test_iou():
@@ -30,4 +30,4 @@ def test_iou():
     iou.reset()
     iou.accumulate(base_outputs, base_targets)
 
-    assert actual_iou == pytest.approx(iou.compute().item())
+    assert actual_iou == pytest.approx(iou.value.item())

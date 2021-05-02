@@ -25,7 +25,7 @@ def test_binary_inputs():
         np_outputs, np_targets = bs._compute(outputs=outputs, targets=targets)
 
         pr.accumulate(outputs=outputs, targets=targets)
-        pr_val = pr.compute()
+        pr_val = pr.value
         assert pr.case_type == "binary"
 
         pr_skm = precision_score(np_targets.numpy(), np_outputs.numpy(), average="binary")
@@ -41,7 +41,7 @@ def test_binary_inputs():
                 outputs=outputs[idx : idx + bs], targets=targets[idx : idx + bs],
             )
 
-        m_pr = pr.compute()
+        m_pr = pr.value
         assert pr_skm == pytest.approx(m_pr.item())
 
     for _ in range(10):
@@ -63,7 +63,7 @@ def test_multiclass_inputs():
 
         pr.accumulate(outputs=outputs, targets=targets)
 
-        pr_val = pr.compute()
+        pr_val = pr.value
 
         assert pr.case_type == "multiclass"
         with warnings.catch_warnings():
@@ -82,7 +82,7 @@ def test_multiclass_inputs():
             pr.accumulate(
                 outputs=outputs[idx : idx + bs], targets=targets[idx : idx + bs],
             )
-        pr_meter_val = pr.compute()
+        pr_meter_val = pr.value
         assert pr_skm == pytest.approx(pr_meter_val.item())
 
     for _ in range(10):
@@ -104,7 +104,7 @@ def test_multilabel_inputs():
 
         pr.accumulate(outputs=outputs, targets=targets)
 
-        pr_val = pr.compute()
+        pr_val = pr.value
 
         assert pr.case_type == "multilabel"
         with warnings.catch_warnings():
@@ -123,7 +123,7 @@ def test_multilabel_inputs():
             pr.accumulate(
                 outputs=outputs[idx : idx + bs], targets=targets[idx : idx + bs],
             )
-        pr_meter_val = pr.compute()
+        pr_meter_val = pr.value
         assert pr_skm == pytest.approx(pr_meter_val.item())
 
     for _ in range(10):

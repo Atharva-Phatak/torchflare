@@ -11,7 +11,12 @@ class FBeta(_BaseInputHandler, MetricMeter):
     """
 
     def __init__(
-        self, beta: float, num_classes: int, threshold: float = 0.5, average: str = "macro", multilabel: bool = False,
+        self,
+        beta: float,
+        num_classes: int,
+        threshold: float = 0.5,
+        average: str = "macro",
+        multilabel: bool = False,
     ):
         """Constructor method for Fbeta score.
 
@@ -26,7 +31,10 @@ class FBeta(_BaseInputHandler, MetricMeter):
             In case of binary classification, set num_classes = 1
         """
         super(FBeta, self).__init__(
-            num_classes=num_classes, multilabel=multilabel, threshold=threshold, average=average,
+            num_classes=num_classes,
+            multilabel=multilabel,
+            threshold=threshold,
+            average=average,
         )
 
         self.beta = beta
@@ -62,7 +70,8 @@ class FBeta(_BaseInputHandler, MetricMeter):
         self._outputs = []
         self._targets = []
 
-    def compute(self) -> torch.Tensor:
+    @property
+    def value(self) -> torch.Tensor:
         """Computes the FBeta Score.
 
         Returns:
@@ -90,7 +99,11 @@ class F1Score(_BaseInputHandler, MetricMeter):
     """
 
     def __init__(
-        self, num_classes: int, threshold: float = 0.5, multilabel: bool = False, average: str = "macro",
+        self,
+        num_classes: int,
+        threshold: float = 0.5,
+        multilabel: bool = False,
+        average: str = "macro",
     ):
         """Constructor method for F1-score.
 
@@ -101,7 +114,10 @@ class F1Score(_BaseInputHandler, MetricMeter):
             multilabel: Whether the problem is multilabel or not.
         """
         super(F1Score, self).__init__(
-            num_classes=num_classes, multilabel=multilabel, threshold=threshold, average=average,
+            num_classes=num_classes,
+            multilabel=multilabel,
+            threshold=threshold,
+            average=average,
         )
 
         self.eps = 1e-20
@@ -118,8 +134,9 @@ class F1Score(_BaseInputHandler, MetricMeter):
         """
         return self.__class__.__name__.lower()
 
-    def compute(self) -> torch.Tensor:
-        """Method to compute FBeta Score.
+    @property
+    def value(self) -> torch.Tensor:
+        """Value of FBeta Score.
 
         Returns:
             The computed F1-score

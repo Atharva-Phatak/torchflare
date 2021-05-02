@@ -29,7 +29,7 @@ class DiceLoss(nn.Module):
         """
         self.dice.reset()
         self.dice.accumulate(outputs=outputs, targets=targets)
-        return 1 - self.dice.compute()
+        return 1 - self.dice.value
 
 
 __all__ = ["DiceLoss"]

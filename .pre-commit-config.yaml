@@ -10,12 +10,7 @@ repos:
     rev: v2.4.1
     hooks:
       - id: pyupgrade
-  - repo: https://github.com/python/black
-    rev: 19.10b0
-    hooks:
-      - id: black
-        exclude: ^tests/
-        args: [ --safe, --quiet ]
+
   - repo: https://github.com/asottile/seed-isort-config
     rev: v2.1.1
     hooks:
@@ -25,7 +20,12 @@ repos:
     hooks:
       - id: isort
         exclude: ^tests/
-
+  - repo: https://github.com/python/black
+    rev: 21.4b2
+    hooks:
+      - id: black
+        exclude: ^tests/
+        args: [ --safe, --quiet ]
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.8.1
     hooks:
@@ -34,3 +34,8 @@ repos:
                                      flake8-debugger, flake8-docstrings, flake8-isort, flake8-polyfill, flake8-pytest,
                                      flake8-quotes, yesqa ]
         exclude: ^tests/
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: '1.7.0' # Update me!
+    hooks:
+      - id: bandit

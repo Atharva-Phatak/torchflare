@@ -1,9 +1,6 @@
 """Implements Model History."""
-import os
-from abc import ABC
-from typing import Dict
 
-import pandas as pd
+from abc import ABC
 
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.states import CallbackOrder
@@ -25,25 +22,11 @@ class History(Callbacks, ABC):
         for key in logs:
             if key not in self.history:
                 self.history[key] = []
-                self.history[key].append(logs[key])
+                self.history[key].append(logs.get(key))
             else:
-                self.history[key].append(logs[key])
+                self.history[key].append(logs.get(key))
 
-    def _store_history(self):
-
-        path = os.path.join(self.exp.save_dir, "history.csv")
-        df = pd.DataFrame.from_dict(self.history)
-        df.to_csv(path, index=False)
-
-    def epoch_end(self, epoch: int, logs: Dict):
-        """Method to update history object at the end of every epoch.
-
-        Args:
-            epoch: The current epoch.
-            logs: Dictionary containing the metric and loss values.1
-        """
-        self._update_history(logs=dict(Epoch=epoch, **logs))
-
-    def experiment_end(self):
-        """Method to store history object at experiment enc."""
-        self._store_history()
+    def epoch_end(self):
+        """Method to update history object at the end of every epoch."""
+        self._update_history(logs=self.exp.exp_logs)
+        self.exp.history = self.history

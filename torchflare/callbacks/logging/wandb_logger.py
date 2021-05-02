@@ -42,18 +42,30 @@ class WandbLogger(Callbacks, ABC):
 
         """
         super(WandbLogger, self).__init__(order=CallbackOrder.LOGGING)
+        self.entity = entity
+        self.project = project
+        self.name = name
+        self.config = config
+        self.tags = tags
+        self.notes = notes
+        self.dir = directory
+        self.experiment = None
+
+    def experiment_start(self):
+        """Experiment start."""
         self.experiment = wandb.init(
-            entity=entity, project=project, name=name, config=config, tags=tags, notes=notes, dir=directory
+            entity=self.entity,
+            project=self.project,
+            name=self.name,
+            config=self.config,
+            tags=self.tags,
+            notes=self.notes,
+            dir=self.dir,
         )
 
-    def epoch_end(self, epoch, logs):
-        """Method to log metrics and values at the end of very epoch.
-
-        Args:
-            logs: A dictionary containing metrics and loss values.
-            epoch: The current epoch
-        """
-        _ = logs.pop("Time")
+    def epoch_end(self):
+        """Method to log metrics and values at the end of very epoch."""
+        logs = {k: v for k, v in self.exp.exp_logs.items() if k != self.exp.epoch_key}
         self.experiment.log(logs)
 
     def experiment_end(self):
