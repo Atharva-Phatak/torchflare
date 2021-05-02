@@ -57,7 +57,7 @@ def test_experiment(tmpdir):
         )
         exp.perform_sanity_check(dl=loader)
         exp.run_experiment(train_dl=loader, valid_dl=loader)
-        exp.plot_history(key="accuracy", save_fig=True, plot_fig=False)
+        exp.plot_history(keys=["accuracy"], save_fig=True, plot_fig=False)
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     _test(device=device)
