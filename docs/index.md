@@ -49,7 +49,8 @@ Define callbacks and metrics
 metric_list = [metrics.Accuracy(num_classes=num_classes, multilabel=False),
                 metrics.F1Score(num_classes=num_classes, multilabel=False)]
 
-callbacks = [cbs.EarlyStopping(monitor="accuracy", mode="max"), cbs.ModelCheckpoint(monitor="accuracy")]
+callbacks = [cbs.EarlyStopping(monitor="accuracy", mode="max"), cbs.ModelCheckpoint(monitor="accuracy", mode = "max"),
+            cbs.ReduceLROnPlateau(mode="max",  patience = 2)]
 ```
 
 Define your experiment
@@ -60,7 +61,6 @@ exp = Experiment(
     save_dir="./models",
     model_name="model.bin",
     fp16=False,
-    using_batch_mixers=False,
     device="cuda",
     compute_train_metrics=True,
     seed=42,
@@ -72,8 +72,6 @@ exp.compile_experiment(
     optimizer="Adam",
     optimizer_params=dict(lr=3e-4),
     callbacks=callbacks,
-    scheduler="ReduceLROnPlateau",
-    scheduler_params=dict(mode="max", patience=5),
     criterion="cross_entropy",
     metrics=metric_list,
     main_metric="accuracy",
@@ -84,25 +82,23 @@ exp.compile_experiment(
 exp.run_experiment(train_dl=train_dl, valid_dl= valid_dl)
 ```
 
-For inference you can use infer method, which yields output per batch. You can use it as follows
+For inference, you can use infer method, which yields output per batch. You can use it as follows
 ``` python
 outputs = []
 
-for op in exp.infer(test_loader=test_dl , path='./models/model.bin' , device = 'cuda'):
+for op in exp.infer(test_dl=test_dl , path='./models/model.bin' , device = 'cuda'):
     op = some_post_process_function(op)
     outputs.extend(op)
 
 ```
 
-Experiment class internally saves a history.csv file which includes your training and validation metrics per epoch.
-This file can be found in same directory as ***save_dir*** argument.
 
 If you want to access your experiments history or plot it. You can do it as follows.
 ``` python
 
-history = exp.history.history # This will return a dict
+history = exp.history # This will return a dict
 
 # If you want to plot progress of particular metric as epoch progress use this.
 
-exp.plot_history(key = "accuracy" , save_fig = False , plot_fig = True)
+exp.plot_history(keys= ["accuracy"] , save_fig = False , plot_fig = True)
 ```

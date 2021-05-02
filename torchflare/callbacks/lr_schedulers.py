@@ -45,9 +45,7 @@ class LRSchedulerCallback(Callbacks, ABC):
 
 
 class LambdaLR(LRSchedulerCallback, ABC):
-    """LambdaLR scheduler.
-
-    Multiply learning rate by a factor computed with a given function.
+    """Multiply learning rate by a factor computed with a given function.
     The function should take int value number of epochs as the only argument.
     """
 
@@ -72,10 +70,7 @@ class LambdaLR(LRSchedulerCallback, ABC):
 
 
 class StepLR(LRSchedulerCallback, ABC):
-    """StepLR scheduler.
-
-    Multiply learning rate by a given factor with a given period.
-    """
+    """Multiply learning rate by a given factor with a given period."""
 
     def __init__(self, step_size: int, gamma: float = 0.1, last_epoch: int = -1, step_on_batch: bool = False):
         """Constructor for StepLR.
@@ -94,10 +89,7 @@ class StepLR(LRSchedulerCallback, ABC):
 
 
 class MultiStepLR(LRSchedulerCallback, ABC):
-    """MultiStepLR scheduler.
-
-    Multiply learning rate by a given factor on each epoch from a given list.
-    """
+    """Multiply learning rate by a given factor on each epoch from a given list."""
 
     def __init__(
         self, milestones: Iterable[int], gamma: float = 0.1, last_epoch: int = -1, step_on_batch: bool = False
@@ -118,10 +110,7 @@ class MultiStepLR(LRSchedulerCallback, ABC):
 
 
 class ExponentialLR(LRSchedulerCallback, ABC):
-    """MultiStepLR scheduler.
-
-    Multiply learning rate by a given factor on each epoch.
-    """
+    """Multiply learning rate by a given factor on each epoch."""
 
     def __init__(self, gamma: float, last_epoch: int = -1, step_on_batch: bool = False):
         """Constructor for ExponentialLR.
@@ -138,10 +127,7 @@ class ExponentialLR(LRSchedulerCallback, ABC):
 
 
 class CosineAnnealingLR(LRSchedulerCallback, ABC):
-    """CosineAnnealingLR scheduler.
-
-    Set the learning rate of each parameter group using a cosine annealing schedule.
-    """
+    """Set the learning rate of each parameter group using a cosine annealing schedule."""
 
     def __init__(self, T_max: int, eta_min: float = 0, last_epoch: int = -1, step_on_batch: bool = True):  # noqa
         """Constructor for CosineAnnealingLR.
@@ -160,10 +146,7 @@ class CosineAnnealingLR(LRSchedulerCallback, ABC):
 
 
 class ReduceLROnPlateau(LRSchedulerCallback, ABC):
-    """ReduceLROnPlateau scheduler.
-
-    Reduce learning rate when a metric has stopped improving.
-    """
+    """Reduce learning rate when a metric has stopped improving."""
 
     def __init__(
         self,
@@ -216,10 +199,7 @@ class ReduceLROnPlateau(LRSchedulerCallback, ABC):
 
 
 class CyclicLR(LRSchedulerCallback, ABC):
-    """CyclicLR scheduler.
-
-    Sets the learning rate of each parameter group according to cyclical learning rate policy.
-    """
+    """Sets the learning rate of each parameter group according to cyclical learning rate policy."""
 
     def __init__(
         self,
@@ -288,10 +268,7 @@ class CyclicLR(LRSchedulerCallback, ABC):
 
 
 class CosineAnnealingWarmRestarts(LRSchedulerCallback, ABC):
-    """CosineAnnealingLR scheduler.
-
-    Set the learning rate of each parameter group using a cosine annealing schedule with a warm restart.
-    """
+    """Set the learning rate of each parameter group using a cosine annealing schedule with a warm restart."""
 
     def __init__(
         self, T_0: int, T_mult: int = 1, eta_min: int = 0, last_epoch: int = -1, step_on_batch: bool = True
@@ -315,10 +292,7 @@ class CosineAnnealingWarmRestarts(LRSchedulerCallback, ABC):
 
 
 class MultiplicativeLR(LRSchedulerCallback, ABC):
-    """MultiplicativeLR scheduler.
-
-    Multiply the learning rate of each parameter group by the factor given in the specified function.
-    """
+    """Multiply the learning rate of each parameter group by the factor given in the specified function."""
 
     def __init__(
         self,
@@ -343,9 +317,7 @@ class MultiplicativeLR(LRSchedulerCallback, ABC):
 
 
 class OneCycleLR(LRSchedulerCallback, ABC):
-    """OneCycleLR scheduler.
-
-    Sets the learning rate of each parameter group according to the 1cycle learning rate policy.
+    """Sets the learning rate of each parameter group according to the 1cycle learning rate policy.
     The 1cycle policy anneals
     the learning rate from an initial learning rate to some maximum learning rate
     and then from that maximum learning rate to some minimum learning rate much lower than the initial learning rate.

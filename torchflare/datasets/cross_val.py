@@ -24,7 +24,8 @@ class CVSplit:
             **kwargs: keyword arguments related to cross validation strategy.
 
         Note:
-            Only supports KFold, ShuffleSplit, StratifiedKFold, StratifiedShuffleSplit cross validation scheme.
+            Only supports KFold, ShuffleSplit, StratifiedKFold, StratifiedShuffleSplit, RepeatedKFold,
+            RepeatedStratifiedKFold cross validation schemes.
 
         Raises:
             ValueError if cv strategy not in the specified ones.

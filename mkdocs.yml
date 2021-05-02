@@ -21,7 +21,9 @@ theme:
     code: Ubuntu
   features:
     - navigation.tabs
-    - navigation.expand
+    - navigation.sections
+    - navigation.top
+
 
 
 plugins:
@@ -91,7 +93,12 @@ nav:
         - SegmentationDataset: './datasets/segmentation_data.md'
         - TabularDataset: './datasets/tabular_data.md'
         - TextClassificationDataset: './datasets/text_data.md'
-    - SimpleDataloader: './dataloader.md'
+        - CrossValidation: './datasets/cross_val.md'
+    - Dataloaders:
+        - ImageData: './dataloaders/image_data.md'
+        - SegmentationData: './dataloaders/segmentation_data.md'
+        - TabularData: './dataloaders/tabular_data.md'
+        - TextData: './dataloaders/text_data.md'
     - Metrics:
         - Classification:
             - Accuracy: './metrics/classification/accuracy.md'
@@ -123,7 +130,18 @@ nav:
             - NeptuneLogger: './callbacks/logging/neptune_logger.md'
             - TensorboardLogger: './callbacks/logging/tensorboard_logger.md'
             - WandbLogger: './callbacks/logging/wandb_logger.md'
-    - Batch Mixers: './batch_mixers/batch_mixer.md'
+        - Schedulers:
+            - LRSchedulerCallback: './callbacks/LRScheduler/schedulers.md'
+            - LambdaLR: './callbacks/LRScheduler/lambda_lr.md'
+            - StepLR: './callbacks/LRScheduler/step_lr.md'
+            - MultiplicativeLR: './callbacks/LRScheduler/multiplicative_lr.md'
+            - MultiStepLR: './callbacks/LRScheduler/multistep_lr.md'
+            - ExponentialLR: './callbacks/LRScheduler/exponential_lr.md'
+            - ReduceLROnPlateau: './callbacks/LRScheduler/reduce_lr.md'
+            - CosineAnnealingLR: './callbacks/LRScheduler/cosineannealing_lr.md'
+            - CosineAnnealingWarmRestarts: './callbacks/LRScheduler/cosinewarm_lr.md'
+            - CyclicLR: './callbacks/LRScheduler/cyclic_lr.md'
+            - OneCycleLR: './callbacks/LRScheduler/onecycle_lr.md'
     - Modules:
         - ArcFace: './modules/arcface.md'
         - CosFace: './modules/cosface.md'
@@ -131,10 +149,10 @@ nav:
         - AMSoftmax: './modules/am_softmax.md'
         - Sqeeze and Excitation Blocks: './modules/se_modules.md'
   - Tutorials:
-      - Image Data: './Tutorials/image_classification.md'
-      - Text Data: './Tutorials/text_classification.md'
-      - Tabular Data: './Tutorials/tabular_data.md'
-      - hydra: './Tutorials/hydra.md'
+      - Image classification: './Tutorials/image_classification.md'
+      - Text Classification: './Tutorials/Imdb_classification.md'
+      - Tabular Classification: './Tutorials/tabular_classification.md'
+      - Parameter management with Hydra: './Tutorials/image_classification_hydra.md'
 
 # Extra CSS
 extra_css:

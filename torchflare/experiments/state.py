@@ -164,30 +164,31 @@ class BaseState:
         if bool(self.exp_logs):
             self.exp_logs = {}
 
-    def plot_history(self, key: str, save_fig: bool = False, plot_fig: bool = True):
+    def plot_history(self, keys: List[str], save_fig: bool = False, plot_fig: bool = True):
         """Method to plot model history.
 
         Args:
-            key : A key value in lower case. Ex accuracy or loss
+            keys: A key value in lower case. Ex accuracy or loss
             save_fig: Set to True if you want to save_fig.
             plot_fig: Whether to plot the figure.
         """
-        plt.style.use("seaborn")
-        plt.figure()
-        for k, v in self.history.items():
-            if key in k:
-                plt.plot(v, "-o", label=k)
-        plt.title(f"{key.upper()}/{self.epoch_key.upper()}", fontweight="bold")
-        plt.ylabel(f"{key.upper()}", fontweight="bold")
-        plt.xlabel(self.epoch_key.upper(), fontweight="bold")
-        plt.grid(True)
-        plt.legend(loc="upper left")
+        for key in keys:
+            plt.style.use("seaborn")
+            plt.figure()
+            for k, v in self.history.items():
+                if key in k:
+                    plt.plot(self.history.get(self.epoch_key), v, "-o", label=k)
+            plt.title(f"{key.upper()}/{self.epoch_key.upper()}", fontweight="bold")
+            plt.ylabel(f"{key.upper()}", fontweight="bold")
+            plt.xlabel(self.epoch_key.upper(), fontweight="bold")
+            plt.grid(True)
+            plt.legend(loc="upper left")
 
-        if save_fig is not None:
-            save_path = os.path.join(self.save_dir, f"{key}-vs-{self.epoch_key.lower()}.jpg")
-            plt.savefig(save_path, dpi=150)
-        if plot_fig:
-            plt.show()
+            if save_fig is not None:
+                save_path = os.path.join(self.save_dir, f"{key}-vs-{self.epoch_key.lower()}.jpg")
+                plt.savefig(save_path, dpi=150)
+            if plot_fig:
+                plt.show()
 
 
 __all__ = ["BaseState"]

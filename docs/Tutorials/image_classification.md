@@ -1,49 +1,122 @@
-# Image Classification with torchflare
+# Image Classification on CIFAR-10
+* Dataset : <https://www.kaggle.com/c/cifar-10>
 
-Hey there, this tutorial will guide on how to do image classification using torchflare.
-
-Dataset: <https://www.kaggle.com/c/cifar-10>
-
-
-* ### Importing Libraries
+***
+#### Importing Libraries
 ``` python
-import numpy as np
+import torch
+from torchflare.datasets import ImageDataloader , show_batch
+import torchflare.callbacks as cbs
 import pandas as pd
-import albumentations as A
-from sklearn.model_selection import train_test_split
 
+from sklearn.model_selection import train_test_split
 import torch.nn as nn
 import torch.nn.functional as F
+import torchvision.models as models
 import torchvision.transforms as transforms
-
-from torchflare.datasets import SimpleDataloader, show_batch
 from torchflare.experiments import Experiment
-import torchflare.callbacks as cbs
-from torchflare.metrics import Accuracy
+import torchflare.metrics as metrics
 ```
 
-* ### Loading and Preparing the dataset
-
 ``` python
-df = pd.read_csv("trainLabels.csv")
+%load_ext nb_black
+```
+
+
+
+#### Reading data and preprocessing.
+``` python
+df = pd.read_csv("dataset/trainLabels.csv")
 classes = df.label.unique().tolist()
 class_to_idx = {value: key for key, value in enumerate(classes)}
 df.label = df.label.map(class_to_idx)
 df.id = df.id.astype(str)
-df = df.sample(frac=1).reset_index(drop=True)  # Shuffling the dataframe
-
-test_df = df.iloc[:10000, :]  # I took first 10000 entries as test data
-data_df = df.iloc[10000:, :]
-train_df, valid_df = train_test_split(
-    data_df, test_size=0.3
-)  # Splitting into train and validation data.
+df = df.sample(frac=1).reset_index(drop=True)
 ```
 
-* ### Defining a Simple Model.
+
+
+#### Splitting data into train and validation
+``` python
+test_df = df.iloc[:10000, :]  # I took first 10000 entries as test data
+data_df = df.iloc[10000:, :]
+train_df, valid_df = train_test_split(data_df, test_size=0.3)
+```
+
+
+#### Defining augmentations
+``` python
+train_transform = transforms.Compose(
+    [
+        transforms.ToTensor(),
+        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+    ]
+)
+
+valid_transform = transforms.Compose([transforms.ToTensor()])
+```
+
+
+#### Creating Training, validation and Test dataloaders.
+``` python
+# Creating Training Dataloader.
+
+train_dl = ImageDataloader.from_df(
+    path="dataset/train",
+    image_col="id",
+    label_cols="label",
+    augmentations=train_transform,
+    df=train_df,
+    extension=".png",
+    convert_mode="RGB",
+).get_loader(batch_size=32, shuffle=True, num_workers = 0)
+
+# Creating Validation Dataloader.
+
+valid_dl = ImageDataloader.from_df(
+    path="dataset/train",
+    image_col="id",
+    label_cols="label",
+    augmentations=valid_transform,
+    df=valid_df,
+    extension=".png",
+    convert_mode="RGB",
+).get_loader(batch_size=32, shuffle = False,num_workers=0)
+
+# Creating Test Dataloader.
+
+test_dl = ImageDataloader.from_df(
+    path="dataset/train",
+    image_col="id",
+    label_cols=None,  # Setting label_cols as None since we wont have labels for test data.
+    augmentations=valid_transform,
+    df=test_df,
+    extension=".png",
+    convert_mode="RGB",
+).get_loader(batch_size=16, num_workers=0)
+
+```
+
+#### Visualizing batch of training data.
+``` python
+show_batch(train_dl)
+```
+
+    Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers).
+
+
+
+
+![png](image_classification_files/image_classification_6_1.png)
+
+
+
+#### Defining Network architecture.
+
 ``` python
 class Net(nn.Module):
     def __init__(self):
-        super(Net, self).__init__()
+        super().__init__()
         self.conv1 = nn.Conv2d(3, 6, 5)
         self.pool = nn.MaxPool2d(2, 2)
         self.conv2 = nn.Conv2d(6, 16, 5)
@@ -63,140 +136,84 @@ class Net(nn.Module):
 
 net = Net()
 ```
-* ### Defining basic transforms.
+
+
+#### Defining metrics and callbacks.
 ``` python
-train_transform = transforms.Compose(
-    [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
-)
 
-valid_transform = transforms.Compose([transforms.ToTensor()])
-```
-* ### Creating Dataloaders
-
-We will be using SimpleDataloaders from torchflare to easily create the dataloaders.
-``` python
-# Creating Training Dataloader.
-
-train_dl = SimpleDataloader.image_data_from_df(
-    path="./train",
-    image_col="id",
-    label_cols="label",
-    augmentations=train_transform,
-    df=train_df,
-    extension=".png",
-    convert_mode="RGB",
-).get_loader(batch_size=32, shuffle=True, num_workers = 0)
-
-# Creating Validation Dataloader.
-
-valid_dl = SimpleDataloader.image_data_from_df(
-    path="./train",
-    image_col="id",
-    label_cols="label",
-    augmentations=valid_transform,
-    df=valid_df,
-    extension=".png",
-    convert_mode="RGB",
-).get_loader(batch_size=16, num_workers=0)
-
-# Creating Test Dataloader.
-
-test_dl = SimpleDataloader.image_data_from_df(
-    path="./train",
-    image_col="id",
-    label_cols=None,  # Setting label_cols as None since we wont have labels for test data.
-    augmentations=valid_transform,
-    df=test_df,
-    extension=".png",
-    convert_mode="RGB",
-).get_loader(batch_size=16, num_workers=0)
-```
-
-Visualizing a batch from train dataloader.
-``` python
-show_batch(train_dl)
-```
-![batch](./images/cifar10-batch.png)
-
-* ### Defining Callbacks and metrics.
-
-We will be using callbacks and metrics defined in torchflare library.
-
-``` python
-metric_list = [Accuracy(num_classes=len(classes), multilabel=False)]
+metric_list = [metrics.Accuracy(num_classes=len(classes), multilabel=False)]
 
 callbacks = [
-    cbs.EarlyStopping(monitor=acc.handle(), patience=5),
-    cbs.ModelCheckpoint(monitor=acc.handle()),
+    cbs.EarlyStopping(monitor="accuracy", mode = "max",patience=5),
+    cbs.ModelCheckpoint(monitor="accuracy", mode = "max"),
+    cbs.ReduceLROnPlateau(mode="max" , patience = 2)
 ]
+
 ```
 
-* ### Setting up the experiment and Training our model.
-***
-**1. The first step is to setup some constants and params for the experiment.**
 
+### Defining, compiling and running the experiment.
 ``` python
 exp = Experiment(
     num_epochs=5,
     save_dir="./models",
     model_name="cifar10.bin",
-    fp16=False,
-    using_batch_mixers=False,
+    fp16=True,
     device="cuda",
     compute_train_metrics=True,
     seed=42,
 )
-```
-
-**2. We will compile our experiment where we will define our optimizer, scheduler,etc**
-
-``` python
 exp.compile_experiment(
     model=net,
     optimizer="Adam",
     optimizer_params=dict(lr=3e-4),
     callbacks=callbacks,
-    scheduler="ReduceLROnPlateau",
-    scheduler_params=dict(mode="max", patience=5),
     criterion="cross_entropy",
     metrics=metric_list,
     main_metric="accuracy",
 )
-```
-
-**3. This step is optional, but it's good to perform a check to see if the
-       defined model's forward pass is working or not and check if loss computation
-       is working.**
-
-``` python
-exp.perform_sanity_check(train_dl)
-```
-
-
-**4. Now we run our experiment with our training and validation dataloaders. We use fastprogress as our progress bar hence the output will be like fast.ai,
-       a nice table with our metrics, loss and time.**
-
-``` python
 exp.run_experiment(train_dl=train_dl, valid_dl=valid_dl)
+
+
+
 ```
-![progress bar](./images/progress-bar.png)
 
-**5. The infer method yields output of every batch so that you can perform any kind of post-processing
-           on your outputs.**
 
+    Epoch: 1/5
+    Train: 875/875 [=========================]- 139s 159ms/step - train_loss: 1.8800 - train_accuracy: 0.3141
+    Valid: 375/375 [=========================]- 47s 124ms/step - val_loss: 2.4238 - val_accuracy: 0.2670
+
+    Epoch: 2/5
+    Train: 875/875 [=========================]- 11s 13ms/step - train_loss: 1.5838 - train_accuracy: 0.3309
+    Valid: 375/375 [=========================]- 3s 8ms/step - val_loss: 2.2545 - val_accuracy: 0.3120
+
+    Epoch: 3/5
+    Train: 875/875 [=========================]- 11s 13ms/step - train_loss: 1.4719 - train_accuracy: 0.3528
+    Valid: 375/375 [=========================]- 3s 8ms/step - val_loss: 2.3558 - val_accuracy: 0.3385
+
+    Epoch: 4/5
+    Train: 875/875 [=========================]- 12s 13ms/step - train_loss: 1.3983 - train_accuracy: 0.3684
+    Valid: 375/375 [=========================]- 3s 8ms/step - val_loss: 2.1588 - val_accuracy: 0.3598
+
+    Epoch: 5/5
+    Train: 875/875 [=========================]- 12s 14ms/step - train_loss: 1.3391 - train_accuracy: 0.3833
+    Valid: 375/375 [=========================]- 3s 9ms/step - val_loss: 2.2122 - val_accuracy: 0.3756
+
+
+
+
+
+
+#### Plotting experiment history.
 ``` python
-ops = []
-# Since infer method yeilds we use a for loop.
-for op in exp.infer(path="./models/cifar10.bin", test_loader=test_dl):
-    op = post_process_func(op)
-    ops.extend(y_pred)
+keys = ["loss", "accuracy"]
+exp.plot_history(keys=keys, plot_fig=True, save_fig=False)
 ```
 
-**6. Want to visualize model history ?**
 
-``` python
-# I want to visualize train_accuracy/valid_accuracy against epochs.
-exp.plot_history(key = "accuracy" , save_fig = False , plot_fig = True)
-```
 
-* ***[Notebook](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification.ipynb) is available in examples folder.***
+![png](image_classification_files/image_classification_10_0.png)
+
+
+
+![png](image_classification_files/image_classification_10_1.png)

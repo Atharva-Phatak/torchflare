@@ -108,9 +108,9 @@ class SegmentationDataloader:
         """Method to get dataloader.
 
         Args:
-            batch_size(int): The batch size to use
-            shuffle(bool): Whether to shuffle the inputs.
-            **dl_params(dict) : Keyword arguments related to dataloader
+            batch_size: The batch size to use
+            shuffle: Whether to shuffle the inputs.
+            **dl_params : Keyword arguments related to dataloader
 
         Returns:
             A PyTorch dataloader with given arguments.

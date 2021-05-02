@@ -31,8 +31,6 @@ model = SomeModel()
 # Defining params
 optimizer = "Adam"
 optimizer_params = dict(lr=1e-4)
-scheduler = "ReduceLROnPlateau"
-scheduler_params = dict(mode="max")
 criterion = "cross_entropy"
 num_epochs = 10
 num_classes = 4
@@ -46,7 +44,8 @@ metric_list = [
 # Defining the list of callbacks
 callbacks = [
     cbs.EarlyStopping(monitor="accuracy", mode="max"),
-    cbs.ModelCheckpoint(monitor="accuracy"),
+    cbs.ModelCheckpoint(monitor="accuracy", mode = "max"),
+    cbs.ReduceLROnPlateau(mode = "max" , patience = 3) #Defining Scheduler callback.
 ]
 
 # Creating Experiment and setting the params.
@@ -57,7 +56,6 @@ exp = Experiment(
     fp16=True,
     device=device,
     seed=42,
-    using_batch_mixers=False,
     compute_train_metrics=False,
 )
 
@@ -69,8 +67,6 @@ exp.compile_experiment(
     main_metric="accuracy",
     optimizer=optimizer,
     optimizer_params=optimizer_params,
-    scheduler=scheduler,
-    scheduler_params=scheduler_params,
     criterion=criterion,
 )
 
