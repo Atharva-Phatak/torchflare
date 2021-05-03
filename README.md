@@ -89,7 +89,6 @@ exp = Experiment(
     save_dir="./models",
     model_name="model.bin",
     fp16=False,
-    using_batch_mixers=False,
     device="cuda",
     compute_train_metrics=True,
     seed=42,
