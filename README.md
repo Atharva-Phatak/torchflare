@@ -30,16 +30,24 @@ your models with all the callbacks, metrics, etc
 
 Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU support will be coming soon!
 
-**Note :**  ***This library is in its nascent stage. So, there might be breaking changes.***
-
+***
 ### ***Installation***
 
     pip install torchflare
 
+***
 ### ***Documentation***
 
 The Documentation is available [here](https://atharva-phatak.github.io/torchflare/)
 
+***
+### ***Stability***
+
+The library isn't mature or stable for production use yet. 
+
+The best of the library currently would be for **non production use and rapid prototyping**.
+
+***
 ### ***Getting Started***
 
 The core idea around TorchFlare is the [Experiment](/torchflare/experiments/experiment.py)
@@ -130,9 +138,31 @@ history = exp.history # This will return a dict
 exp.plot_history(keys = ["loss" , "accuracy"] , save_fig = False , plot_fig = True)
 ```
 
-
+***
 ### ***Examples***
 * [Image Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification.ipynb) on CIFAR-10 using TorchFlare.
 * [Text Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Imdb_classification.ipynb) on IMDB data.
 * [Binary Classification of Tabular Data](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/tabular_classification.ipynb) on previous [kaggle competition](https://www.kaggle.com/c/cat-in-the-dat-ii/overview)
 * Tutorial on using [Hydra and TorchFlare](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification_hydra.ipynb) for efficient workflow and parameter management.
+
+***
+### ***Current Contributors***
+
+<a href="https://github.com/Atharva-Phatak/torchflare/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Atharva-Phatak/torchflare" />
+</a>
+
+
+***
+### ***Contribution***
+
+Contributions are always welcomed, it would be great to have people use and contribute to this project to help users understand and benefit from the library.
+
+#### How to contribute
+- ***Create an issue:*** If you have a new feature in mind, feel free to open an issue and add some short description on what that feature could be.
+- ***Create a PR***: If you have a bug fix, enhancement or new feature addition, create a Pull Request and the maintainers of the repo, would review and merge them.
+
+***
+### ***Author***
+
+* **Atharva Phatak** - [Atharva-Phatak](https://github.com/Atharva-Phatak)
