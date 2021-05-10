@@ -1,5 +1,5 @@
 mkdocs==1.1.2
-mkdocs-autorefs==0.1.1
+mkdocs-autorefs==0.2.1
 mkdocs-macros-plugin==0.5.5
 mkdocs-macros-test==0.1.0
 mkdocs-material==7.1.3
