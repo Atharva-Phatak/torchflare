@@ -1,6 +1,5 @@
 # flake8: noqa
 from torchflare.callbacks.callback import CallbackRunner
-from torchflare.callbacks.states import ExperimentStates
 from torchflare.callbacks.early_stopping import EarlyStopping
 
 
