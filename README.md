@@ -144,6 +144,8 @@ exp.plot_history(keys = ["loss" , "accuracy"] , save_fig = False , plot_fig = Tr
 * [Text Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Imdb_classification.ipynb) on IMDB data.
 * [Binary Classification of Tabular Data](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/tabular_classification.ipynb) on previous [kaggle competition](https://www.kaggle.com/c/cat-in-the-dat-ii/overview)
 * Tutorial on using [Hydra and TorchFlare](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification_hydra.ipynb) for efficient workflow and parameter management.
+* Tutorial on [fit methods](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-Classification.ipynb) and how to dispatch training progress to Discord Channel.
+* [Variational Autoencoders](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-VAE.ipynb) on MNIST data.
 
 ***
 ### ***Current Contributors***
