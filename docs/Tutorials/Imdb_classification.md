@@ -131,7 +131,7 @@ exp.compile_experiment(
 )
 
 # Training the models.
-exp.run_experiment(train_dl = train_dl , valid_dl = valid_dl)
+exp.fit_loader(train_dl = train_dl , valid_dl = valid_dl)
 ```
 
 

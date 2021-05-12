@@ -24,5 +24,5 @@ def test_comet():
         f1 += 10
 
         loss = loss / 10
-        logger.epoch_end(epoch=epoch, logs=d)
-    logger.experiment_end()
+        logger.on_epoch_end()
+    logger.on_experiment_end()

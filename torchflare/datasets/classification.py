@@ -9,7 +9,7 @@ import pandas as pd
 import torchvision
 from torch.utils.data import Dataset
 
-from torchflare.datasets.utils import apply_augmentations, open_image, to_tensor
+from torchflare.datasets.utils import apply_image_transforms, open_image, to_tensor
 
 
 def get_files(directory: str):
@@ -54,8 +54,8 @@ class ImageDataset(Dataset):
             augmentations : The augmentations to apply to the images.
             convert_mode: The mode in which the image is opened.
         """
-        self.label_list = label_list
-        self.image_list = image_paths_list
+        self.labels = label_list
+        self.inputs = image_paths_list
         self.augmentations = augmentations
         self.convert_mode = convert_mode
 
@@ -172,7 +172,7 @@ class ImageDataset(Dataset):
         Returns:
             length of dataloader.
         """
-        return len(self.image_list)
+        return len(self.inputs)
 
     def __getitem__(self, item: int):
         """__getitem__ method.
@@ -183,12 +183,12 @@ class ImageDataset(Dataset):
         Returns:
             Tensors of Image , labels if labels are present else Tensors of Images.
         """
-        images = open_image(self.image_list[item], convert_mode=self.convert_mode)
-        images = apply_augmentations(images, augs=self.augmentations, mask=None)
-        if self.label_list is None:
+        images = open_image(self.inputs[item], convert_mode=self.convert_mode)
+        images = apply_image_transforms(images, augs=self.augmentations)
+        if self.labels is None:
             return images
 
-        labels = self.label_list[item]
+        labels = self.labels[item]
         return images, to_tensor(labels)
 
 

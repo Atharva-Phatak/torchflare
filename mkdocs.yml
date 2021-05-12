@@ -156,6 +156,7 @@ nav:
       - Text Classification: './Tutorials/Imdb_classification.md'
       - Tabular Classification: './Tutorials/tabular_classification.md'
       - Parameter management with Hydra: './Tutorials/image_classification_hydra.md'
+      - How to use fit methods: './Tutorials/MNIST-Classification.md'
       - GradCam & GradCamPP: './Tutorials/Cam-Tutorials.md'
 
 # Extra CSS

@@ -31,7 +31,7 @@ folder_inputs = folder_inputs(
 
 
 def test_from_df():
-    def test_augmentations_augs():
+    def test_albumentations_augs():
         augmentations = A.Compose([A.Resize(256, 256)])
 
         ds = SegmentationDataset.from_rle(
@@ -77,7 +77,7 @@ def test_from_df():
         assert y.shape == (df_inputs.num_classes, 256, 256)
 
     def test_inference():
-
+        augmentations = torchvision.transforms.Compose([torchvision.transforms.Resize((256, 256))])
         ds = SegmentationDataset.from_rle(
             path=df_inputs.path,
             df=df,
@@ -86,7 +86,7 @@ def test_from_df():
             extension=df_inputs.extension,
             mask_size=None,
             num_classes=None,
-            augmentations=None,
+            augmentations=augmentations,
             image_convert_mode="RGB",
         )
         x = ds[0]
@@ -95,7 +95,7 @@ def test_from_df():
         assert len(x.shape) == 3
 
     test_torchvision_augs()
-    test_augmentations_augs()
+    test_albumentations_augs()
     test_inference()
 
 

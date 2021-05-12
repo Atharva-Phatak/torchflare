@@ -1,5 +1,4 @@
 """Implementation of Callbacks and CallbackRunner."""
-from enum import Enum
 from typing import List
 
 
@@ -32,43 +31,43 @@ class Callbacks:
         self.exp = exp
 
     # skipcq: PTC-W0049
-    def batch_start(self):
+    def on_batch_start(self):
         """Start of batch."""
         # skipcq: PYL-W0107
         pass
 
     # skipcq: PTC-W0049
-    def batch_end(self):
+    def on_batch_end(self):
         """End of Batch."""
         pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
-    def loader_start(self):
+    def on_loader_start(self):
         """Start of loader."""
         pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
-    def loader_end(self):
+    def on_loader_end(self):
         """End of loader."""
         pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
-    def epoch_start(self):
+    def on_epoch_start(self):
         """Start of Epoch."""
         pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
-    def epoch_end(self):
+    def on_epoch_end(self):
         """End of epoch."""
         pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
-    def experiment_start(self):
+    def on_experiment_start(self):
         """Start of experiment."""
         pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
-    def experiment_end(self):
+    def on_experiment_end(self):
         """End of experiment."""
         pass  # skipcq: PYL-W0107
 
@@ -88,10 +87,10 @@ class CallbackRunner:
         for cb in self.callbacks:
             cb.set_experiment(exp)
 
-    def __call__(self, current_state: Enum):
+    def __call__(self, current_state: str):
         """Runs callbacks depending on the current experiment state."""
         for cb in self.callbacks:
             try:
-                _ = getattr(cb, current_state.value)()
+                _ = getattr(cb, current_state)()
             except AttributeError:
                 pass

@@ -6,16 +6,17 @@ from typing import Dict
 
 from torch.utils.data import DataLoader
 
+from torchflare.callbacks.callback import Callbacks
+from torchflare.callbacks.states import CallbackOrder
 
 # Adapted From: https://github.com/tensorflow/tensorflow/blob/v2.4.1/tensorflow/python/keras/utils/generic_utils.py
-class ProgressBar:
+
+
+class ProgressBar(Callbacks):
     """Class to create almost keras like progress bar."""
 
     def __init__(
         self,
-        num_epochs: int,
-        train_dl: DataLoader,
-        valid_dl: DataLoader,
         width: int = 25,
         interval: float = 0.05,
         unit_name: str = "step",
@@ -23,16 +24,12 @@ class ProgressBar:
         """Constructor class for ProgressBar.
 
         Args:
-            num_epochs: The total number of epochs
-            train_dl: The training dataloader.
-            valid_dl: The validation dataloader.
             width: The width of progress bar.
             interval: Minimum visual progress update interval (in seconds).
             unit_name: Display name for step counts (usually "step" or "sample").
         """
-        self.num_epochs = num_epochs
-        self.train_dl = train_dl
-        self.valid_dl = valid_dl
+        super(ProgressBar, self).__init__(order=CallbackOrder.INTERNAL)
+        self.num_epochs = None
         self.width = width
         self.interval = interval
         self.unit_name = unit_name
@@ -50,15 +47,15 @@ class ProgressBar:
         self.num_steps = 0
         self.prefix = None
 
-    def display_epoch(self, current_epoch: int):
-        """Method to display the current epoch.
+    def on_experiment_start(self):
+        """On start of experiment."""
+        self.num_epochs = self.exp.num_epochs
 
-        Args:
-            current_epoch: The current running epoch.
-        """
+    def on_epoch_start(self):
+        """On start of epoch."""
         sys.stdout.write("\n")
-        if (current_epoch is not None) and (self.num_epochs is not None):
-            sys.stdout.write(f"Epoch: {current_epoch + 1}/{self.num_epochs}")
+        if (self.exp.current_epoch is not None) and (self.num_epochs is not None):
+            sys.stdout.write(f"Epoch: {self.exp.current_epoch}/{self.num_epochs}")
             sys.stdout.write("\n")
 
     def _create_bar(self, current_step: int):
@@ -147,14 +144,15 @@ class ProgressBar:
         sys.stdout.flush()
         self._last_update = now
 
-    def add(self, n: int, values: Dict[str, float] = None):
-        """The final update for progress bar.
+    def on_batch_end(self):
+        """On end of a batch."""
+        values = {"loss": self.exp.loss.item()}
+        self.update(current_step=self.exp.batch_idx, values=values)
 
-        Args:
-            n: The increment count.
-            values: A dictionary containing values computed at the end of epoch.
-        """
-        self.update(self._seen_so_far + n, values)
+    def on_loader_end(self):
+        """On end of dataloader."""
+        self.update(current_step=self._seen_so_far + 1, values=self.exp.metrics)
+        self.reset()
 
     # noinspection PyTypeChecker
     @staticmethod
@@ -170,14 +168,10 @@ class ProgressBar:
         steps = len(dl.dataset) / dl.batch_size
         return math.ceil(steps)
 
-    def set_steps(self, is_training: bool):
-        """Method to set the number of steps and prefix.
-
-        Args:
-            is_training: Whether training is in progress or validation.
-        """
-        dl = self.train_dl if is_training else self.valid_dl
-        self.prefix = "Train" if is_training else "Valid"
+    def on_loader_start(self):
+        """On start of loader.."""
+        dl = self.exp.train_dl if self.exp.is_training else self.exp.valid_dl
+        self.prefix = "Train" if self.exp.is_training else "Valid"
         self.num_steps = self.calculate_steps(dl=dl)
 
     def reset(self):

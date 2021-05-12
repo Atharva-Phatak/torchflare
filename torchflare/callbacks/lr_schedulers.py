@@ -23,17 +23,17 @@ class LRSchedulerCallback(Callbacks, ABC):
         self.step_on_batch = step_on_batch
         self.scheduler = None
 
-    def experiment_start(self):
+    def on_experiment_start(self):
         """Set scheduler."""
         if self.scheduler is None:
             self.scheduler = self._scheduler(self.exp.optimizer)
 
-    def batch_end(self):
+    def on_batch_end(self):
         """Step at end of batch."""
         if self.scheduler is not None and self.step_on_batch:
             self.scheduler.step()
 
-    def epoch_end(self):
+    def on_epoch_end(self):
         """Step at the end of epoch."""
         if self.scheduler is not None and not self.step_on_batch:
             if isinstance(self.scheduler, _schedulers.ReduceLROnPlateau):

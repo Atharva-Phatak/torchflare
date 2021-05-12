@@ -48,10 +48,7 @@ class CVSplit:
 
     def _get_inputs(self):
         """Creates X,y for cross validation depending upon dataset."""
-        if isinstance(self.dataset, ImageDataset):
-            self.X, self.y = self.dataset.image_list, self.dataset.label_list
-
-        elif isinstance(self.dataset, (TabularDataset, TextClassificationDataset)):
+        if isinstance(self.dataset, (ImageDataset, TabularDataset, TextClassificationDataset)):
             self.X, self.y = self.dataset.inputs, self.dataset.labels
 
         elif isinstance(self.dataset, SegmentationDataset):

@@ -9,7 +9,7 @@ import pandas as pd
 import torchvision
 from torch.utils.data import Dataset
 
-from torchflare.datasets.utils import apply_augmentations, make_masks, open_image
+from torchflare.datasets.utils import apply_image_transforms, apply_segmentation_augs, make_masks, open_image
 
 
 def get_rle(df: pd.DataFrame, image_col: str, mask_cols: List[str], name: str) -> List[str]:
@@ -40,8 +40,8 @@ class SegmentationDataset(Dataset):
             mask_convert_mode: The mode in which masks should be opened.
             **kwargs: Extra named args.
         """
-        self.image_list = image_paths_list
-        self.mask_list = mask_list
+        self.inputs = image_paths_list
+        self.labels = mask_list
         self.augmentations = augmentations
         self.kwargs = kwargs
         self.image_convert_mode = image_convert_mode
@@ -53,7 +53,7 @@ class SegmentationDataset(Dataset):
         Returns:
             The length of dataloader.
         """
-        return len(self.image_list)
+        return len(self.inputs)
 
     def __getitem__(self, item):
         """__getitem__ method.
@@ -62,21 +62,20 @@ class SegmentationDataset(Dataset):
             item : The selected id.
 
         Returns:
-            Tensors of images , masks if mask_list is provided else Tensors of images.
+            Tensors of images , masks if labels is provided else Tensors of images.
         """
-        images = open_image(self.image_list[item], convert_mode=self.image_convert_mode)
-        if self.mask_list is not None:
-            if any(isinstance(ele, list) for ele in self.mask_list):
-                mask = make_masks(self.mask_list[item], **self.kwargs)
+        images = open_image(self.inputs[item], convert_mode=self.image_convert_mode)
+        if self.labels is not None:
+            if any(isinstance(ele, list) for ele in self.labels):
+                mask = make_masks(self.labels[item], **self.kwargs)
             else:
-                mask = open_image(self.mask_list[item], convert_mode=self.mask_convert_mode)
-            images, mask = apply_augmentations(images, augs=self.augmentations, mask=mask)
-
+                mask = open_image(self.labels[item], convert_mode=self.mask_convert_mode)
+            images, mask = apply_segmentation_augs(images, augs=self.augmentations, mask=mask)
             return images, mask
 
         else:
 
-            images = apply_augmentations(images, augs=self.augmentations, mask=None)
+            images = apply_image_transforms(images, augs=self.augmentations)
             return images
 
     @staticmethod
@@ -135,7 +134,7 @@ class SegmentationDataset(Dataset):
                 If your image_names do not have extension then set extension to '.jpg' or '.png' ,etc
 
         Returns:
-            returns image_paths_list , mask_list , image_convert_mode , augmentations and extra kwargs.
+            returns image_paths_list , labels , image_convert_mode , augmentations and extra kwargs.
 
         Note:
             If you want to create a dataset for testing set mask_cols = None, mask_size = None, num_classes = None.
@@ -146,7 +145,6 @@ class SegmentationDataset(Dataset):
         mask_list = (
             cls.create_mask_list(df=df, image_col=image_col, mask_cols=mask_cols) if mask_cols is not None else None
         )
-
         return cls(
             image_list,
             mask_list,

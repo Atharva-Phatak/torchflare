@@ -1,19 +1,5 @@
 """Definitions of experiment states and Callback order."""
-from enum import Enum, IntEnum
-
-
-class ExperimentStates(Enum):
-    """Class Define various stages of Training."""
-
-    EPOCH_START = "epoch_start"
-    EPOCH_END = "epoch_end"
-    EXP_START = "experiment_start"
-    EXP_END = "experiment_end"
-    BATCH_START = "batch_start"
-    BATCH_END = "batch_end"
-    LOADER_START = "loader_start"
-    LOADER_END = "loader_end"
-    STOP = "stop"
+from enum import IntEnum
 
 
 class CallbackOrder(IntEnum):
@@ -25,4 +11,4 @@ class CallbackOrder(IntEnum):
     EXTERNAL = 3
 
 
-__all__ = ["ExperimentStates", "CallbackOrder"]
+__all__ = ["CallbackOrder"]

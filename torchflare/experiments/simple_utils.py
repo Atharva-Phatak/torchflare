@@ -71,6 +71,24 @@ def to_device(value, device):
     return value
 
 
+def _apply_fn(x):
+
+    if isinstance(x, np.ndarray):
+        return torch.from_numpy(x)
+    elif torch.is_tensor(x):
+        return x
+
+
+def numpy_to_torch(value):
+    """Converts list of np.arrays , dict of np.arrays , np.arrays to tensor."""
+    if isinstance(value, dict):
+        return {k: _apply_fn(v) for k, v in value.items()}
+    elif isinstance(value, (tuple, list)):
+        return [_apply_fn(v) for v in value]
+    elif isinstance(value, np.ndarray):
+        return _apply_fn(value)
+
+
 def to_numpy(x):
     """Convert tensors to numpy array.
 

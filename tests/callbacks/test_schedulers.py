@@ -35,15 +35,15 @@ class TestExp:
 
     def run(self):
 
-        self.cb.experiment_start()
+        self.cb.on_experiment_start()
         loss = 0.1
         for _ in range(5):
             for i in range(2):
                 loss = loss * 2
-                self.cb.batch_end()
+                self.cb.on_batch_end()
 
             self.exp_logs = {"val_loss": loss}
-            self.cb.epoch_end()
+            self.cb.on_epoch_end()
 
 
 class MockScheduler:

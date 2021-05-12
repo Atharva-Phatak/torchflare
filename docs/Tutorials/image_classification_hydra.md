@@ -152,7 +152,7 @@ exp.compile_experiment(
 
 #### Running the experiment.
 ``` python
-exp.run_experiment(train_dl=train_dl, valid_dl=valid_dl)
+exp.fit_loader(train_dl=train_dl, valid_dl=valid_dl)
 ```
 
 

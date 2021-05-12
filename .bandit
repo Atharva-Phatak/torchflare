@@ -1,2 +1,3 @@
 [bandit]
-exclude: /test
+skips: ['*_test.py', 'test_*.py']
+exclude: tests

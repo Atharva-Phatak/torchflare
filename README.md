@@ -44,7 +44,9 @@ The Documentation is available [here](https://atharva-phatak.github.io/torchflar
 ***
 ### ***Stability***
 
+
 The library isn't mature or stable for production use yet. 
+
 
 The best of the library currently would be for **non production use and rapid prototyping**.
 
@@ -96,11 +98,8 @@ Define your experiment
 # Set some constants for training
 exp = Experiment(
     num_epochs=5,
-    save_dir="./models",
-    model_name="model.bin",
     fp16=False,
     device="cuda",
-    compute_train_metrics=True,
     seed=42,
 )
 
@@ -112,18 +111,25 @@ exp.compile_experiment(
     callbacks=callbacks,
     criterion="cross_entropy",
     metrics=metric_list,
-    main_metric="accuracy",
+    
+    
+    
+    
+    
+    
+    
+    _metric="accuracy",
 )
 
 # Run your experiment with training dataloader and validation dataloader.
-exp.run_experiment(train_dl=train_dl, valid_dl= valid_dl)
+exp.fit_on_loader(train_dl=train_dl, valid_dl= valid_dl)
 ```
 
 For inference, you can use infer method, which yields output per batch. You can use it as follows
 ``` python
 outputs = []
 
-for op in exp.infer(test_loader=test_dl , path='./models/model.bin' , device = 'cuda'):
+for op in exp.predict_on_loader(test_loader=test_dl , path_to_model='./models/model.bin' , device = 'cuda'):
     op = some_post_process_function(op)
     outputs.extend(op)
 
@@ -157,7 +163,8 @@ exp.plot_history(keys = ["loss" , "accuracy"] , save_fig = False , plot_fig = Tr
 ***
 ### ***Contribution***
 
-Contributions are always welcomed, it would be great to have people use and contribute to this project to help users understand and benefit from the library.
+
+Contributions are always welcome, it would be great to have people use and contribute to this project to help users understand and benefit from the library.
 
 #### How to contribute
 - ***Create an issue:*** If you have a new feature in mind, feel free to open an issue and add some short description on what that feature could be.

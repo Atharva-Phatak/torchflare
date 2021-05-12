@@ -117,6 +117,28 @@ def open_image(x, convert_mode="RGB"):
     return x
 
 
+def apply_image_transforms(image, augs) -> torch.Tensor:
+    """Apply augmentations to image.
+
+    Args:
+        image: The input image.
+        augs: The augmentations to be applied.
+    """
+    if augs is None:
+        return to_tensor(image)
+
+    if isinstance(augs, A.Compose):
+        image = np.array(image)
+        augmented_image = augs(image=image)
+        image = augmented_image.get("image")
+        image = handle_shape(image)
+        return to_tensor(image)
+
+    else:
+        image = augs(image)
+        return to_tensor(image)
+
+
 def apply_albu_augs(image, augs, mask):
     """Applies albumentations augmentations.
 
@@ -129,17 +151,10 @@ def apply_albu_augs(image, augs, mask):
         image , mask if image segmentation else returns image.
     """
     image = np.array(image)
-    if mask is not None:
-        mask = np.array(mask)
-        augmented_image = augs(image=image, mask=mask)
-        mask = augmented_image.get("mask")
-
-    else:
-        augmented_image = augs(image=image)
-        mask = None
-
+    mask = np.array(mask)
+    augmented_image = augs(image=image, mask=mask)
     image = augmented_image.get("image")
-
+    mask = augmented_image.get("mask")
     return image, mask
 
 
@@ -155,19 +170,16 @@ def apply_torchvision_augs(image, augs, mask):
         image , mask if image segmentation else returns image.
     """
     image = augs(image)
-    if mask is not None:
-        if isinstance(mask, np.ndarray):
-            mask = mask.astype(np.uint8)
-            mask = torchvision.transforms.ToPILImage()(mask)
+    if isinstance(mask, np.ndarray):
+        mask = mask.astype(np.uint8)
+        mask = torchvision.transforms.ToPILImage()(mask)
 
-        mask = augs(mask)
-    else:
-        mask = None
+    mask = augs(mask)
     return image, mask
 
 
-def apply_augmentations(image, augs, mask=None):
-    """Apply albumentations/torchvision augmentations.
+def apply_segmentation_augs(image, augs, mask=None):
+    """Apply albumentations/torchvision augmentations for segmentation task.
 
     Args:
         image: The input image.
@@ -181,20 +193,13 @@ def apply_augmentations(image, augs, mask=None):
 
         image, mask = apply_albu_augs(image=image, augs=augs, mask=mask)
         image = handle_shape(image)
-        if mask is not None:
-            mask = handle_shape(mask)
+        mask = handle_shape(mask)
 
     elif isinstance(augs, torchvision.transforms.Compose):
 
         image, mask = apply_torchvision_augs(image=image, augs=augs, mask=mask)
 
-    if mask is not None:
-
-        return to_tensor(image), to_tensor(mask)
-
-    else:
-
-        return to_tensor(image)
+    return to_tensor(image), to_tensor(mask)
 
 
 def to_tensor(x):
@@ -220,6 +225,7 @@ def show_batch(dl, **kwargs):
 
     Args:
         dl : The pytorch dataloader.
+        **kwargs: keyword arguments for torchvision.utils.make_grid function.
 
     Note:
         Only use for classification and segmentations tasks.

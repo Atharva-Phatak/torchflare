@@ -14,7 +14,7 @@ class History(Callbacks, ABC):
         super(History, self).__init__(order=CallbackOrder.LOGGING)
         self.history = None
 
-    def experiment_start(self):
+    def on_experiment_start(self):
         """Sets variables at experiment start."""
         self.history = {}
 
@@ -26,7 +26,7 @@ class History(Callbacks, ABC):
             else:
                 self.history[key].append(logs.get(key))
 
-    def epoch_end(self):
+    def on_epoch_end(self):
         """Method to update history object at the end of every epoch."""
         self._update_history(logs=self.exp.exp_logs)
         self.exp.history = self.history
