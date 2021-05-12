@@ -59,7 +59,9 @@ def test_experiment(tmpdir):
         exp.fit_loader(train_dl=loader, valid_dl=loader)
         exp.plot_history(keys=["accuracy"], save_fig=False, plot_fig=False)
         outputs = []
-        for op in exp.predict_on_loader(test_dl=test_dl, path_to_model=os.path.join(save_dir, file_name)):
+        for op in exp.predict_on_loader(
+            test_dl=test_dl, device=device, path_to_model=os.path.join(save_dir, file_name)
+        ):
             outputs.extend(op)
 
         assert len(outputs) == test_samples
@@ -100,7 +102,9 @@ def test_experiment(tmpdir):
         exp.fit(x=X, y=y, val_data=(X, y), batch_size=32)
         exp.plot_history(keys=["accuracy"], save_fig=False, plot_fig=False)
         outputs = []
-        for op in exp.predict(x=test_data, path_to_model=os.path.join(save_dir, file_name), batch_size=16):
+        for op in exp.predict(
+            x=test_data, device=device, path_to_model=os.path.join(save_dir, file_name), batch_size=16
+        ):
             outputs.extend(op)
 
         assert len(outputs) == test_samples
