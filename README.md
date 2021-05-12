@@ -44,7 +44,9 @@ The Documentation is available [here](https://atharva-phatak.github.io/torchflar
 ***
 ### ***Stability***
 
-The library isn't mature or stable for production use yet.
+
+The library isn't mature or stable for production use yet. 
+
 
 The best of the library currently would be for **non production use and rapid prototyping**.
 
@@ -109,7 +111,14 @@ exp.compile_experiment(
     callbacks=callbacks,
     criterion="cross_entropy",
     metrics=metric_list,
-    main_metric="accuracy",
+    
+    
+    
+    
+    
+    
+    
+    _metric="accuracy",
 )
 
 # Run your experiment with training dataloader and validation dataloader.
@@ -153,6 +162,7 @@ exp.plot_history(keys = ["loss" , "accuracy"] , save_fig = False , plot_fig = Tr
 
 ***
 ### ***Contribution***
+
 
 Contributions are always welcome, it would be great to have people use and contribute to this project to help users understand and benefit from the library.
 

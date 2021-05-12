@@ -142,6 +142,9 @@ nav:
             - CosineAnnealingWarmRestarts: './callbacks/LRScheduler/cosinewarm_lr.md'
             - CyclicLR: './callbacks/LRScheduler/cyclic_lr.md'
             - OneCycleLR: './callbacks/LRScheduler/onecycle_lr.md'
+    - Interpreters:
+        - GradCam: './interpreters/cam.md'
+        - GradCam++: './interpreters/camPP.md'
     - Modules:
         - ArcFace: './modules/arcface.md'
         - CosFace: './modules/cosface.md'
@@ -154,6 +157,7 @@ nav:
       - Tabular Classification: './Tutorials/tabular_classification.md'
       - Parameter management with Hydra: './Tutorials/image_classification_hydra.md'
       - How to use fit methods: './Tutorials/MNIST-Classification.md'
+      - GradCam & GradCamPP: './Tutorials/Cam-Tutorials.md'
 
 # Extra CSS
 extra_css:
