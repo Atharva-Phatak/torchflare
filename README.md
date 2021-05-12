@@ -111,14 +111,7 @@ exp.compile_experiment(
     callbacks=callbacks,
     criterion="cross_entropy",
     metrics=metric_list,
-    
-    
-    
-    
-    
-    
-    
-    _metric="accuracy",
+    main_metric="accuracy",
 )
 
 # Run your experiment with training dataloader and validation dataloader.
