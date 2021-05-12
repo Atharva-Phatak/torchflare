@@ -82,11 +82,12 @@ def _apply_fn(x):
 def numpy_to_torch(value):
     """Converts list of np.arrays , dict of np.arrays , np.arrays to tensor."""
     if isinstance(value, dict):
-        return {k: _apply_fn(v) for k, v in value.items()}
+        v = {k: _apply_fn(v) for k, v in value.items()}
     elif isinstance(value, (tuple, list)):
-        return [_apply_fn(v) for v in value]
+        v = [_apply_fn(v) for v in value]
     elif isinstance(value, np.ndarray):
-        return _apply_fn(value)
+        v = _apply_fn(value)
+    return v
 
 
 def to_numpy(x):

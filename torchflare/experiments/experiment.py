@@ -210,6 +210,7 @@ class Experiment(BaseState):
 
     def train_step(self) -> None:
         """Method to perform the train step and step scheduler."""
+        # skipcq: PYL-W0106
         self.fp16_step() if self.fp16 else self.standard_step()
 
     def val_step(self) -> None:
