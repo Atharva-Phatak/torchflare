@@ -5,14 +5,14 @@ from enum import Enum, IntEnum
 class ExperimentStates(Enum):
     """Class Define various stages of Training."""
 
-    EPOCH_START = "epoch_start"
-    EPOCH_END = "epoch_end"
-    EXP_START = "experiment_start"
-    EXP_END = "experiment_end"
-    BATCH_START = "batch_start"
-    BATCH_END = "batch_end"
-    LOADER_START = "loader_start"
-    LOADER_END = "loader_end"
+    ON_EPOCH_START = "on_epoch_start"
+    ON_EPOCH_END = "on_epoch_end"
+    ON_EXP_START = "on_experiment_start"
+    ON_EXP_END = "on_experiment_end"
+    ON_BATCH_START = "on_batch_start"
+    ON_BATCH_END = "on_batch_end"
+    ON_LOADER_START = "on_loader_start"
+    ON_LOADER_END = "on_loader_end"
     STOP = "stop"
 
 

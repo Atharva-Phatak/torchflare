@@ -153,6 +153,7 @@ nav:
       - Text Classification: './Tutorials/Imdb_classification.md'
       - Tabular Classification: './Tutorials/tabular_classification.md'
       - Parameter management with Hydra: './Tutorials/image_classification_hydra.md'
+      - How to use fit methods: './Tutorials/MNIST-Classification.md'
 
 # Extra CSS
 extra_css:

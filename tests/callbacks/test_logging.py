@@ -17,7 +17,7 @@ os.environ["WB_API_TOKEN"] = "Dummy_wandb_token"
 def test_neptune_mock(neptune):
     """Simple to check if same experiment is created."""
     logger = NeptuneLogger(api_token="test", project_dir="namespace/project")
-    logger.experiment_start()
+    logger.on_experiment_start()
     created_experiment = neptune.init(name="namespace/project", api_token="test")
     assert logger.experiment is not None
     assert created_experiment.name == logger.experiment.name
@@ -28,7 +28,7 @@ def test_neptune_mock(neptune):
 def test_wandb_mock(wandb):
     """Simple test to check if same experiment is created or not."""
     logger = WandbLogger(project="test", entity="project")
-    logger.experiment_start()
+    logger.on_experiment_start()
     wandb.init.assert_called_once()
     wandb_exp = wandb.init(project="test", entity="project")
     assert logger.experiment is not None
@@ -86,9 +86,9 @@ def test_wandb(tmpdir):
         f1 += 10
 
         loss = loss / 10
-        logger.epoch_end(epoch=epoch, logs=d)
+        logger.on_epoch_end(epoch=epoch, logs=d)
 
-    logger.experiment_end()
+    logger.on_experiment_end()
 """
 
 
@@ -98,7 +98,7 @@ class DummyExp:
         self.exp_logs = None
         self.logger = logger
         self.logger.set_experiment(self)
-        self.logger.experiment_start()
+        self.logger.on_experiment_start()
 
     def start_log(self):
         acc = 10
@@ -110,9 +110,9 @@ class DummyExp:
             f1 += 10
 
             loss = loss / 10
-            self.logger.epoch_end()
+            self.logger.on_epoch_end()
 
-        self.logger.experiment_end()
+        self.logger.on_experiment_end()
 
 
 def test_tensorboard(tmpdir):

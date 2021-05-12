@@ -51,7 +51,7 @@ class WandbLogger(Callbacks, ABC):
         self.dir = directory
         self.experiment = None
 
-    def experiment_start(self):
+    def on_experiment_start(self):
         """Experiment start."""
         self.experiment = wandb.init(
             entity=self.entity,
@@ -63,11 +63,11 @@ class WandbLogger(Callbacks, ABC):
             dir=self.dir,
         )
 
-    def epoch_end(self):
+    def on_epoch_end(self):
         """Method to log metrics and values at the end of very epoch."""
         logs = {k: v for k, v in self.exp.exp_logs.items() if k != self.exp.epoch_key}
         self.experiment.log(logs)
 
-    def experiment_end(self):
+    def on_experiment_end(self):
         """Method to end experiment after training is done."""
         self.experiment.finish()

@@ -92,10 +92,11 @@ def test_data_from_df():
 
     def test_for_inference():
 
+        augs = torchvision.transforms.Compose([torchvision.transforms.ToTensor()])
         ds = ImageDataset.from_df(
             path=constants_df.path,
             df=constants_df.df,
-            augmentations=None,
+            augmentations=augs,
             image_col=constants_df.image_col,
             label_cols=None,
             extension=constants_df.extension,
@@ -123,7 +124,8 @@ def test_from_folders():
         assert x.shape == (3, 256, 256)
 
     def test_inference():
-        ds = ImageDataset.from_folders(path=folder_inputs.test_path, augmentations=None, convert_mode="RGB")
+        augs = torchvision.transforms.Compose([torchvision.transforms.ToTensor()])
+        ds = ImageDataset.from_folders(path=folder_inputs.test_path, augmentations=augs, convert_mode="RGB")
         x = ds[0]
 
         assert torch.is_tensor(x) is True

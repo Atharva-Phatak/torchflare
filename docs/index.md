@@ -1,4 +1,4 @@
-![A picture of a cat](./static/images/TorchFlare.gif)
+![logo](./static/images/TorchFlare.gif)
 
 ***TorchFlare*** is a simple, beginner-friendly and an easy-to-use PyTorch Framework train your models without much effort.
 It provides an almost Keras-like experience for training
@@ -11,6 +11,7 @@ your models with all the callbacks, metrics, etc
 * _Metrics and much more._
 
 Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU support will be coming soon!
+***
 ### ***Getting Started***
 
 The core idea around TorchFlare is the [Experiment](/torchflare/experiments/experiment.py)
@@ -21,6 +22,7 @@ Also, there are off-the-shelf dataloaders available for standard tasks, so that 
 have to worry about creating Pytorch Datasets.
 
 Here is an easy-to-understand example to show how Experiment class works.
+
 
 ``` python
 import torch
@@ -49,8 +51,8 @@ Define callbacks and metrics
 metric_list = [metrics.Accuracy(num_classes=num_classes, multilabel=False),
                 metrics.F1Score(num_classes=num_classes, multilabel=False)]
 
-callbacks = [cbs.EarlyStopping(monitor="accuracy", mode="max"), cbs.ModelCheckpoint(monitor="accuracy", mode = "max"),
-            cbs.ReduceLROnPlateau(mode="max",  patience = 2)]
+callbacks = [cbs.EarlyStopping(monitor="accuracy", mode="max"), cbs.ModelCheckpoint(monitor="accuracy"),
+            cbs.ReduceLROnPlateau(mode="max" , patience = 2)]
 ```
 
 Define your experiment
@@ -58,11 +60,8 @@ Define your experiment
 # Set some constants for training
 exp = Experiment(
     num_epochs=5,
-    save_dir="./models",
-    model_name="model.bin",
     fp16=False,
     device="cuda",
-    compute_train_metrics=True,
     seed=42,
 )
 
@@ -78,20 +77,18 @@ exp.compile_experiment(
 )
 
 # Run your experiment with training dataloader and validation dataloader.
-# Both Training and validation dataloaders are required for training.
-exp.run_experiment(train_dl=train_dl, valid_dl= valid_dl)
+exp.fit_on_loader(train_dl=train_dl, valid_dl= valid_dl)
 ```
 
 For inference, you can use infer method, which yields output per batch. You can use it as follows
 ``` python
 outputs = []
 
-for op in exp.infer(test_dl=test_dl , path='./models/model.bin' , device = 'cuda'):
+for op in exp.predict_on_loader(test_loader=test_dl , path_to_model='./models/model.bin' , device = 'cuda'):
     op = some_post_process_function(op)
     outputs.extend(op)
 
 ```
-
 
 If you want to access your experiments history or plot it. You can do it as follows.
 ``` python
@@ -100,5 +97,12 @@ history = exp.history # This will return a dict
 
 # If you want to plot progress of particular metric as epoch progress use this.
 
-exp.plot_history(keys= ["accuracy"] , save_fig = False , plot_fig = True)
+exp.plot_history(keys = ["loss" , "accuracy"] , save_fig = False , plot_fig = True)
 ```
+
+***
+### ***Examples***
+* [Image Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification.ipynb) on CIFAR-10 using TorchFlare.
+* [Text Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Imdb_classification.ipynb) on IMDB data.
+* [Binary Classification of Tabular Data](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/tabular_classification.ipynb) on previous [kaggle competition](https://www.kaggle.com/c/cat-in-the-dat-ii/overview)
+* Tutorial on using [Hydra and TorchFlare](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification_hydra.ipynb) for efficient workflow and parameter management.

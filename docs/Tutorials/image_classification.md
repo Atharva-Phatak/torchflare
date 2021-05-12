@@ -172,7 +172,7 @@ exp.compile_experiment(
     metrics=metric_list,
     main_metric="accuracy",
 )
-exp.run_experiment(train_dl=train_dl, valid_dl=valid_dl)
+exp.fit_loader(train_dl=train_dl, valid_dl=valid_dl)
 
 
 

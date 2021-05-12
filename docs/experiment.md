@@ -4,9 +4,10 @@
       members:
         - __init__
         - compile_experiment
-        - run_experiment
-        - infer
-        - perform_sanity_check
+        - fit_loader
+        - fit
+        - predict_on_loader
+        - predict
     rendering:
       show_root_full_path: false
       show_root_toc_entry: false
@@ -70,9 +71,7 @@ exp.compile_experiment(
     criterion=criterion,
 )
 
-# Performing sanity check(optional)
-exp.perform_sanity_check(train_dl)
 
 # Running the experiment
-exp.run_experiment(train_dl=train_dl, valid_dl=valid_dl)
+exp.fit_loader(train_dl=train_dl, valid_dl=valid_dl)
 ```

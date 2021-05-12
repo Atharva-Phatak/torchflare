@@ -39,7 +39,7 @@ class NeptuneLogger(Callbacks, ABC):
         self.experiment_name = experiment_name
         self.experiment = None
 
-    def experiment_start(self):
+    def on_experiment_start(self):
         """Start of experiment."""
         self.experiment = neptune.init(
             project=self.project_dir, api_token=self.api_token, tags=self.tags, name=self.experiment_name
@@ -50,14 +50,14 @@ class NeptuneLogger(Callbacks, ABC):
 
         self.experiment[name].log(value=value, step=epoch)
 
-    def epoch_end(self):
+    def on_epoch_end(self):
         """Method to log metrics and values at the end of very epoch."""
         for key, value in self.exp.exp_logs.items():
             if key != self.exp.epoch_key:
                 epoch = self.exp.exp_logs[self.exp.epoch_key]
                 self._log_metrics(name=key, value=value, epoch=epoch)
 
-    def experiment_end(self):
+    def on_experiment_end(self):
         """Method to end experiment after training is done."""
         self.experiment.stop()
         self.experiment = None

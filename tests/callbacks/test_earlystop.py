@@ -33,7 +33,7 @@ class DummyPipeline:
         train_acc = 10
         val_acc = 10
 
-        self.set_model_state = ExperimentStates.EXP_START
+        self.set_model_state = "on_experiment_start"
 
         for epoch in range(10):
 
@@ -52,11 +52,11 @@ class DummyPipeline:
             }
 
             self.exp_logs.update(logs)
-            self.set_model_state = ExperimentStates.EPOCH_END
+            self.set_model_state = "on_epoch_end"
 
             if self.stop_training:
                 break
-        self.set_model_state = ExperimentStates.EXP_END
+        self.set_model_state = "on_experiment_end"
 
 
 def test_on_val_loss():

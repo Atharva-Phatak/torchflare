@@ -28,8 +28,7 @@ class MetricContainer:
 
     def reset(self):
         """Method to reset the state of metrics and loss meter."""
-        if self.exp.compute_metric_flag:
-            _ = map(lambda x: x.reset(), self.metrics)
+        _ = map(lambda x: x.reset(), self.metrics)
 
     @property
     def value(self) -> Dict:
@@ -48,9 +47,8 @@ class MetricContainer:
 
     def accum_vals(self):
         """Accumulate values."""
-        if self.exp.compute_metric_flag:
-            for metric in self.metrics:
-                metric.accumulate(self.exp.preds, self.exp.y)
+        for metric in self.metrics:
+            metric.accumulate(self.exp.preds, self.exp.y)
 
     def compute(self):
         """Compute values."""
@@ -59,9 +57,8 @@ class MetricContainer:
 
     def compute_vals(self):
         """Compute values."""
-        if self.exp.compute_metric_flag:
-            metric_vals = list(map(lambda x: x.value.item(), self.metrics))
-            self.metric_dict = {self.prefix + key: value for key, value in zip(self.metric_names, metric_vals)}
+        metric_vals = list(map(lambda x: x.value.item(), self.metrics))
+        self.metric_dict = {self.prefix + key: value for key, value in zip(self.metric_names, metric_vals)}
 
 
 __all__ = ["MetricContainer"]

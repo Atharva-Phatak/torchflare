@@ -1,16 +1,18 @@
 ![image](https://raw.githubusercontent.com/Atharva-Phatak/torchflare/main/docs/static/images/TorchFlare_official.png)
 
 ![PyPI](https://img.shields.io/pypi/v/torchflare?color=success)
+![API](https://img.shields.io/badge/API-stable-success)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Atharva-Phatak/torchflare?color=success)
 [![CodeFactor](https://www.codefactor.io/repository/github/atharva-phatak/torchflare/badge?s=8b602116b87a38ed9dbf6295933839ff7c85ac81)](https://www.codefactor.io/repository/github/atharva-phatak/torchflare)
 [![Test](https://github.com/Atharva-Phatak/torchflare/actions/workflows/test.yml/badge.svg)](https://github.com/Atharva-Phatak/torchflare/actions/workflows/test.yml)
 [![documentation](https://github.com/Atharva-Phatak/torchflare/actions/workflows/docs.yml/badge.svg)](https://github.com/Atharva-Phatak/torchflare/actions/workflows/docs.yml)
+[![Publish-PyPI](https://github.com/Atharva-Phatak/torchflare/actions/workflows/publish.yml/badge.svg)](https://github.com/Atharva-Phatak/torchflare/actions/workflows/publish.yml)
 [![DeepSource](https://deepsource.io/gh/Atharva-Phatak/torchflare.svg/?label=active+issues&token=_u890jqK5XjPmNlJCyQkxwmG)](https://deepsource.io/gh/Atharva-Phatak/torchflare/?ref=repository-badge)
 [![DeepSource](https://deepsource.io/gh/Atharva-Phatak/torchflare.svg/?label=resolved+issues&token=_u890jqK5XjPmNlJCyQkxwmG)](https://deepsource.io/gh/Atharva-Phatak/torchflare/?ref=repository-badge)
 [![codecov](https://codecov.io/gh/Atharva-Phatak/torchflare/branch/main/graph/badge.svg?token=HSG3FP6NNB)](https://codecov.io/gh/Atharva-Phatak/torchflare)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 [![GitHub license](https://img.shields.io/github/license/Atharva-Phatak/torchflare?color=success)](https://github.com/Atharva-Phatak/torchflare/blob/main/LICENSE)
-[![Publish-PyPI](https://github.com/Atharva-Phatak/torchflare/actions/workflows/publish.yml/badge.svg)](https://github.com/Atharva-Phatak/torchflare/actions/workflows/publish.yml)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/torchflare?color=success)
 
 
 
@@ -29,16 +31,24 @@ your models with all the callbacks, metrics, etc
 
 Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU support will be coming soon!
 
-**Note :**  ***This library is in its nascent stage. So, there might be breaking changes.***
-
+***
 ### ***Installation***
 
     pip install torchflare
 
+***
 ### ***Documentation***
 
 The Documentation is available [here](https://atharva-phatak.github.io/torchflare/)
 
+***
+### ***Stability***
+
+The library isn't mature or stable for production use yet.
+
+The best of the library currently would be for **non production use and rapid prototyping**.
+
+***
 ### ***Getting Started***
 
 The core idea around TorchFlare is the [Experiment](/torchflare/experiments/experiment.py)
@@ -77,7 +87,8 @@ Define callbacks and metrics
 metric_list = [metrics.Accuracy(num_classes=num_classes, multilabel=False),
                 metrics.F1Score(num_classes=num_classes, multilabel=False)]
 
-callbacks = [cbs.EarlyStopping(monitor="accuracy", mode="max"), cbs.ModelCheckpoint(monitor="accuracy")]
+callbacks = [cbs.EarlyStopping(monitor="accuracy", mode="max"), cbs.ModelCheckpoint(monitor="accuracy"),
+            cbs.ReduceLROnPlateau(mode="max" , patience = 2)]
 ```
 
 Define your experiment
@@ -85,12 +96,8 @@ Define your experiment
 # Set some constants for training
 exp = Experiment(
     num_epochs=5,
-    save_dir="./models",
-    model_name="model.bin",
     fp16=False,
-    using_batch_mixers=False,
     device="cuda",
-    compute_train_metrics=True,
     seed=42,
 )
 
@@ -100,38 +107,60 @@ exp.compile_experiment(
     optimizer="Adam",
     optimizer_params=dict(lr=3e-4),
     callbacks=callbacks,
-    scheduler="ReduceLROnPlateau",
-    scheduler_params=dict(mode="max", patience=5),
     criterion="cross_entropy",
     metrics=metric_list,
     main_metric="accuracy",
 )
 
 # Run your experiment with training dataloader and validation dataloader.
-exp.run_experiment(train_dl=train_dl, valid_dl= valid_dl)
+exp.fit_on_loader(train_dl=train_dl, valid_dl= valid_dl)
 ```
 
 For inference, you can use infer method, which yields output per batch. You can use it as follows
 ``` python
 outputs = []
 
-for op in exp.infer(test_loader=test_dl , path='./models/model.bin' , device = 'cuda'):
+for op in exp.predict_on_loader(test_loader=test_dl , path_to_model='./models/model.bin' , device = 'cuda'):
     op = some_post_process_function(op)
     outputs.extend(op)
 
 ```
 
-Experiment class internally saves a history.csv file which includes your training and validation metrics per epoch.
-This file can be found in same directory as ***save_dir*** argument.
-
 If you want to access your experiments history or plot it. You can do it as follows.
 ``` python
 
-history = exp.history.history # This will return a dict
+history = exp.history # This will return a dict
 
 # If you want to plot progress of particular metric as epoch progress use this.
 
-exp.plot_history(key = "accuracy" , save_fig = False , plot_fig = True)
+exp.plot_history(keys = ["loss" , "accuracy"] , save_fig = False , plot_fig = True)
 ```
 
-#### ***You can check out examples in examples/***
+***
+### ***Examples***
+* [Image Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification.ipynb) on CIFAR-10 using TorchFlare.
+* [Text Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Imdb_classification.ipynb) on IMDB data.
+* [Binary Classification of Tabular Data](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/tabular_classification.ipynb) on previous [kaggle competition](https://www.kaggle.com/c/cat-in-the-dat-ii/overview)
+* Tutorial on using [Hydra and TorchFlare](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification_hydra.ipynb) for efficient workflow and parameter management.
+
+***
+### ***Current Contributors***
+
+<a href="https://github.com/Atharva-Phatak/torchflare/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Atharva-Phatak/torchflare" />
+</a>
+
+
+***
+### ***Contribution***
+
+Contributions are always welcome, it would be great to have people use and contribute to this project to help users understand and benefit from the library.
+
+#### How to contribute
+- ***Create an issue:*** If you have a new feature in mind, feel free to open an issue and add some short description on what that feature could be.
+- ***Create a PR***: If you have a bug fix, enhancement or new feature addition, create a Pull Request and the maintainers of the repo, would review and merge them.
+
+***
+### ***Author***
+
+* **Atharva Phatak** - [Atharva-Phatak](https://github.com/Atharva-Phatak)

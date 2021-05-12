@@ -1,4 +1,5 @@
 """Implements Model Checkpoint Callback."""
+import os
 from abc import ABC
 
 import numpy as np
@@ -12,7 +13,7 @@ from torchflare.callbacks.states import CallbackOrder
 class ModelCheckpoint(Callbacks, ABC):
     """Callback for Checkpointing your model."""
 
-    def __init__(self, mode: str, monitor: str = "val_loss"):
+    def __init__(self, mode: str, monitor: str = "val_loss", save_dir: str = "./models", file_name: str = "model.bin"):
         """Constructor for ModelCheckpoint class.
 
         Args:
@@ -21,6 +22,8 @@ class ModelCheckpoint(Callbacks, ABC):
                 in "max" mode it will stop when the quantity monitored has stopped increasing.
             monitor: The quantity to be monitored. (Default : val_loss)
                     If you want to monitor other metric just pass in the name of the metric.
+            save_dir: The directory where you want to save the model files.
+            file_name: The name of file. Default : model.bin
 
         Note:
 
@@ -42,6 +45,7 @@ class ModelCheckpoint(Callbacks, ABC):
             self.monitor = monitor
 
         self.improvement, self.best_val = init_improvement(mode=self.mode, min_delta=self.eps)
+        self.path = os.path.join(save_dir, file_name)
 
     def checkpoint(self, epoch: int):
         """Method to save the state dictionaries of model, optimizer,etc.
@@ -55,10 +59,10 @@ class ModelCheckpoint(Callbacks, ABC):
                 "optimizer_state_dict": self.exp.optimizer.state_dict(),
                 "Epoch": epoch,
             },
-            self.exp.path,
+            self.path,
         )
 
-    def epoch_end(self):
+    def on_epoch_end(self):
         """Method to save best model depending on the monitored quantity."""
         val = self.exp.exp_logs.get(self.monitor)
 
@@ -66,7 +70,7 @@ class ModelCheckpoint(Callbacks, ABC):
 
             self.checkpoint(epoch=self.exp.exp_logs.get(self.exp.epoch_key))
 
-    def experiment_end(self):
+    def on_experiment_end(self):
         """Reset to default."""
         if self.mode == "max":
             self.best_val = -np.inf

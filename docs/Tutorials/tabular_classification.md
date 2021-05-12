@@ -263,7 +263,7 @@ for fold in range(n_splits):
         metrics=metric_list,
         main_metric="accuracy",
     )
-    exp.run_experiment(train_dl, valid_dl)
+    exp.fit_loader(train_dl, valid_dl)
     keys = ["loss", "accuracy"]
     exp.plot_history(keys=keys, save_fig=False, plot_fig=True)
 ```

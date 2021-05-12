@@ -45,12 +45,12 @@ class EarlyStopping(Callbacks, ABC):
 
         self.stopping_counter = 0
 
-    def experiment_start(self):
+    def on_experiment_start(self):
         """Start of experiment."""
         self.stopping_counter = 0
         self.best_score = math.inf if self.mode == "min" else -math.inf
 
-    def epoch_end(self):
+    def on_epoch_end(self):
         """Function which will determine when to stop the training depending on the score."""
         epoch_score = self.exp.exp_logs.get(self.monitor)
         if self.improvement(epoch_score, self.best_score):
@@ -63,7 +63,7 @@ class EarlyStopping(Callbacks, ABC):
                 print("Early Stopping !")
                 self.exp.stop_training = True
 
-    def experiment_end(self):
+    def on_experiment_end(self):
         """Reset to defaults."""
         self.stopping_counter = 0
         self.best_score = None

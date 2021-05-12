@@ -23,6 +23,7 @@ from torchflare.callbacks.model_checkpoint import ModelCheckpoint  # isort: skip
 from torchflare.callbacks.model_history import History  # isort: skip
 from torchflare.callbacks.notifiers.message_notifiers import DiscordNotifierCallback  # isort: skip
 from torchflare.callbacks.notifiers.message_notifiers import SlackNotifierCallback
+from torchflare.callbacks.progress_bar import ProgressBar
 from torchflare.callbacks.states import CallbackOrder, ExperimentStates  # isort: skip
 
 from torchflare.callbacks.lr_schedulers import CosineAnnealingLR  # isort: skip; isort: skip
@@ -56,4 +57,5 @@ __all__ = [
     "ReduceLROnPlateau",
     "StepLR",
     "ExponentialLR",
+    "ProgressBar",
 ]
