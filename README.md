@@ -147,6 +147,7 @@ exp.plot_history(keys = ["loss" , "accuracy"] , save_fig = False , plot_fig = Tr
 * Tutorial on using [Hydra and TorchFlare](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification_hydra.ipynb) for efficient workflow and parameter management.
 * Tutorial on [fit methods](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-Classification.ipynb) and how to dispatch training progress to your personal discord channel.
 * Tutorial on how to train [Variational Autoencoders](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-VAE.ipynb) using torchflare on MNIST Dataset.
+
 ***
 ### ***Current Contributors***
 
