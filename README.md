@@ -22,13 +22,17 @@
 It provides an almost Keras-like experience for training
 your models with all the callbacks, metrics, etc
 
-Use TorchFlare to reduce the boiler plate code.
+
 ### ***Features***
 * _A high-level module for Keras-like training._
 * _Off-the-shelf Pytorch style Datasets/Dataloaders for standard tasks such as **Image classification, Image segmentation,
   Text Classification**, etc_
 * _**Callbacks** for model checkpoints, early stopping, and much more!_
 * _**Metrics** and much more._
+* _**Reduction** of the boiler plate code required for training your models._
+
+![compare](https://github.com/Atharva-Phatak/torchflare/blob/main/docs/static/images/compare.gif)
+***
 
 Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU support will be coming soon!
 
