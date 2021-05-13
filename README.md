@@ -22,6 +22,7 @@
 It provides an almost Keras-like experience for training
 your models with all the callbacks, metrics, etc
 
+Use TorchFlare to reduce the boiler plate code.
 ### ***Features***
 * _A high-level module for Keras-like training._
 * _Off-the-shelf Pytorch style Datasets/Dataloaders for standard tasks such as **Image classification, Image segmentation,
@@ -105,13 +106,13 @@ exp = Experiment(
 
 # Compile your experiment with model, optimizer, schedulers, etc
 exp.compile_experiment(
-    model= net,
-    optimizer= "Adam",
-    optimizer_params= {"lr" : 3e-4},
-    callbacks= callbacks,
-    criterion= "cross_entropy",
-    metrics= metric_list,
-    main_metric= "accuracy",
+    model = net,
+    optimizer = "Adam",
+    optimizer_params = {"lr" : 3e-4},
+    callbacks = callbacks,
+    criterion = "cross_entropy",
+    metrics = metric_list,
+    main_metric = "accuracy",
 )
 
 # Run your experiment with training dataloader and validation dataloader.
