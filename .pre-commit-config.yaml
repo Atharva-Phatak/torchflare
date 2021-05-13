@@ -39,4 +39,5 @@ repos:
     rev: '1.7.0' # Update me!
     hooks:
       - id: bandit
+        args: [--skip, "B101"]
         exclude: ^tests/

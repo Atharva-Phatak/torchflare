@@ -22,6 +22,7 @@
 It provides an almost Keras-like experience for training
 your models with all the callbacks, metrics, etc
 
+Use TorchFlare to reduce the boiler plate code.
 ### ***Features***
 * _A high-level module for Keras-like training._
 * _Off-the-shelf Pytorch style Datasets/Dataloaders for standard tasks such as **Image classification, Image segmentation,
@@ -45,7 +46,7 @@ The Documentation is available [here](https://atharva-phatak.github.io/torchflar
 ### ***Stability***
 
 
-The library isn't mature or stable for production use yet. 
+The library isn't mature or stable for production use yet.
 
 
 The best of the library currently would be for **non production use and rapid prototyping**.
@@ -105,13 +106,13 @@ exp = Experiment(
 
 # Compile your experiment with model, optimizer, schedulers, etc
 exp.compile_experiment(
-    model=net,
-    optimizer="Adam",
-    optimizer_params=dict(lr=3e-4),
-    callbacks=callbacks,
-    criterion="cross_entropy",
-    metrics=metric_list,
-    main_metric="accuracy",
+    model = net,
+    optimizer = "Adam",
+    optimizer_params = {"lr" : 3e-4},
+    callbacks = callbacks,
+    criterion = "cross_entropy",
+    metrics = metric_list,
+    main_metric = "accuracy",
 )
 
 # Run your experiment with training dataloader and validation dataloader.
@@ -144,8 +145,8 @@ exp.plot_history(keys = ["loss" , "accuracy"] , save_fig = False , plot_fig = Tr
 * [Text Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Imdb_classification.ipynb) on IMDB data.
 * [Binary Classification of Tabular Data](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/tabular_classification.ipynb) on previous [kaggle competition](https://www.kaggle.com/c/cat-in-the-dat-ii/overview)
 * Tutorial on using [Hydra and TorchFlare](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification_hydra.ipynb) for efficient workflow and parameter management.
-* Tutorial on [fit methods](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-Classification.ipynb) and how to dispatch training progress to Discord Channel.
-* [Variational Autoencoders](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-VAE.ipynb) on MNIST data.
+* Tutorial on [fit methods](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-Classification.ipynb) and how to dispatch training progress to your personal discord channel.
+* Tutorial on how to train [Variational Autoencoders](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-VAE.ipynb) using torchflare on MNIST Dataset.
 
 ***
 ### ***Current Contributors***
