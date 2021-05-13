@@ -120,7 +120,7 @@ exp.compile_experiment(
 )
 
 # Run your experiment with training dataloader and validation dataloader.
-exp.fit_on_loader(train_dl=train_dl, valid_dl= valid_dl)
+exp.fit_loader(train_dl=train_dl, valid_dl= valid_dl)
 ```
 
 For inference, you can use infer method, which yields output per batch. You can use it as follows
