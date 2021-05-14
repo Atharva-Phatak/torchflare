@@ -31,7 +31,7 @@ your models with all the callbacks, metrics, etc
 * _**Metrics** and much more._
 * _**Reduction** of the boiler plate code required for training your models._
 
-![compare](https://github.com/Atharva-Phatak/torchflare/blob/main/docs/static/images/compare.gif)
+![compare](https://raw.githubusercontent.com/Atharva-Phatak/torchflare/main/docs/static/images/Compare.gif)
 ***
 
 Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU support will be coming soon!
