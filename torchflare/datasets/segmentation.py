@@ -55,6 +55,14 @@ class SegmentationDataset(Dataset):
         """
         return len(self.inputs)
 
+    def _get_labels(self, idx):
+        if any(isinstance(ele, list) for ele in self.labels):
+            mask = make_masks(self.labels[idx], **self.kwargs)
+        else:
+            mask = open_image(self.labels[idx], convert_mode=self.mask_convert_mode)
+
+        return mask
+
     def __getitem__(self, item):
         """__getitem__ method.
 
@@ -66,15 +74,11 @@ class SegmentationDataset(Dataset):
         """
         images = open_image(self.inputs[item], convert_mode=self.image_convert_mode)
         if self.labels is not None:
-            if any(isinstance(ele, list) for ele in self.labels):
-                mask = make_masks(self.labels[item], **self.kwargs)
-            else:
-                mask = open_image(self.labels[item], convert_mode=self.mask_convert_mode)
+            mask = self._get_labels(idx=item)
             images, mask = apply_segmentation_augs(images, augs=self.augmentations, mask=mask)
             return images, mask
 
         else:
-
             images = apply_image_transforms(images, augs=self.augmentations)
             return images
 

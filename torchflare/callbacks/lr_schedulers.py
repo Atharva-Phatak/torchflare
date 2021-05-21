@@ -1,11 +1,14 @@
 """Implements LrScheduler callbacks."""
 from abc import ABC
-from typing import Callable, Iterable, List, Optional, Union
+from typing import TYPE_CHECKING, Callable, Iterable, List, Optional, Union
 
 import torch.optim.lr_scheduler as _schedulers
 
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.states import CallbackOrder
+
+if TYPE_CHECKING:
+    from torchflare.experiments.experiment import Experiment
 
 
 class LRSchedulerCallback(Callbacks, ABC):
@@ -23,21 +26,21 @@ class LRSchedulerCallback(Callbacks, ABC):
         self.step_on_batch = step_on_batch
         self.scheduler = None
 
-    def on_experiment_start(self):
+    def on_experiment_start(self, experiment: "Experiment"):
         """Set scheduler."""
         if self.scheduler is None:
-            self.scheduler = self._scheduler(self.exp.optimizer)
+            self.scheduler = self._scheduler(experiment.optimizer)
 
-    def on_batch_end(self):
+    def on_batch_end(self, experiment: "Experiment"):
         """Step at end of batch."""
         if self.scheduler is not None and self.step_on_batch:
             self.scheduler.step()
 
-    def on_epoch_end(self):
+    def on_epoch_end(self, experiment: "Experiment"):
         """Step at the end of epoch."""
         if self.scheduler is not None and not self.step_on_batch:
             if isinstance(self.scheduler, _schedulers.ReduceLROnPlateau):
-                val = self.exp.exp_logs.get(self.exp.val_key + self.exp.main_metric)
+                val = experiment.exp_logs.get(experiment.val_key + experiment.main_metric)
                 self.scheduler.step(val)
 
             else:

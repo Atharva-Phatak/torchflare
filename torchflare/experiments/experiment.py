@@ -75,6 +75,7 @@ class Experiment(BaseState):
         args = to_device(args, self.device)
         return args
 
+    # noinspection DuplicatedCode
     def process_inputs(self, x, y=None):
         """Method to move the inputs and targets to the respective device.
 
@@ -93,18 +94,18 @@ class Experiment(BaseState):
     def _update_logs(self):
 
         # To-do : Better logs updating
-        self.exp_logs = {"Epoch": self.current_epoch, **self._train_monitor, **self._val_monitor}
+        self.exp_logs = {self.epoch_key: self.current_epoch, **self._train_monitor, **self._val_monitor}
 
     def _update_monitors(self):
-        if self.is_training:
+        if self.stage == "train":
             self._train_monitor = self.metrics
         else:
             self._val_monitor = self.metrics
 
     def _update_metrics(self):
 
-        metrics = {} if self._metric_runner is None else self._metric_runner.value
-        self.metrics = {**self.loss_meter.value, **metrics}
+        metrics = {} if self._metric_runner is None else self._metric_runner.value(self)
+        self.metrics = {**self.loss_meter.value(self), **metrics}
         self._update_monitors()
 
     def compute_loss(self) -> None:
@@ -131,8 +132,7 @@ class Experiment(BaseState):
 
     def set_dataloaders(self, train_dl, valid_dl):
         """Setup dataloader variables."""
-        self.train_dl = train_dl
-        self.valid_dl = valid_dl
+        self.dataloaders = {"train": train_dl, "valid": valid_dl}
 
     def on_experiment_start(self):
         """Event on experiment start."""
@@ -144,8 +144,7 @@ class Experiment(BaseState):
 
     def on_loader_start(self):
         """Event on loader start."""
-        self._step = self.train_step if self.is_training else self.val_step
-        self._iterator = self.train_dl if self.is_training else self.valid_dl
+        self._step = {"train": self.train_step, "valid": self.val_step}
 
     def on_epoch_start(self):
         """Event on epoch start."""
@@ -157,10 +156,10 @@ class Experiment(BaseState):
 
     def on_batch_end(self):
         """Event on batch end."""
-        self.loss_meter.accumulate()
+        self.loss_meter.accumulate(self)
         # accumulate values for metric computation
         if self._metric_runner is not None:
-            self._metric_runner.accumulate()
+            self._metric_runner.accumulate(self)
 
     def on_loader_end(self):
         """Event of loader end."""
@@ -174,18 +173,20 @@ class Experiment(BaseState):
         """Method to run events."""
         getattr(self, event)()
         # As soon as event ends, we run callbacks.
-        self._callback_runner(current_state=event)
+        for callback in self.callbacks:
+            _ = getattr(callback, event)(self)
 
     def run_batch(self) -> None:
         """Run batch with batch event."""
         self._run_event("on_batch_start")
-        self._step()
+        self._step.get(self.stage)()
         self._run_event("on_batch_end")
 
     def run_loader(self):
         """Function to iterate the dataloader through all the batches."""
         self._run_event("on_loader_start")
-        for self.batch_idx, (self.x, self.y) in enumerate(self._iterator):
+        iterator = self.dataloaders.get(self.stage)
+        for self.batch_idx, (self.x, self.y) in enumerate(iterator):
             self.run_batch()
         # Stdout  computed metrics/update monitors.
         self._run_event("on_loader_end")
@@ -221,13 +222,13 @@ class Experiment(BaseState):
     def _do_train_epoch(self):
         """Method to train the model for one epoch."""
         self.model.train()
-        self.is_training = True
+        self.stage = "train"
         self.run_loader()
 
     def _do_val_epoch(self):
         """Method to validate model for one epoch."""
         self.model.eval()
-        self.is_training = False
+        self.stage = "valid"
         self.run_loader()
 
     def _do_epoch(self):
@@ -350,3 +351,6 @@ class Experiment(BaseState):
         dataloader_kwargs = {"batch_size": batch_size, **dataloader_kwargs}
         dl = self._dataloader_from_data((x,), dataloader_kwargs)
         return self.predict_on_loader(path_to_model=path_to_model, test_dl=dl, device=device)
+
+
+__all__ = ["Experiment"]

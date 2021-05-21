@@ -1,9 +1,13 @@
 """Implements Model History."""
 
 from abc import ABC
+from typing import TYPE_CHECKING
 
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.states import CallbackOrder
+
+if TYPE_CHECKING:
+    from torchflare.experiments.experiment import Experiment
 
 
 class History(Callbacks, ABC):
@@ -14,7 +18,7 @@ class History(Callbacks, ABC):
         super(History, self).__init__(order=CallbackOrder.LOGGING)
         self.history = None
 
-    def on_experiment_start(self):
+    def on_experiment_start(self, experiment: "Experiment"):
         """Sets variables at experiment start."""
         self.history = {}
 
@@ -26,7 +30,7 @@ class History(Callbacks, ABC):
             else:
                 self.history[key].append(logs.get(key))
 
-    def on_epoch_end(self):
+    def on_epoch_end(self, experiment: "Experiment"):
         """Method to update history object at the end of every epoch."""
-        self._update_history(logs=self.exp.exp_logs)
-        self.exp.history = self.history
+        self._update_history(logs=experiment.exp_logs)
+        experiment.history = self.history

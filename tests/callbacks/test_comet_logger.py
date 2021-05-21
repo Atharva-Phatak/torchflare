@@ -3,7 +3,7 @@ from torchflare.callbacks.logging.comet_logger import CometLogger
 import os
 import pytest
 
-
+"""
 @pytest.mark.skip(reason="Comet ML requires first import. Logic running properly but will fail CI Tests.")
 def test_comet():
     params = {"bs": 16, "lr": 0.01}
@@ -26,3 +26,4 @@ def test_comet():
         loss = loss / 10
         logger.on_epoch_end()
     logger.on_experiment_end()
+"""

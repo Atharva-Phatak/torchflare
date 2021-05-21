@@ -1,8 +1,11 @@
 """Simple utilities required by experiment."""
-from typing import List
+from typing import TYPE_CHECKING, List
 
 import numpy as np
 import torch
+
+if TYPE_CHECKING:
+    from torchflare.experiments.experiment import Experiment
 
 
 class AvgLoss:
@@ -11,27 +14,21 @@ class AvgLoss:
     def __init__(self):
         self.total, self.count = 0, 0
         self.loss_dict = None
-        self.exp = None
         self.reset()
 
     def reset(self):
         """Reset the variables."""
         self.total, self.count = 0, 0
 
-    def set_experiment(self, exp):
-        """Set experiments."""
-        self.exp = exp
-
-    def accumulate(self):
+    def accumulate(self, experiment: "Experiment"):
         """Accumulate values."""
-        bs = self.exp.train_dl.batch_size if self.exp.is_training else self.exp.valid_dl.batch_size
-        self.total += self.exp.loss.item() * bs
+        bs = experiment.dataloaders.get(experiment.stage).batch_size
+        self.total += experiment.loss.item() * bs
         self.count += bs
 
-    @property
-    def value(self):
+    def value(self, experiment: "Experiment"):
         """Method to return computed dictionary."""
-        self.loss_dict = {self.exp.get_prefix() + "loss": self.total / self.count}
+        self.loss_dict = {experiment.get_prefix() + "loss": self.total / self.count}
         self.reset()
         return self.loss_dict
 
@@ -87,6 +84,8 @@ def numpy_to_torch(value):
         return [_apply_fn(v) for v in value]
     elif isinstance(value, np.ndarray):
         return _apply_fn(value)
+    else:
+        return None
 
 
 def to_numpy(x):

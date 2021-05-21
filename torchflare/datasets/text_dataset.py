@@ -4,8 +4,9 @@ from __future__ import annotations
 from typing import List, Union
 
 import pandas as pd
-import torch
 from torch.utils.data import Dataset
+
+from torchflare.datasets.utils import to_tensor
 
 
 class TextClassificationDataset(Dataset):
@@ -62,7 +63,7 @@ class TextClassificationDataset(Dataset):
 
         if self.labels is not None:
             labels = self.labels[item]
-            return inps_dict, torch.tensor(labels, dtype=torch.long)
+            return inps_dict, to_tensor(labels)
 
         return inps_dict
 

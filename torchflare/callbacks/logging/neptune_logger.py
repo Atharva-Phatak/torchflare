@@ -1,11 +1,14 @@
 """Implements Neptune Logger."""
 from abc import ABC
-from typing import List
+from typing import TYPE_CHECKING, List
 
 import neptune.new as neptune
 
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.states import CallbackOrder
+
+if TYPE_CHECKING:
+    from torchflare.experiments.experiment import Experiment
 
 
 class NeptuneLogger(Callbacks, ABC):
@@ -39,7 +42,7 @@ class NeptuneLogger(Callbacks, ABC):
         self.experiment_name = experiment_name
         self.experiment = None
 
-    def on_experiment_start(self):
+    def on_experiment_start(self, experiment: "Experiment"):
         """Start of experiment."""
         self.experiment = neptune.init(
             project=self.project_dir, api_token=self.api_token, tags=self.tags, name=self.experiment_name
@@ -50,14 +53,14 @@ class NeptuneLogger(Callbacks, ABC):
 
         self.experiment[name].log(value=value, step=epoch)
 
-    def on_epoch_end(self):
+    def on_epoch_end(self, experiment: "Experiment"):
         """Method to log metrics and values at the end of very epoch."""
-        for key, value in self.exp.exp_logs.items():
-            if key != self.exp.epoch_key:
-                epoch = self.exp.exp_logs[self.exp.epoch_key]
+        for key, value in experiment.exp_logs.items():
+            if key != experiment.epoch_key:
+                epoch = experiment.exp_logs[experiment.epoch_key]
                 self._log_metrics(name=key, value=value, epoch=epoch)
 
-    def on_experiment_end(self):
+    def on_experiment_end(self, experiment: "Experiment"):
         """Method to end experiment after training is done."""
         self.experiment.stop()
         self.experiment = None

@@ -8,13 +8,12 @@ from torchflare.metrics.precision_meter import Precision
 torch.manual_seed(42)
 
 
-class DummyPipe:
+class Experiment:
     def __init__(self, train=True, metrics=None):
 
         self.train_metric = train
         self.val_metrics = True
         self._metric_runner = MetricContainer(metrics=metrics)
-        self._metric_runner.set_experiment(self)
         self.compute_metric_flag = None
         self.preds = torch.randn(100, 1)
         self.y = torch.randint(0, 2, size=(100,))
@@ -32,9 +31,9 @@ class DummyPipe:
         for _ in range(10):
 
             loss = loss * 0.1
-            self._metric_runner.accumulate()
+            self._metric_runner.accumulate(self)
 
-        metrics = self._metric_runner.value
+        metrics = self._metric_runner.value(self)
         assert isinstance(metrics, dict) is True
         loss_bool = "train_accuracy" in metrics
         assert loss_bool is True
@@ -47,9 +46,9 @@ class DummyPipe:
         loss = 20
         for _ in range(10):
             loss = loss * 0.1
-            self._metric_runner.accumulate()
+            self._metric_runner.accumulate(self)
 
-        metrics = self._metric_runner.value
+        metrics = self._metric_runner.value(self)
         assert isinstance(metrics, dict) is True
         loss_bool = "val_accuracy" in metrics
         assert loss_bool is True
@@ -67,5 +66,5 @@ def test():
         Accuracy(num_classes=1, threshold=0.5, multilabel=False),
         Precision(num_classes=1, threshold=0.5, multilabel=False, average="macro",),
     ]
-    d = DummyPipe(train=True, metrics=metrics)
+    d = Experiment(train=True, metrics=metrics)
     d.fit()

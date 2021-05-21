@@ -1,5 +1,8 @@
 """Implementation of Callbacks and CallbackRunner."""
-from typing import List
+from typing import TYPE_CHECKING, List
+
+if TYPE_CHECKING:
+    from torchflare.experiments.experiment import Experiment
 
 
 def sort_callbacks(callbacks: List) -> List:
@@ -24,73 +27,45 @@ class Callbacks:
         Args:
             order: The priority value for callbacks so that they can be sorted according to the value.
         """
-        self.exp = None
         self.order = order
 
-    def set_experiment(self, exp):  # noqa
-        self.exp = exp
-
     # skipcq: PTC-W0049
-    def on_batch_start(self):
+    def on_batch_start(self, experiment: "Experiment"):
         """Start of batch."""
         # skipcq: PYL-W0107
         pass
 
     # skipcq: PTC-W0049
-    def on_batch_end(self):
+    def on_batch_end(self, experiment: "Experiment"):
         """End of Batch."""
         pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
-    def on_loader_start(self):
+    def on_loader_start(self, experiment: "Experiment"):
         """Start of loader."""
         pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
-    def on_loader_end(self):
+    def on_loader_end(self, experiment: "Experiment"):
         """End of loader."""
         pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
-    def on_epoch_start(self):
+    def on_epoch_start(self, experiment: "Experiment"):
         """Start of Epoch."""
         pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
-    def on_epoch_end(self):
+    def on_epoch_end(self, experiment: "Experiment"):
         """End of epoch."""
         pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
-    def on_experiment_start(self):
+    def on_experiment_start(self, experiment: "Experiment"):
         """Start of experiment."""
         pass  # skipcq: PYL-W0107
 
     # skipcq: PTC-W0049
-    def on_experiment_end(self):
+    def on_experiment_end(self, experiment: "Experiment"):
         """End of experiment."""
         pass  # skipcq: PYL-W0107
-
-
-class CallbackRunner:
-    """Class to run all the callbacks."""
-
-    def __init__(self, callbacks):
-        """Constructor for CallbackRunner Class.
-
-        Args:
-            callbacks: The List of callbacks
-        """
-        self.callbacks = callbacks
-
-    def set_experiment(self, exp):  # noqa
-        for cb in self.callbacks:
-            cb.set_experiment(exp)
-
-    def __call__(self, current_state: str):
-        """Runs callbacks depending on the current experiment state."""
-        for cb in self.callbacks:
-            try:
-                _ = getattr(cb, current_state)()
-            except AttributeError:
-                pass

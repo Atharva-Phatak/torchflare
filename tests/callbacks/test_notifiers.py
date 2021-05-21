@@ -4,7 +4,7 @@ import os
 from torchflare.callbacks.notifiers import DiscordNotifierCallback, SlackNotifierCallback
 import pytest
 
-
+"""
 @pytest.mark.skip(reason="Requires secret webhook url.")
 def test_slack():
 
@@ -44,3 +44,4 @@ def test_discord():
         discord_n.on_epoch_end()
 
     print("Discord Testing Completed")
+"""

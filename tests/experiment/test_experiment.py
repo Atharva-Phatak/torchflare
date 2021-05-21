@@ -5,6 +5,7 @@ import torchflare.metrics as metrics
 from torchflare.experiments.experiment import Experiment
 from torchflare.utils.seeder import seed_all
 import os
+import pandas as pd
 
 
 def test_experiment(tmpdir):
@@ -58,6 +59,8 @@ def test_experiment(tmpdir):
         )
         exp.fit_loader(train_dl=loader, valid_dl=loader)
         exp.plot_history(keys=["accuracy"], save_fig=False, plot_fig=False)
+        logs = exp.get_logs()
+        assert isinstance(logs , pd.DataFrame) is True
         outputs = []
         for op in exp.predict_on_loader(
             test_dl=test_dl, device=device, path_to_model=os.path.join(save_dir, file_name)
@@ -101,6 +104,8 @@ def test_experiment(tmpdir):
         )
         exp.fit(x=X, y=y, val_data=(X, y), batch_size=32)
         exp.plot_history(keys=["accuracy"], save_fig=False, plot_fig=False)
+        logs = exp.get_logs()
+        assert isinstance(logs, pd.DataFrame) is True
         outputs = []
         for op in exp.predict(
             x=test_data, device=device, path_to_model=os.path.join(save_dir, file_name), batch_size=16

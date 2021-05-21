@@ -1,7 +1,7 @@
 # flake8: noqa
 # isort: skip
 """Imports for callbacks."""
-from torchflare.callbacks.callback import CallbackRunner, Callbacks, sort_callbacks  # isort: skip
+from torchflare.callbacks.callback import Callbacks, sort_callbacks  # isort: skip
 from torchflare.callbacks.early_stopping import EarlyStopping  # isort: skip
 from torchflare.callbacks.extra_utils import init_improvement  # isort: skip
 from torchflare.callbacks.load_checkpoint import LoadCheckpoint  # isort: skip
@@ -32,7 +32,6 @@ from torchflare.callbacks.lr_schedulers import CosineAnnealingLR  # isort: skip;
 __all__ = [
     "Callbacks",
     "CallbackOrder",
-    "CallbackRunner",
     "sort_callbacks",
     "EarlyStopping",
     "SlackNotifierCallback",

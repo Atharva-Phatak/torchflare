@@ -1,6 +1,7 @@
 """Implements Model Checkpoint Callback."""
 import os
 from abc import ABC
+from typing import TYPE_CHECKING
 
 import numpy as np
 import torch
@@ -8,6 +9,9 @@ import torch
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.extra_utils import init_improvement
 from torchflare.callbacks.states import CallbackOrder
+
+if TYPE_CHECKING:
+    from torchflare.experiments.experiment import Experiment
 
 
 class ModelCheckpoint(Callbacks, ABC):
@@ -32,7 +36,6 @@ class ModelCheckpoint(Callbacks, ABC):
 
             1) 'model_state_dict' : The state dictionary of model
             2) 'optimizer_state_dict'  : The state dictionary of optimizer
-            4) 'Epoch' : The epoch at which model was saved.
 
             Model checkpoint will be saved based on the values of metrics/loss obtained from validation set.
         """
@@ -47,30 +50,28 @@ class ModelCheckpoint(Callbacks, ABC):
         self.improvement, self.best_val = init_improvement(mode=self.mode, min_delta=self.eps)
         self.path = os.path.join(save_dir, file_name)
 
-    def checkpoint(self, epoch: int):
-        """Method to save the state dictionaries of model, optimizer,etc.
-
-        Args:
-            epoch : The epoch at which model is saved.
-        """
+    def checkpoint(self, model, optimizer):
+        """Method to save the state dictionaries of model, optimizer,etc."""
         torch.save(
             {
-                "model_state_dict": self.exp.model.state_dict(),
-                "optimizer_state_dict": self.exp.optimizer.state_dict(),
-                "Epoch": epoch,
+                "model_state_dict": model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
             },
             self.path,
         )
 
-    def on_epoch_end(self):
+    def on_epoch_end(self, experiment: "Experiment"):
         """Method to save best model depending on the monitored quantity."""
-        val = self.exp.exp_logs.get(self.monitor)
+        val = experiment.exp_logs.get(self.monitor)
 
         if self.improvement(score=val, best=self.best_val):
 
-            self.checkpoint(epoch=self.exp.exp_logs.get(self.exp.epoch_key))
+            self.checkpoint(
+                model=experiment.model,
+                optimizer=experiment.optimizer,
+            )
 
-    def on_experiment_end(self):
+    def on_experiment_end(self, experiment: "Experiment"):
         """Reset to default."""
         if self.mode == "max":
             self.best_val = -np.inf

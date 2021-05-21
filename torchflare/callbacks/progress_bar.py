@@ -2,12 +2,15 @@
 import math
 import sys
 import time
-from typing import Dict
+from typing import TYPE_CHECKING, Dict
 
 from torch.utils.data import DataLoader
 
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.states import CallbackOrder
+
+if TYPE_CHECKING:
+    from torchflare.experiments.experiment import Experiment
 
 # Adapted From: https://github.com/tensorflow/tensorflow/blob/v2.4.1/tensorflow/python/keras/utils/generic_utils.py
 
@@ -45,17 +48,16 @@ class ProgressBar(Callbacks):
         self._start = time.time()
         self._last_update = 0
         self.num_steps = 0
-        self.prefix = None
 
-    def on_experiment_start(self):
+    def on_experiment_start(self, experiment: "Experiment"):
         """On start of experiment."""
-        self.num_epochs = self.exp.num_epochs
+        self.num_epochs = experiment.num_epochs
 
-    def on_epoch_start(self):
+    def on_epoch_start(self, experiment: "Experiment"):
         """On start of epoch."""
         sys.stdout.write("\n")
-        if (self.exp.current_epoch is not None) and (self.num_epochs is not None):
-            sys.stdout.write(f"Epoch: {self.exp.current_epoch}/{self.num_epochs}")
+        if (experiment.current_epoch is not None) and (self.num_epochs is not None):
+            sys.stdout.write(f"Epoch: {experiment.current_epoch}/{self.num_epochs}")
             sys.stdout.write("\n")
 
     def _create_bar(self, current_step: int):
@@ -64,7 +66,7 @@ class ProgressBar(Callbacks):
         Args:
             current_step: The current iteration step.
         """
-        bar = f"{self.prefix}: {current_step}/{self.num_steps} ["
+        bar = f"{current_step}/{self.num_steps} ["
         prog = float(current_step) / self.num_steps
         prog_width = int(self.width * prog)
         if prog_width > 0:
@@ -144,14 +146,14 @@ class ProgressBar(Callbacks):
         sys.stdout.flush()
         self._last_update = now
 
-    def on_batch_end(self):
+    def on_batch_end(self, experiment: "Experiment"):
         """On end of a batch."""
-        values = {"loss": self.exp.loss.item()}
-        self.update(current_step=self.exp.batch_idx, values=values)
+        values = {"loss": experiment.loss.item()}
+        self.update(current_step=experiment.batch_idx, values=values)
 
-    def on_loader_end(self):
+    def on_loader_end(self, experiment: "Experiment"):
         """On end of dataloader."""
-        self.update(current_step=self._seen_so_far + 1, values=self.exp.metrics)
+        self.update(current_step=self._seen_so_far + 1, values=experiment.metrics)
         self.reset()
 
     # noinspection PyTypeChecker
@@ -168,10 +170,9 @@ class ProgressBar(Callbacks):
         steps = len(dl.dataset) / dl.batch_size
         return math.ceil(steps)
 
-    def on_loader_start(self):
+    def on_loader_start(self, experiment: "Experiment"):
         """On start of loader.."""
-        dl = self.exp.train_dl if self.exp.is_training else self.exp.valid_dl
-        self.prefix = "Train" if self.exp.is_training else "Valid"
+        dl = experiment.dataloaders.get(experiment.stage)
         self.num_steps = self.calculate_steps(dl=dl)
 
     def reset(self):
@@ -180,4 +181,3 @@ class ProgressBar(Callbacks):
         self._seen_so_far = 0
         self._start = time.time()
         self._last_update = 0
-        self.prefix = None

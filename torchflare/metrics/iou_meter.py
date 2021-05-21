@@ -53,12 +53,12 @@ class IOU(MetricMeter):
         Returns:
             The computed iou.
         """
-        self._outputs = torch.cat(self._outputs)
-        self._targets = torch.cat(self._targets)
+        outputs = torch.cat(self._outputs)
+        targets = torch.cat(self._targets)
 
         tp, fp, fn = calculate_segmentation_statistics(
-            outputs=self._outputs,
-            targets=self._targets,
+            outputs=outputs,
+            targets=targets,
             threshold=self.threshold,
             class_dim=self.class_dim,
         )
