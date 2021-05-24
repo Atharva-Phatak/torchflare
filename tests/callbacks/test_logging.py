@@ -12,61 +12,79 @@ os.environ["WANDB_SILENT"] = "true"
 # os.environ["NEPTUNE_API_TOKEN"] = "Dummy_token"
 os.environ["WB_API_TOKEN"] = "Dummy_wandb_token"
 
+
 class TestExperiment:
     def __init__(self):
         pass
+
     @patch("torchflare.callbacks.logging.neptune_logger.neptune")
-    def test_neptune_mock(self,neptune):
+    def test_neptune_mock(self, neptune):
         """Simple to check if same experiment is created."""
         logger = NeptuneLogger(api_token="test", project_dir="namespace/project")
         logger.on_experiment_start(self)
         created_experiment = neptune.init(name="namespace/project", api_token="test")
+        logger.on_epoch_end(self)
+        logger.on_experiment_end(self)
         assert logger.experiment is not None
         assert created_experiment.name == logger.experiment.name
         assert created_experiment.id == logger.experiment.id
-
+        assert created_experiment.on_experiment_start.assert_called_once()
+        assert created_experiment.on_epoch_end.assert_called_once()
+        assert created_experiment.on_experiment_end.assert_called_once()
 
     @patch("torchflare.callbacks.logging.wandb_logger.wandb")
-    def test_wandb_mock(self,wandb):
+    def test_wandb_mock(self, wandb):
         """Simple test to check if same experiment is created or not."""
         logger = WandbLogger(project="test", entity="project")
-        logger.on_experiment_start()
+        logger.on_experiment_start(self)
         wandb.init.assert_called_once(self)
         wandb_exp = wandb.init(project="test", entity="project")
+        logger.on_epoch_end(self)
+        logger.on_experiment_end(self)
         assert logger.experiment is not None
         assert logger.experiment.entity == wandb_exp.entity
         assert logger.experiment.id == wandb_exp.id
+        assert wandb_exp.on_experiment_start.assert_called_once()
+        assert wandb_exp.on_epoch_end.assert_called_once()
+        assert wandb_exp.on_experiment_end.assert_called_once()
 
 
-""""
-@pytest.mark.skip(reason="Callback running correctly.Requires secret api token.")
+class Experiment:
+    def __init__(self, logger):
+        self.epoch_key = "epoch"
+        self.exp_logs = None
+        self.logger = logger
+
+
+    def start_log(self):
+        acc = 10
+        f1 = 10
+        loss = 100
+        self.logger.on_experiment_start(self)
+        for epoch in range(10):
+            self.exp_logs = {"epoch": epoch, "acc": acc, "f1": f1, "loss": loss, "Time": 5}
+            acc += 10
+            f1 += 10
+
+            loss = loss / 10
+            self.logger.on_epoch_end(self)
+
+        self.logger.on_experiment_end(self)
+
+"""
 def test_neptune():
-
     params = {"bs": 16, "lr": 0.01}
     logger = NeptuneLogger(
-        project_dir="notsogenius/DL-Experiments",
-        params=params,
-        experiment_name="Neptune_test",
-        tags=["Dummy", "test"],
-        api_token=os.environ.get("NEPTUNE_API_TOKEN"),
-    )
-    cb = CallbackRunner(callbacks=[logger])
-    acc = 10
-    f1 = 10
-    loss = 10
+            project_dir="torchflare456/torchflare-tests",
+            params=params,
+            experiment_name="Neptune_test",
+            tags=["Dummy", "test"],
+            api_token="ANONYMOUS",)
+    neptune_exp = Experiment(logger)
+    neptune_exp.start_log()
 
-    cb(current_state=ExperimentStates.EXP_START)
-    for epoch in range(10):
-        d = {"acc": acc, "f1": f1, "loss": loss, "Time": 5}
-        acc += 10
-        f1 += 10
-
-        loss = loss / 10
-
-        cb(current_state=ExperimentStates.EPOCH_END, epoch=epoch, logs=d)
-    cb(current_state=ExperimentStates.EXP_END)
-
-
+"""
+"""
 @pytest.mark.skip(reason="Callback running correctly. Will need seprate API token for general Tests.")
 def test_wandb(tmpdir):
     params = {"bs": 16, "lr": 0.01}
@@ -94,26 +112,6 @@ def test_wandb(tmpdir):
 """
 
 
-class Experiment:
-    def __init__(self, logger):
-        self.epoch_key = "epoch"
-        self.exp_logs = None
-        self.logger = logger
-        self.logger.on_experiment_start(self)
-
-    def start_log(self):
-        acc = 10
-        f1 = 10
-        loss = 100
-        for epoch in range(10):
-            self.exp_logs = {"epoch": epoch, "acc": acc, "f1": f1, "loss": loss, "Time": 5}
-            acc += 10
-            f1 += 10
-
-            loss = loss / 10
-            self.logger.on_epoch_end(self)
-
-        self.logger.on_experiment_end(self)
 
 
 def test_tensorboard(tmpdir):
