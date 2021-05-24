@@ -75,6 +75,10 @@ class BaseState:
         """
         return self.train_key if self.stage.startswith("train") else self.val_key
 
+    @staticmethod
+    def _get_params_for(prefix, kwargs):
+        return {k[len(prefix) :]: v for k, v in kwargs.items() if k.startswith(prefix)}
+
     def _set_callbacks(self, callbacks: List):
         self.callbacks = [ProgressBar(), History()]
         if callbacks is not None:
@@ -87,18 +91,18 @@ class BaseState:
         if metrics is not None:
             self._metric_runner = metric_utils.MetricContainer(metrics=metrics)
 
-    def _set_params(self, optimizer_params):
+    def _set_model(self, model_class):
+        model_params = self._get_params_for("model_", self.__dict__)
+        self.model = model_class(**model_params)
 
-        if "model_params" in optimizer_params:
-            grad_params = optimizer_params.pop("model_params")
-        else:
-            grad_params = (param for param in self.model.parameters() if param.requires_grad)
+    def _set_params(self):
 
+        grad_params = (param for param in self.model.parameters() if param.requires_grad)
         return grad_params
 
-    def _set_optimizer(self, optimizer, optimizer_params):
-
-        grad_params = self._set_params(optimizer_params=optimizer_params)
+    def _set_optimizer(self, optimizer):
+        optimizer_params = self._get_params_for("optimizer_", self.__dict__)
+        grad_params = self._set_params()
         self.optimizer = get_optimizer(optimizer)(grad_params, **optimizer_params)
 
     def _set_criterion(self, criterion):

@@ -5,14 +5,12 @@ import torch
 from torchflare.metrics.meters import MetricMeter
 
 
-def _check_dim(x):
-    if x.ndim > 1:
-        return x.squeeze()
-
-
 def _auc_check(x, y):
+    if x.ndim > 1:
+        x = x.view(-1)
 
-    x, y = _check_dim(x), _check_dim(y)
+    if y.ndim > 1:
+        y = y.view(-1)
     if x.ndim > 1 or y.ndim > 1:
         raise ValueError(
             f"Expected both x and `y` tensor to be 1d, but got tensors with dimension {x.ndim} and {y.ndim}"

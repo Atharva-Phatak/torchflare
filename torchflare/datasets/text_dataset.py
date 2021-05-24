@@ -79,10 +79,10 @@ class TextClassificationDataset(Dataset):
         """Classmethod to create the dataset from dataframe.
 
         Args:
-            df: The dataframe which has the data.
+            df: The dataframe which has the input sentences and targets.
             input_col: The column containing the inputs.
             label_cols: The column which contains corresponding labels.
-            tokenizer: The tokenizer to be used.(Use only tokenizer available in huggingface)
+            tokenizer: The tokenizer to be used.(Use only tokenizer available in huggingface.
             max_len: The max_len to be used.
 
         Returns:
@@ -93,3 +93,6 @@ class TextClassificationDataset(Dataset):
         labels = df.loc[:, label_cols].values.tolist() if label_cols is not None else None
 
         return cls(inputs=inputs, labels=labels, tokenizer=tokenizer, max_len=max_len)
+
+
+__all__ = ["TextClassificationDataset"]

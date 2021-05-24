@@ -1,13 +1,18 @@
 """Implements Base class."""
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 
+from torchflare.data_config.base import DataPipe
 from torchflare.experiments.simple_utils import to_device
 from torchflare.experiments.state import BaseState
+
+if TYPE_CHECKING:
+    from torchflare.data_config.base import BaseConfig
 
 
 class Experiment(BaseState):
@@ -37,21 +42,22 @@ class Experiment(BaseState):
 
     def compile_experiment(
         self,
-        model: nn.Module,
+        model_class: nn.Module,
         optimizer: Union[torch.optim.Optimizer, str, Any],
-        optimizer_params: Dict[str, Union[int, float]],
         criterion: Union[Callable[[torch.Tensor], torch.Tensor], str],
         callbacks: List = None,
         metrics: List = None,
         main_metric: Optional[str] = None,
+        **kwargs,
     ):
         """Configures the model for training and validation.
 
         Args:
-            model: The model to be trained.
-            optimizer: The optimizer to be used or name of optimizer.
+            model_class: An uninstantiated PyTorch class which defines the model. The init arguments for your
+                        model class should be passed to ***compile_experiment*** with prefix **model_**.
+            optimizer: The optimizer to be used or name of optimizer. The init arguments for your optimizer
+                        should be passed to ***compile_experiment*** with prefix **optimizer_**.
                         If you pass in the name of the optimizer, only optimizers available in pytorch are supported.
-            optimizer_params: The parameters to be used for the optimizer.
             criterion: The loss function to optimize or name of the loss function.
                     If you pass in the name of the loss function,
                     only loss functions available in pytorch can be supported.
@@ -64,9 +70,10 @@ class Experiment(BaseState):
             Supports all the schedulers implemented in pytorch/transformers except SWA.
             Support for custom scheduling will be added soon.
         """
-        self.model = model
+        vars(self).update(kwargs)
         self.main_metric = main_metric
-        self._set_optimizer(optimizer=optimizer, optimizer_params=optimizer_params)
+        self._set_model(model_class=model_class)
+        self._set_optimizer(optimizer=optimizer)
         self._set_metrics(metrics=metrics)
         self._set_callbacks(callbacks=callbacks)
         self._set_criterion(criterion=criterion)
@@ -245,6 +252,40 @@ class Experiment(BaseState):
             if self.stop_training:
                 break
 
+    def _general_fit(self):
+        self._run_event("on_experiment_start")
+        self._run()
+        self._run_event("on_experiment_end")
+
+    def fit_config(
+        self,
+        train_data_cfg: Union["BaseConfig", dataclass],
+        val_data_cfg: Union["BaseConfig", dataclass],
+        batch_size: int = 64,
+        dataloader_kwargs: Dict = None,
+    ):
+        """Train and validate the model on dataset created using train and validation data configs.
+
+        Args:
+            train_data_cfg: The training data config.
+            val_data_cfg: The validation data config.
+            batch_size: The batch size to be used for training and validation.
+            dataloader_kwargs: Keyword arguments to pass to the PyTorch dataloaders created
+                internally. By default, shuffle=True is passed for the training dataloader but this can be
+                overriden by using this argument.
+
+        Note:
+            Model will only be saved when ModelCheckpoint callback is used.
+        """
+        if dataloader_kwargs is None:
+            dataloader_kwargs = {}
+
+        dataloader_kwargs = {"batch_size": batch_size, **dataloader_kwargs}
+        data_pipe = DataPipe(train_data_cfg=train_data_cfg, valid_data_cfg=val_data_cfg)
+        train_dl = DataLoader(data_pipe.train_ds, **{"shuffle": True, **dataloader_kwargs})
+        valid_dl = DataLoader(data_pipe.valid_ds, **dataloader_kwargs)
+        self.fit_loader(train_dl=train_dl, valid_dl=valid_dl)
+
     def fit(
         self,
         x: Union[torch.Tensor, np.ndarray],
@@ -286,9 +327,7 @@ class Experiment(BaseState):
             Model will only be saved when ModelCheckpoint callback is used.
         """
         self.set_dataloaders(train_dl=train_dl, valid_dl=valid_dl)
-        self._run_event("on_experiment_start")
-        self._run()
-        self._run_event("on_experiment_end")
+        self._general_fit()
 
     @torch.no_grad()
     def _infer_on_batch(self, inp):

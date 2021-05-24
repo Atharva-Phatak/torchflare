@@ -94,9 +94,8 @@ class ImageDataset(Dataset):
         Args:
             path: The path where images are saved.
             df: The dataframe containing the image name/ids, and the targets
-            image_col: The name of the image column containing the image name/ids along with image extension.
-                i.e. the images should have names like img_215.jpg or img_name.png ,etc
-            augmentations: The batch_mixers to be used on images.
+            image_col: The name of the image column containing the image name/ids.
+            augmentations: The augmentations to be used on images.
             label_cols: Column name or list of column names containing targets.
             extension : The image file extension.
             convert_mode: The mode to be passed to PIL.Image.convert.
