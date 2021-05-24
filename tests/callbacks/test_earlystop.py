@@ -1,29 +1,15 @@
 # flake8: noqa
-from torchflare.callbacks.callback import CallbackRunner
 from torchflare.callbacks.early_stopping import EarlyStopping
 
 
-class DummyPipeline:
+class Experiment:
     def __init__(self, cbs):
 
         self.stop_training = False
         self._model_state = None
-        self.cb = CallbackRunner(cbs)
-
-        self.cb.set_experiment(self)
+        self.cb = cbs
         self.exp_logs = {}
 
-    @property
-    def set_model_state(self):
-
-        return self._model_state
-
-    @set_model_state.setter
-    def set_model_state(self, state):
-
-        self._model_state = state
-        if self.cb is not None:
-            self.cb(current_state=self._model_state)
 
     def fit(self):
 
@@ -32,7 +18,7 @@ class DummyPipeline:
         train_acc = 10
         val_acc = 10
 
-        self.set_model_state = "on_experiment_start"
+        self.cb.on_experiment_start(self)
 
         for epoch in range(10):
 
@@ -51,17 +37,17 @@ class DummyPipeline:
             }
 
             self.exp_logs.update(logs)
-            self.set_model_state = "on_epoch_end"
+            self.cb.on_epoch_end(self)
 
             if self.stop_training:
                 break
-        self.set_model_state = "on_experiment_end"
+        self.cb.on_experiment_end(self)
 
 
 def test_on_val_loss():
 
     es = EarlyStopping(mode="min")
-    trainer = DummyPipeline(cbs=[es])
+    trainer = Experiment(cbs=es)
 
     trainer.fit()
 
@@ -71,7 +57,7 @@ def test_on_val_loss():
 
 def test_on_metric():
     es = EarlyStopping(monitor="acc", mode="max")
-    trainer = DummyPipeline(cbs=[es])
+    trainer = Experiment(es)
 
     trainer.fit()
     assert es.monitor == "val_acc"

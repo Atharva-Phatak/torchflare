@@ -1,7 +1,10 @@
 """Implements container for loss and metric computation."""
-from typing import Dict, List
+from typing import TYPE_CHECKING, Dict, List
 
 from torchflare.experiments.simple_utils import wrap_metric_names
+
+if TYPE_CHECKING:
+    from torchflare.experiments.experiment import Experiment
 
 
 class MetricContainer:
@@ -19,40 +22,31 @@ class MetricContainer:
         else:
             self.metrics = None
 
-        self.exp = None
         self.prefix = None
         self.metric_dict = None
-
-    def set_experiment(self, exp):  # noqa
-        self.exp = exp
 
     def reset(self):
         """Method to reset the state of metrics and loss meter."""
         _ = map(lambda x: x.reset(), self.metrics)
 
-    @property
-    def value(self) -> Dict:
+    def value(self, experiment: "Experiment") -> Dict:
         """Method to compute the metrics once accumulation of values is done.
 
         Returns:
             A dictionary containing corresponding metrics.
         """
-        self.compute()
+        self.compute(experiment=experiment)
         self.reset()
         return self.metric_dict
 
-    def accumulate(self):
-        """Method to accumulate output of every batch."""
-        self.accum_vals()
-
-    def accum_vals(self):
+    def accumulate(self, experiment: "Experiment"):
         """Accumulate values."""
         for metric in self.metrics:
-            metric.accumulate(self.exp.preds, self.exp.y)
+            metric.accumulate(experiment.preds, experiment.y)
 
-    def compute(self):
+    def compute(self, experiment: "Experiment"):
         """Compute values."""
-        self.prefix = self.exp.get_prefix()
+        self.prefix = experiment.get_prefix()
         self.compute_vals()
 
     def compute_vals(self):

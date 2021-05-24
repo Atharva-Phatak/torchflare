@@ -1,13 +1,18 @@
 """Implements Base class."""
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 
+from torchflare.data_config.base import DataPipe
 from torchflare.experiments.simple_utils import to_device
 from torchflare.experiments.state import BaseState
+
+if TYPE_CHECKING:
+    from torchflare.data_config.base import BaseConfig
 
 
 class Experiment(BaseState):
@@ -37,21 +42,22 @@ class Experiment(BaseState):
 
     def compile_experiment(
         self,
-        model: nn.Module,
+        model_class: nn.Module,
         optimizer: Union[torch.optim.Optimizer, str, Any],
-        optimizer_params: Dict[str, Union[int, float]],
         criterion: Union[Callable[[torch.Tensor], torch.Tensor], str],
         callbacks: List = None,
         metrics: List = None,
         main_metric: Optional[str] = None,
+        **kwargs,
     ):
         """Configures the model for training and validation.
 
         Args:
-            model: The model to be trained.
-            optimizer: The optimizer to be used or name of optimizer.
+            model_class: An uninstantiated PyTorch class which defines the model. The init arguments for your
+                        model class should be passed to ***compile_experiment*** with prefix **model_**.
+            optimizer: The optimizer to be used or name of optimizer. The init arguments for your optimizer
+                        should be passed to ***compile_experiment*** with prefix **optimizer_**.
                         If you pass in the name of the optimizer, only optimizers available in pytorch are supported.
-            optimizer_params: The parameters to be used for the optimizer.
             criterion: The loss function to optimize or name of the loss function.
                     If you pass in the name of the loss function,
                     only loss functions available in pytorch can be supported.
@@ -64,9 +70,10 @@ class Experiment(BaseState):
             Supports all the schedulers implemented in pytorch/transformers except SWA.
             Support for custom scheduling will be added soon.
         """
-        self.model = model
+        vars(self).update(kwargs)
         self.main_metric = main_metric
-        self._set_optimizer(optimizer=optimizer, optimizer_params=optimizer_params)
+        self._set_model(model_class=model_class)
+        self._set_optimizer(optimizer=optimizer)
         self._set_metrics(metrics=metrics)
         self._set_callbacks(callbacks=callbacks)
         self._set_criterion(criterion=criterion)
@@ -75,6 +82,7 @@ class Experiment(BaseState):
         args = to_device(args, self.device)
         return args
 
+    # noinspection DuplicatedCode
     def process_inputs(self, x, y=None):
         """Method to move the inputs and targets to the respective device.
 
@@ -93,18 +101,18 @@ class Experiment(BaseState):
     def _update_logs(self):
 
         # To-do : Better logs updating
-        self.exp_logs = {"Epoch": self.current_epoch, **self._train_monitor, **self._val_monitor}
+        self.exp_logs = {self.epoch_key: self.current_epoch, **self._train_monitor, **self._val_monitor}
 
     def _update_monitors(self):
-        if self.is_training:
+        if self.stage == "train":
             self._train_monitor = self.metrics
         else:
             self._val_monitor = self.metrics
 
     def _update_metrics(self):
 
-        metrics = {} if self._metric_runner is None else self._metric_runner.value
-        self.metrics = {**self.loss_meter.value, **metrics}
+        metrics = {} if self._metric_runner is None else self._metric_runner.value(self)
+        self.metrics = {**self.loss_meter.value(self), **metrics}
         self._update_monitors()
 
     def compute_loss(self) -> None:
@@ -131,8 +139,7 @@ class Experiment(BaseState):
 
     def set_dataloaders(self, train_dl, valid_dl):
         """Setup dataloader variables."""
-        self.train_dl = train_dl
-        self.valid_dl = valid_dl
+        self.dataloaders = {"train": train_dl, "valid": valid_dl}
 
     def on_experiment_start(self):
         """Event on experiment start."""
@@ -144,8 +151,7 @@ class Experiment(BaseState):
 
     def on_loader_start(self):
         """Event on loader start."""
-        self._step = self.train_step if self.is_training else self.val_step
-        self._iterator = self.train_dl if self.is_training else self.valid_dl
+        self._step = {"train": self.train_step, "valid": self.val_step}
 
     def on_epoch_start(self):
         """Event on epoch start."""
@@ -157,10 +163,10 @@ class Experiment(BaseState):
 
     def on_batch_end(self):
         """Event on batch end."""
-        self.loss_meter.accumulate()
+        self.loss_meter.accumulate(self)
         # accumulate values for metric computation
         if self._metric_runner is not None:
-            self._metric_runner.accumulate()
+            self._metric_runner.accumulate(self)
 
     def on_loader_end(self):
         """Event of loader end."""
@@ -174,18 +180,20 @@ class Experiment(BaseState):
         """Method to run events."""
         getattr(self, event)()
         # As soon as event ends, we run callbacks.
-        self._callback_runner(current_state=event)
+        for callback in self.callbacks:
+            _ = getattr(callback, event)(self)
 
     def run_batch(self) -> None:
         """Run batch with batch event."""
         self._run_event("on_batch_start")
-        self._step()
+        self._step.get(self.stage)()
         self._run_event("on_batch_end")
 
     def run_loader(self):
         """Function to iterate the dataloader through all the batches."""
         self._run_event("on_loader_start")
-        for self.batch_idx, (self.x, self.y) in enumerate(self._iterator):
+        iterator = self.dataloaders.get(self.stage)
+        for self.batch_idx, (self.x, self.y) in enumerate(iterator):
             self.run_batch()
         # Stdout  computed metrics/update monitors.
         self._run_event("on_loader_end")
@@ -221,13 +229,13 @@ class Experiment(BaseState):
     def _do_train_epoch(self):
         """Method to train the model for one epoch."""
         self.model.train()
-        self.is_training = True
+        self.stage = "train"
         self.run_loader()
 
     def _do_val_epoch(self):
         """Method to validate model for one epoch."""
         self.model.eval()
-        self.is_training = False
+        self.stage = "valid"
         self.run_loader()
 
     def _do_epoch(self):
@@ -243,6 +251,40 @@ class Experiment(BaseState):
             self._run_event("on_epoch_end")
             if self.stop_training:
                 break
+
+    def _general_fit(self):
+        self._run_event("on_experiment_start")
+        self._run()
+        self._run_event("on_experiment_end")
+
+    def fit_config(
+        self,
+        train_data_cfg: Union["BaseConfig", dataclass],
+        val_data_cfg: Union["BaseConfig", dataclass],
+        batch_size: int = 64,
+        dataloader_kwargs: Dict = None,
+    ):
+        """Train and validate the model on dataset created using train and validation data configs.
+
+        Args:
+            train_data_cfg: The training data config.
+            val_data_cfg: The validation data config.
+            batch_size: The batch size to be used for training and validation.
+            dataloader_kwargs: Keyword arguments to pass to the PyTorch dataloaders created
+                internally. By default, shuffle=True is passed for the training dataloader but this can be
+                overriden by using this argument.
+
+        Note:
+            Model will only be saved when ModelCheckpoint callback is used.
+        """
+        if dataloader_kwargs is None:
+            dataloader_kwargs = {}
+
+        dataloader_kwargs = {"batch_size": batch_size, **dataloader_kwargs}
+        data_pipe = DataPipe(train_data_cfg=train_data_cfg, valid_data_cfg=val_data_cfg)
+        train_dl = DataLoader(data_pipe.train_ds, **{"shuffle": True, **dataloader_kwargs})
+        valid_dl = DataLoader(data_pipe.valid_ds, **dataloader_kwargs)
+        self.fit_loader(train_dl=train_dl, valid_dl=valid_dl)
 
     def fit(
         self,
@@ -285,9 +327,7 @@ class Experiment(BaseState):
             Model will only be saved when ModelCheckpoint callback is used.
         """
         self.set_dataloaders(train_dl=train_dl, valid_dl=valid_dl)
-        self._run_event("on_experiment_start")
-        self._run()
-        self._run_event("on_experiment_end")
+        self._general_fit()
 
     @torch.no_grad()
     def _infer_on_batch(self, inp):
@@ -350,3 +390,6 @@ class Experiment(BaseState):
         dataloader_kwargs = {"batch_size": batch_size, **dataloader_kwargs}
         dl = self._dataloader_from_data((x,), dataloader_kwargs)
         return self.predict_on_loader(path_to_model=path_to_model, test_dl=dl, device=device)
+
+
+__all__ = ["Experiment"]

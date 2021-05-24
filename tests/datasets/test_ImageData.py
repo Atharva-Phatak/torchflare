@@ -6,8 +6,9 @@ import pandas as pd
 import torch
 import torchvision
 
-from torchflare.datasets.classification import ImageDataset
+from torchflare.datasets.image_classification import ImageDataset
 from torchflare.datasets.image_dataloader import ImageDataloader
+from torchflare.data_config.image_config import ImageDataConfig
 
 inputs = collections.namedtuple("inputs", ["path", "extension", "label_cols", "df", "image_col"])
 df = pd.read_csv("tests/datasets/data/image_classification/csv_data/train.csv")
@@ -51,7 +52,10 @@ def test_data_from_df():
 
     def test_with_torchvision():
         augmentations = torchvision.transforms.Compose(
-            [torchvision.transforms.Resize((256, 256)), torchvision.transforms.ToTensor(),]
+            [
+                torchvision.transforms.Resize((256, 256)),
+                torchvision.transforms.ToTensor(),
+            ]
         )
 
         ds = ImageDataset.from_df(
@@ -116,7 +120,11 @@ def test_from_folders():
     def test_training():
         augmentations = A.Compose([A.Resize(256, 256)])
 
-        ds = ImageDataset.from_folders(path=folder_inputs.train_path, augmentations=augmentations, convert_mode="RGB",)
+        ds = ImageDataset.from_folders(
+            path=folder_inputs.train_path,
+            augmentations=augmentations,
+            convert_mode="RGB",
+        )
 
         x, y = ds[0]
         assert torch.is_tensor(x) is True
@@ -159,7 +167,9 @@ def test_image_dataloaders():
     def test_image_data_from_folders():
         augmentations = A.Compose([A.Resize(256, 256)])
         dl = ImageDataloader.from_folders(
-            path=folder_inputs.train_path, augmentations=augmentations, convert_mode="RGB",
+            path=folder_inputs.train_path,
+            augmentations=augmentations,
+            convert_mode="RGB",
         ).get_loader(batch_size=2, shuffle=True)
         x, y = next(iter(dl))
         assert torch.is_tensor(x) is True
@@ -169,3 +179,43 @@ def test_image_dataloaders():
 
     test_image_data_from_df()
     test_image_data_from_folders()
+
+
+def test_image_data_configs():
+    def test_config_from_df():
+        augmentations = A.Compose([A.Resize(256, 256)])
+
+        cfg = ImageDataConfig.from_df(
+            path=constants_df.path,
+            df=constants_df.df,
+            augmentations=augmentations,
+            image_col=constants_df.image_col,
+            label_cols=constants_df.label_cols,
+            extension=constants_df.extension,
+            convert_mode="RGB",
+        )
+        ds = cfg.data_method(**cfg.config)
+
+        x, y = ds[0]
+        assert isinstance(ds, ImageDataset) is True
+        assert x.shape == (3, 256, 256)
+        assert y.shape == (4,)
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
+
+    def test_config_from_folders():
+        augmentations = A.Compose([A.Resize(256, 256)])
+        cfg = ImageDataConfig.from_folders(
+            path=folder_inputs.train_path,
+            augmentations=augmentations,
+            convert_mode="RGB",
+        )
+        ds = cfg.data_method(**cfg.config)
+        x, y = ds[0]
+        assert isinstance(ds, ImageDataset) is True
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
+        assert x.shape == (3, 256, 256)
+
+    test_config_from_folders()
+    test_config_from_df()

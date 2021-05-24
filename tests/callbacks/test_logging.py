@@ -12,28 +12,30 @@ os.environ["WANDB_SILENT"] = "true"
 # os.environ["NEPTUNE_API_TOKEN"] = "Dummy_token"
 os.environ["WB_API_TOKEN"] = "Dummy_wandb_token"
 
+class TestExperiment:
+    def __init__(self):
+        pass
+    @patch("torchflare.callbacks.logging.neptune_logger.neptune")
+    def test_neptune_mock(self,neptune):
+        """Simple to check if same experiment is created."""
+        logger = NeptuneLogger(api_token="test", project_dir="namespace/project")
+        logger.on_experiment_start(self)
+        created_experiment = neptune.init(name="namespace/project", api_token="test")
+        assert logger.experiment is not None
+        assert created_experiment.name == logger.experiment.name
+        assert created_experiment.id == logger.experiment.id
 
-@patch("torchflare.callbacks.logging.neptune_logger.neptune")
-def test_neptune_mock(neptune):
-    """Simple to check if same experiment is created."""
-    logger = NeptuneLogger(api_token="test", project_dir="namespace/project")
-    logger.on_experiment_start()
-    created_experiment = neptune.init(name="namespace/project", api_token="test")
-    assert logger.experiment is not None
-    assert created_experiment.name == logger.experiment.name
-    assert created_experiment.id == logger.experiment.id
 
-
-@patch("torchflare.callbacks.logging.wandb_logger.wandb")
-def test_wandb_mock(wandb):
-    """Simple test to check if same experiment is created or not."""
-    logger = WandbLogger(project="test", entity="project")
-    logger.on_experiment_start()
-    wandb.init.assert_called_once()
-    wandb_exp = wandb.init(project="test", entity="project")
-    assert logger.experiment is not None
-    assert logger.experiment.entity == wandb_exp.entity
-    assert logger.experiment.id == wandb_exp.id
+    @patch("torchflare.callbacks.logging.wandb_logger.wandb")
+    def test_wandb_mock(self,wandb):
+        """Simple test to check if same experiment is created or not."""
+        logger = WandbLogger(project="test", entity="project")
+        logger.on_experiment_start()
+        wandb.init.assert_called_once(self)
+        wandb_exp = wandb.init(project="test", entity="project")
+        assert logger.experiment is not None
+        assert logger.experiment.entity == wandb_exp.entity
+        assert logger.experiment.id == wandb_exp.id
 
 
 """"
@@ -92,13 +94,12 @@ def test_wandb(tmpdir):
 """
 
 
-class DummyExp:
+class Experiment:
     def __init__(self, logger):
         self.epoch_key = "epoch"
         self.exp_logs = None
         self.logger = logger
-        self.logger.set_experiment(self)
-        self.logger.on_experiment_start()
+        self.logger.on_experiment_start(self)
 
     def start_log(self):
         acc = 10
@@ -110,12 +111,12 @@ class DummyExp:
             f1 += 10
 
             loss = loss / 10
-            self.logger.on_epoch_end()
+            self.logger.on_epoch_end(self)
 
-        self.logger.on_experiment_end()
+        self.logger.on_experiment_end(self)
 
 
 def test_tensorboard(tmpdir):
     l = TensorboardLogger(log_dir=tmpdir.mkdir("/callbacks"))
-    ob = DummyExp(logger=l)
+    ob = Experiment(logger=l)
     ob.start_log()

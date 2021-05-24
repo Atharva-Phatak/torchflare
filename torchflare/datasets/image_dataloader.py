@@ -8,7 +8,7 @@ import pandas as pd
 import torchvision
 from torch.utils.data import DataLoader
 
-from torchflare.datasets.classification import ImageDataset
+from torchflare.datasets.image_classification import ImageDataset
 
 
 class ImageDataloader:

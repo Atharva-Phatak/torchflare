@@ -1,11 +1,14 @@
 """Implements logger for weights and biases."""
 from abc import ABC
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional
 
 import wandb
 
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.states import CallbackOrder
+
+if TYPE_CHECKING:
+    from torchflare.experiments.experiment import Experiment
 
 
 class WandbLogger(Callbacks, ABC):
@@ -51,7 +54,7 @@ class WandbLogger(Callbacks, ABC):
         self.dir = directory
         self.experiment = None
 
-    def on_experiment_start(self):
+    def on_experiment_start(self, experiment: "Experiment"):
         """Experiment start."""
         self.experiment = wandb.init(
             entity=self.entity,
@@ -63,11 +66,11 @@ class WandbLogger(Callbacks, ABC):
             dir=self.dir,
         )
 
-    def on_epoch_end(self):
+    def on_epoch_end(self, experiment: "Experiment"):
         """Method to log metrics and values at the end of very epoch."""
-        logs = {k: v for k, v in self.exp.exp_logs.items() if k != self.exp.epoch_key}
+        logs = {k: v for k, v in experiment.exp_logs.items() if k != experiment.epoch_key}
         self.experiment.log(logs)
 
-    def on_experiment_end(self):
+    def on_experiment_end(self, experiment: "Experiment"):
         """Method to end experiment after training is done."""
         self.experiment.finish()

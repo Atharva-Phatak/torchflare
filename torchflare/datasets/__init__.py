@@ -1,6 +1,6 @@
 """Imports for datasets."""
-from torchflare.datasets.classification import ImageDataset
 from torchflare.datasets.cross_val import CVSplit
+from torchflare.datasets.image_classification import ImageDataset
 from torchflare.datasets.image_dataloader import ImageDataloader
 from torchflare.datasets.segmentation import SegmentationDataset
 from torchflare.datasets.segmentation_dataloader import SegmentationDataloader

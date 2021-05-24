@@ -3,8 +3,6 @@ from collections import Counter
 
 import pytest
 import torch
-import torch.optim as optim
-import torch.optim.optimizer as Optimizer
 from torch.optim import lr_scheduler
 
 from torchflare.callbacks.lr_schedulers import (
@@ -22,7 +20,7 @@ from torchflare.callbacks.lr_schedulers import (
 )
 
 
-class TestExp:
+class Experiment:
     def __init__(self, cb):
 
         self.model = torch.nn.Linear(10, 2)
@@ -30,20 +28,19 @@ class TestExp:
         self.exp_logs = None
         self.main_metric = "loss"
         self.cb = cb
-        self.cb.set_experiment(self)
         self.val_key = "val_"
 
     def run(self):
 
-        self.cb.on_experiment_start()
+        self.cb.on_experiment_start(self)
         loss = 0.1
         for _ in range(5):
             for i in range(2):
                 loss = loss * 2
-                self.cb.on_batch_end()
+                self.cb.on_batch_end(self)
 
             self.exp_logs = {"val_loss": loss}
-            self.cb.on_epoch_end()
+            self.cb.on_epoch_end(self)
 
 
 class MockScheduler:
@@ -62,7 +59,7 @@ def step_on_batch(request):
 
 def test_lr_scheduler():
     scheduler = LRSchedulerCallback(MockScheduler, step_on_batch=False)
-    dummy = TestExp(cb=scheduler)
+    dummy = Experiment(cb=scheduler)
     dummy.run()
     assert dummy.cb.scheduler.step_count == 5
     assert isinstance(dummy.cb.scheduler.optimizer, torch.optim.Optimizer) is True
@@ -70,7 +67,7 @@ def test_lr_scheduler():
 
 def test_lr_scheduler_step():
     scheduler = LRSchedulerCallback(MockScheduler, step_on_batch=True)
-    dummy = TestExp(cb=scheduler)
+    dummy = Experiment(cb=scheduler)
     dummy.run()
     assert dummy.cb.scheduler.step_count == 10
     assert isinstance(dummy.cb.scheduler.optimizer, torch.optim.Optimizer) is True
@@ -80,7 +77,7 @@ def test_lambda_lr():
 
     scheduler = LambdaLR(lr_lambda=lambda epoch: 0.95 ** epoch, step_on_batch=step_on_batch)
 
-    dummy = TestExp(cb=scheduler)
+    dummy = Experiment(cb=scheduler)
     dummy.run()
 
     assert isinstance(scheduler.scheduler, lr_scheduler._LRScheduler) is True
@@ -92,7 +89,7 @@ def test_step_lr():
 
     scheduler = StepLR(step_size=10, gamma=0.1)
 
-    dummy = TestExp(cb=scheduler)
+    dummy = Experiment(cb=scheduler)
     dummy.run()
 
     assert isinstance(scheduler.scheduler, lr_scheduler.StepLR) is True
@@ -103,7 +100,7 @@ def test_step_lr():
 def test_multistep_lr():
 
     scheduler = MultiStepLR(milestones=[30, 80], gamma=0.1, step_on_batch=step_on_batch)
-    dummy = TestExp(cb=scheduler)
+    dummy = Experiment(cb=scheduler)
     dummy.run()
     assert isinstance(scheduler.scheduler, lr_scheduler.MultiStepLR) is True
     assert scheduler.scheduler.milestones == Counter([30, 80])
@@ -113,7 +110,7 @@ def test_multistep_lr():
 
 def test_exponential_lr():
     scheduler = ExponentialLR(gamma=0.1, step_on_batch=step_on_batch)
-    dummy = TestExp(cb=scheduler)
+    dummy = Experiment(cb=scheduler)
     dummy.run()
     assert isinstance(scheduler.scheduler, lr_scheduler.ExponentialLR)
     assert scheduler.scheduler.gamma == 0.1
@@ -122,7 +119,7 @@ def test_exponential_lr():
 
 def test_cosine_annealing_lr():
     scheduler = CosineAnnealingLR(T_max=10, eta_min=0)
-    dummy = TestExp(cb=scheduler)
+    dummy = Experiment(cb=scheduler)
     dummy.run()
     assert isinstance(scheduler.scheduler, lr_scheduler.CosineAnnealingLR)
     assert scheduler.scheduler.T_max == 10
@@ -131,7 +128,7 @@ def test_cosine_annealing_lr():
 
 def test_multipilicative_lr():
     scheduler = MultiplicativeLR(lambda epoch: 0.95, step_on_batch=step_on_batch)
-    dummy = TestExp(cb=scheduler)
+    dummy = Experiment(cb=scheduler)
     dummy.run()
 
     assert isinstance(scheduler.scheduler, lr_scheduler.MultiplicativeLR)
@@ -141,7 +138,7 @@ def test_multipilicative_lr():
 
 def test_one_cycle():
     scheduler = OneCycleLR(max_lr=0.01, steps_per_epoch=1000, epochs=10)
-    dummy = TestExp(cb=scheduler)
+    dummy = Experiment(cb=scheduler)
     dummy.run()
     assert isinstance(scheduler.scheduler, lr_scheduler.OneCycleLR)
     assert scheduler.scheduler.total_steps == 10000
@@ -149,7 +146,7 @@ def test_one_cycle():
 
 def test_cosine_annealing_warm_restarts():
     scheduler = CosineAnnealingWarmRestarts(T_0=1, T_mult=1, eta_min=0, step_on_batch=step_on_batch)
-    dummy = TestExp(cb=scheduler)
+    dummy = Experiment(cb=scheduler)
     dummy.run()
 
     assert isinstance(scheduler.scheduler, lr_scheduler.CosineAnnealingWarmRestarts)
@@ -169,7 +166,7 @@ def test_cyclic_lr():
         cycle_momentum=True,
         step_on_batch=step_on_batch,
     )
-    dummy = TestExp(cb=scheduler)
+    dummy = Experiment(cb=scheduler)
     dummy.run()
     assert isinstance(scheduler.scheduler, lr_scheduler.CyclicLR)
     assert scheduler.scheduler.base_lrs == [0.001]
@@ -185,7 +182,7 @@ def test_reduce_lr_on_plateau():
     scheduler = ReduceLROnPlateau(
         mode="min", factor=0.1, patience=3, threshold=1e-6, threshold_mode="rel", cooldown=0, eps=1e-8
     )
-    dummy = TestExp(cb=scheduler)
+    dummy = Experiment(cb=scheduler)
     dummy.run()
     assert isinstance(scheduler.scheduler, lr_scheduler.ReduceLROnPlateau)
     assert scheduler.scheduler.mode == "min"
