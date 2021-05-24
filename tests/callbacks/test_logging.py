@@ -83,8 +83,6 @@ def test_neptune():
     neptune_exp = Experiment(logger)
     neptune_exp.start_log()
 
-"""
-"""
 @pytest.mark.skip(reason="Callback running correctly. Will need seprate API token for general Tests.")
 def test_wandb(tmpdir):
     params = {"bs": 16, "lr": 0.01}
