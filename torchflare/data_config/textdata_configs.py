@@ -10,6 +10,8 @@ from torchflare.datasets.text_dataset import TextClassificationDataset
 
 @dataclass
 class _TextDataConfigDF:
+    """Class to create data config for text data."""
+
     df: pd.DataFrame = field(
         default=MISSING, metadata={"help": "The dataframe which has the input sentences and targets."}
     )

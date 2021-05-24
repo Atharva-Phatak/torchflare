@@ -1,4 +1,4 @@
-::: torchflare.datasets.classification.ImageDataset
+::: torchflare.datasets.image_classification.ImageDataset
     handler: python
     selection:
       members:

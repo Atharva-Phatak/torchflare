@@ -12,6 +12,8 @@ from torchflare.datasets.segmentation import SegmentationDataset
 
 @dataclass
 class _SegmentationDataConfigRLE:
+    """Class to create data config for Segmentation data."""
+
     path: str = field(default=MISSING, metadata={"help": "The path where images are saved."})
     df: pd.DataFrame = field(
         default=MISSING, metadata={"help": "The dataframe containing the image name/ids, and the targets."}
@@ -33,6 +35,8 @@ class _SegmentationDataConfigRLE:
 
 @dataclass
 class _SegmentationDataConfigFolders:
+    """Class to create data config for Segmentation data."""
+
     image_path: str = field(default=MISSING, metadata={"help": "The path where images are saved."})
     mask_path: str = field(default=MISSING, metadata={"help": "The path where masks are saved."})
     augmentations: Union[A.Compose, torchvision.transforms.Compose] = field(

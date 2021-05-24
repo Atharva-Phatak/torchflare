@@ -10,6 +10,8 @@ from torchflare.datasets.tabular import TabularDataset
 
 @dataclass
 class _TabularDataConfigDF:
+    """Class to create data config for tabular data."""
+
     df: pd.DataFrame = field(
         default=MISSING, metadata={"help": "The dataframe which has inputs, and the labels/targets."}
     )
@@ -31,6 +33,8 @@ class _TabularDataConfigDF:
 
 @dataclass
 class _TabularDataConfigCSV:
+    """Class to create data config for tabular data."""
+
     csv_path: str = field(default=MISSING, metadata={"help": "The full path to csv."})
     feature_cols: Union[str, List[str]] = field(
         default=MISSING,

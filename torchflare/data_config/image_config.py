@@ -12,6 +12,7 @@ from torchflare.datasets.image_classification import ImageDataset
 
 @dataclass
 class _ImageDataConfigDF:
+    """Class to create data config for Image data."""
 
     path: str = field(default=MISSING, metadata={"help": "The path where images are saved."})
     df: pd.DataFrame = field(
@@ -33,6 +34,8 @@ class _ImageDataConfigDF:
 
 @dataclass
 class _ImageDataConfigFolders:
+    """Class to create data config for Image data."""
+
     path: str = field(default=MISSING, metadata={"help": "The path where images are saved."})
     augmentations: Union[A.Compose, torchvision.transforms.Compose] = field(
         default=None, metadata={"help": "The augmentations to be used on images."}
