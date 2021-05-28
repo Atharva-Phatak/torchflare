@@ -21,7 +21,7 @@ class LRSchedulerCallback(Callbacks, ABC):
             scheduler: A pytorch scheduler
             step_on_batch: Whether the scheduler steps after batch or not.
         """
-        super(LRSchedulerCallback, self).__init__(order=CallbackOrder.INTERNAL)
+        super(LRSchedulerCallback, self).__init__(order=CallbackOrder.SCHEDULER)
         self._scheduler = scheduler
         self.step_on_batch = step_on_batch
         self.scheduler = None

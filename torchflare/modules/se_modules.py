@@ -20,8 +20,8 @@ class CSE(nn.Module):
         """Constructor for CSE class.
 
         Args:
-            in_channels : The number of input channels in the feature map.
-            r : The reduction ration (Default : 16)
+            in_channels(int): The number of input channels in the feature map.
+            r(int): The reduction ration (Default : 16)
         """
         super(CSE, self).__init__()
 
@@ -34,7 +34,7 @@ class CSE(nn.Module):
         """Forward Method.
 
         Args:
-            x: The input tensor of shape (batch, channels, height, width)
+            x(torch.Tensor): The input tensor of shape (batch, channels, height, width)
 
         Returns:
             Tensor of same shape
@@ -65,7 +65,7 @@ class SSE(nn.Module):
         """Constructor method for SSE class.
 
         Args:
-            in_channels : The number of input channels in the feature map.
+            in_channels(int): The number of input channels in the feature map.
         """
         super(SSE, self).__init__()
 
@@ -77,7 +77,7 @@ class SSE(nn.Module):
         """Forward Method.
 
         Args:
-            x: The input tensor of shape (batch, channels, height, width)
+            x(torch.Tensor): The input tensor of shape (batch, channels, height, width)
 
         Returns:
             Tensor of same shape
@@ -106,8 +106,8 @@ class SCSE(nn.Module):
         """Constructor for SCSE class.
 
         Args:
-            in_channels : The number of input channels in the feature map.
-            r : The reduction ration (Default : 16)
+            in_channels(int): The number of input channels in the feature map.
+            r(int): The reduction ration (Default : 16)
         """
         super(SCSE, self).__init__()
 
@@ -121,7 +121,7 @@ class SCSE(nn.Module):
         """Forward method.
 
         Args:
-            x: The input tensor of shape (batch, channels, height, width)
+            x(torch.Tensor): The input tensor of shape (batch, channels, height, width)
 
         Returns:
             Tensor of same shape

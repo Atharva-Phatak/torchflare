@@ -14,7 +14,7 @@ class Accuracy(_BaseMetric, MetricMeter):
         """Constructor method for Accuracy Class.
 
         Args:
-            num_classes: The number of num_classes.
+            num_classes(int): The number of num_classes.
             threshold: The threshold value to transform probability predictions to binary values(0,1)
             multilabel: Set it to True if your problem is  multilabel classification.
         """

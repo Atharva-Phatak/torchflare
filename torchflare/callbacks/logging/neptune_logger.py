@@ -29,7 +29,7 @@ class NeptuneLogger(Callbacks, ABC):
 
         Args:
             project_dir: The qualified name of a project in a form of namespace/project_name
-            params: he hyperparameters for your model and experiment as a dictionary
+            params: The hyperparameters for your model and experiment as a dictionary
             experiment_name: The name of the experiment
             api_token: User’s API token
             tags:  List of strings.

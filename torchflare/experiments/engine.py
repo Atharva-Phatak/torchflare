@@ -7,8 +7,8 @@ import pandas as pd
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 
-import torchflare.metrics.metric_utils as metric_utils
 from torchflare.callbacks.callback import sort_callbacks
+from torchflare.callbacks.metric_utils import MetricCallback
 from torchflare.callbacks.model_history import History
 from torchflare.callbacks.progress_bar import ProgressBar
 from torchflare.experiments.criterion_utilities import get_criterion
@@ -17,7 +17,7 @@ from torchflare.experiments.simple_utils import AvgLoss, numpy_to_torch
 from torchflare.utils.seeder import seed_all
 
 
-class BaseState:
+class Engine:
     """Class to set user and internal variables along with some utility functions."""
 
     def __init__(
@@ -47,7 +47,6 @@ class BaseState:
 
         self.scaler = torch.cuda.amp.GradScaler() if self.fp16 else None
         self.model = None
-        self.resume_checkpoint = None
         self.main_metric = None
         self.stop_training = None
         self.stage = None
@@ -57,13 +56,12 @@ class BaseState:
         self._step = None
         self.exp_logs = None
         self.history = None
-        self._train_monitor, self._val_monitor = None, None
+        self.monitors = {"Train": None, "Valid": None}
         self._metric_runner = None
         self.dataloaders = None
         self.loss, self.loss_meter = None, None
         self.x, self.y = None, None
         self.preds = None
-        self.metrics = None
         self.batch_idx, self.current_epoch = None, 0
         self.plot_dir = "./plots"
 
@@ -73,14 +71,28 @@ class BaseState:
         Returns:
             The prefix for training or validation.
         """
-        return self.train_key if self.stage.startswith("train") else self.val_key
+        return self.train_key if self.stage.startswith("Train") else self.val_key
 
-    @staticmethod
-    def _get_params_for(prefix, kwargs):
-        return {k[len(prefix) :]: v for k, v in kwargs.items() if k.startswith(prefix)}
+    def _run_callbacks(self, event):
+        for callback in self.callbacks:
+            try:
+                _ = getattr(callback, event)(self)
+            except AttributeError:
+                pass
+
+    def get_model_params(self):
+        """Create model params for optimizer."""
+        grad_params = (param for param in self.model.parameters() if param.requires_grad)
+        return grad_params
+
+    def _set_optimizer(self, optimizer, optimizer_params):
+        grad_params = self.get_model_params()
+        self.optimizer = get_optimizer(optimizer)(grad_params, **optimizer_params)
 
     def _set_callbacks(self, callbacks: List):
-        self.callbacks = [ProgressBar(), History()]
+        self.callbacks = [ProgressBar(), History(), AvgLoss()]
+        if self._metric_runner is not None:
+            self.callbacks.append(self._metric_runner)
         if callbacks is not None:
             self.callbacks.extend(callbacks)
 
@@ -89,26 +101,29 @@ class BaseState:
     def _set_metrics(self, metrics):
 
         if metrics is not None:
-            self._metric_runner = metric_utils.MetricContainer(metrics=metrics)
+            self._metric_runner = MetricCallback(metrics=metrics)
 
-    def _set_model(self, model_class):
-        model_params = self._get_params_for("model_", self.__dict__)
+    def _set_model(self, model_class, model_params):
         self.model = model_class(**model_params)
 
-    def _set_params(self):
-
-        grad_params = (param for param in self.model.parameters() if param.requires_grad)
-        return grad_params
-
-    def _set_optimizer(self, optimizer):
-        optimizer_params = self._get_params_for("optimizer_", self.__dict__)
-        grad_params = self._set_params()
-        self.optimizer = get_optimizer(optimizer)(grad_params, **optimizer_params)
-
     def _set_criterion(self, criterion):
+        self.criterion = get_criterion(criterion)
 
-        self.criterion = get_criterion(criterion=criterion)
-        self.loss_meter = AvgLoss()
+    def zero_grad(self) -> None:
+        """Wrapper for optimizer.zero_grad()."""
+        self.optimizer.zero_grad()
+
+    def backward_loss(self) -> None:
+        """Method to propogate loss backward."""
+        self.scaler.scale(self.loss).backward() if self.fp16 else self.loss.backward()
+
+    def optimizer_step(self) -> None:
+        """Method to perform optimizer step."""
+        if self.fp16:
+            self.scaler.step(self.optimizer)
+            self.scaler.update()
+        else:
+            self.optimizer.step()
 
     @staticmethod
     def _dataloader_from_data(args, dataloader_kwargs):
@@ -133,7 +148,7 @@ class BaseState:
 
     def cleanup(self):
         """Method Cleanup internal variables."""
-        self._train_monitor, self._val_monitor, self.exp_logs = None, None, {}
+        self.exp_logs = {}
         self.stage = None
         self.loss, self.x, self.y, self.preds = None, None, None, None
         self.batch_idx, self.current_epoch = None, None
@@ -156,10 +171,6 @@ class BaseState:
             save_path = os.path.join(self.plot_dir, f"{key}-vs-{self.epoch_key.lower()}.jpg")
             plt.savefig(save_path, dpi=150)
 
-    def get_logs(self):
-        """Returns experiment logs as a dataframe."""
-        return pd.DataFrame.from_dict(self.history)
-
     def plot_history(self, keys: List[str], plot_fig: bool = True, save_fig: bool = False):
         """Method to plot model history.
 
@@ -178,5 +189,9 @@ class BaseState:
 
             plt.close(f)
 
+    def get_logs(self):
+        """Returns experiment logs as a dataframe."""
+        return pd.DataFrame.from_dict(self.history)
 
-__all__ = ["BaseState"]
+
+__all__ = ["Engine"]

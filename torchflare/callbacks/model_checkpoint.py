@@ -39,7 +39,7 @@ class ModelCheckpoint(Callbacks, ABC):
 
             Model checkpoint will be saved based on the values of metrics/loss obtained from validation set.
         """
-        super(ModelCheckpoint, self).__init__(order=CallbackOrder.INTERNAL)
+        super(ModelCheckpoint, self).__init__(order=CallbackOrder.CHECKPOINT)
         self.mode = mode
         self.eps = 1e-7
         if "val_" not in monitor:

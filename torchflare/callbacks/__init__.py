@@ -19,6 +19,7 @@ from torchflare.callbacks.lr_schedulers import MultiStepLR  # isort: skip
 from torchflare.callbacks.lr_schedulers import OneCycleLR  # isort: skip
 from torchflare.callbacks.lr_schedulers import ReduceLROnPlateau  # isort: skip
 from torchflare.callbacks.lr_schedulers import StepLR  # isort: skip
+from torchflare.callbacks.metric_utils import MetricCallback
 from torchflare.callbacks.model_checkpoint import ModelCheckpoint  # isort: skip
 from torchflare.callbacks.model_history import History  # isort: skip
 from torchflare.callbacks.notifiers.message_notifiers import DiscordNotifierCallback  # isort: skip
@@ -41,6 +42,7 @@ __all__ = [
     "init_improvement",
     "TensorboardLogger",
     "WandbLogger",
+    "MetricCallback",
     "ModelCheckpoint",
     "History",
     "LoadCheckpoint",
