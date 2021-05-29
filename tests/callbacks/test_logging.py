@@ -3,9 +3,9 @@
 
 import os
 
-from torchflare.callbacks.logging.wandb_logger import WandbLogger
-from torchflare.callbacks.logging.tensorboard_logger import TensorboardLogger
-from torchflare.callbacks.logging.neptune_logger import NeptuneLogger
+from torchflare.callbacks.wandb_logger import WandbLogger
+from torchflare.callbacks.tensorboard_logger import TensorboardLogger
+from torchflare.callbacks.neptune_logger import NeptuneLogger
 from unittest.mock import patch
 
 os.environ["WANDB_SILENT"] = "true"
