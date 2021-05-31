@@ -8,12 +8,12 @@ import torch.nn.functional as F
 class CSE(nn.Module):
     """Implementation of Channel Wise Squeeze and Excitation Block.
 
-    Paper : <https://arxiv.org/abs/1709.01507>
+    Paper : https://arxiv.org/abs/1709.01507
 
     Adapted from
-    <https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/65939>
+    https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/65939
     and
-    <https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/66178>
+    https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/66178
     """
 
     def __init__(self, in_channels: int, r: int = 16):
@@ -55,10 +55,10 @@ class CSE(nn.Module):
 class SSE(nn.Module):
     """SSE : Channel Squeeze and Spatial Excitation block.
 
-    Paper : <https://arxiv.org/abs/1803.02579>
+    Paper : https://arxiv.org/abs/1803.02579
 
     Adapted from
-    <https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/66178>
+    https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/66178
     """
 
     def __init__(self, in_channels):
@@ -95,11 +95,11 @@ class SSE(nn.Module):
 class SCSE(nn.Module):
     """Implementation of SCSE : Concurrent Spatial and Channel Squeeze and Channel Excitation block.
 
-    Paper : <https://arxiv.org/abs/1803.02579>
+    Paper : https://arxiv.org/abs/1803.02579
 
 
     Adapted from
-    <https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/66178>
+    https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/66178
     """
 
     def __init__(self, in_channels, r=16):

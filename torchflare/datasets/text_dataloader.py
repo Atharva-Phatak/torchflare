@@ -32,11 +32,11 @@ class TextDataloader:
         """Classmethod to create a dataset as required by transformers for text classification tasks.
 
         Args:
-            df: The dataframe containing sentences and labels.
-            input_col: The name of column containing sentences.
-            label_cols: name of label column, or a list containing names of label columns.
-            tokenizer: The tokenizer to be used to tokenize the sentences.
-            max_len: The max_length to be used by the tokenizer.
+            df(pd.DataFrame): The dataframe which has the input sentences and targets.
+            input_col(str): The column containing the inputs.
+            label_cols(str or List(str): The column which contains corresponding labels.
+            tokenizer: The tokenizer to be used.(Use only tokenizer available in huggingface.
+            max_len(int): The max_len to be used.
 
         Returns:
                 pytorch dataset for text classification using huggingface.

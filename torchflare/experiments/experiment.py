@@ -11,7 +11,14 @@ from torchflare.experiments.simple_utils import _has_intersection, to_device
 
 
 class Experiment(Engine):
-    """Simple class for handling boilerplate code for training, validation and Inference."""
+    """Simple class for handling boilerplate code for training, validation and Inference.
+
+    Args:
+           num_epochs(int) : The number of epochs to save model.
+           fp16(bool) : Set this to True if you want to use mixed precision training.
+           device(str) : The device where you want train your model. One of **cuda** or **cpu**.
+           seed(int): The seed to ensure reproducibility.
+    """
 
     def __init__(
         self,
@@ -20,14 +27,7 @@ class Experiment(Engine):
         device: str = "cuda",
         seed: int = 42,
     ):
-        """Init method to set up important variables for training and validation.
-
-        Args:
-            num_epochs : The number of epochs to save model.
-            fp16 : Set this to True if you want to use mixed precision training.
-            device : The device where you want train your model.
-            seed: The seed to ensure reproducibility.
-        """
+        """Init method to set up important variables for training and validation."""
         super(Experiment, self).__init__(
             num_epochs=num_epochs,
             fp16=fp16,
@@ -41,7 +41,7 @@ class Experiment(Engine):
         module_params: Optional[Dict],
         optimizer: Union[torch.optim.Optimizer, str, Any],
         optimizer_params: Optional[Dict],
-        criterion: Union[Callable[[torch.Tensor], torch.Tensor], str],
+        criterion: Union[Callable, str],
         callbacks: List = None,
         metrics: List = None,
         main_metric: Optional[str] = None,
@@ -49,17 +49,17 @@ class Experiment(Engine):
         """Configures the model for training and validation.
 
         Args:
-            module: An uninstantiated PyTorch class which defines the model.
-            module_params: The params required to initialize model class.
-            optimizer: The optimizer to be used or name of optimizer.
+            module(nn.Module): An uninstantiated PyTorch class which defines the model.
+            module_params(Dict): The params required to initialize model class.
+            optimizer(torch.optim.Optimizer, str): The optimizer to be used or name of optimizer.
                         If you pass in the name of the optimizer, only optimizers available in pytorch are supported.
-            optimizer_params: The parameters for optimizer.
-            criterion: The loss function to optimize or name of the loss function.
+            optimizer_params(Dict): The parameters for optimizer.
+            criterion(callable , str): The loss function to optimize or name of the loss function.
                     If you pass in the name of the loss function,
                     only loss functions available in pytorch can be supported.
-            callbacks: The list of callbacks to be used.
-            metrics: The list of metrics to be used.
-            main_metric: The name of main metric to be monitored. Use lower case version.
+            callbacks(List): The list of callbacks to be used.
+            metrics(List): The list of metrics to be used.
+            main_metric(str): The name of main metric to be monitored. Use lower case version.
                         For examples , use 'accuracy' instead of 'Accuracy'.
 
         Note:
@@ -231,11 +231,13 @@ class Experiment(Engine):
         """Train and validate the model on training and validation dataset.
 
         Args:
-            x: A numpy array(or array-like) or torch.tensor for inputs to the model.
-            y: Target data. Same type as input data coule numpy array(or array-like) or torch.tensors.
-            val_data: A tuple or list (x_val , y_val) of numpy arrays or torch.tensors.
-            batch_size: The batch size to be used for training and validation.
-            dataloader_kwargs: Keyword arguments to pass to the PyTorch dataloaders created
+            x(numpy array or torch.Tensor): A numpy array(or array-like) or torch.tensor for inputs to the model.
+            y(numpy array or torch.Tensor): Target data. Same type as input data coule numpy array(or array-like)
+                                        or torch.tensors.
+            val_data(tuple of 2 torch.Tensors or numpy arrays: (input, target): A tuple or list (x_val , y_val) of
+                                                                numpy arrays or torch.tensors.
+            batch_size(int): The batch size to be used for training and validation.
+            dataloader_kwargs(Dict): Keyword arguments to pass to the PyTorch dataloaders created
                 internally. By default, shuffle=True is passed for the training dataloader but this can be
                 overriden by using this argument.
 
@@ -254,8 +256,8 @@ class Experiment(Engine):
         """Train and validate the model using dataloaders.
 
         Args:
-            train_dl : The training dataloader.
-            valid_dl : The validation dataloader.
+            train_dl(DataLoader) : The training dataloader.
+            valid_dl(DataLoader) : The validation dataloader.
 
         Note:
             Model will only be saved when ModelCheckpoint callback is used.
@@ -281,9 +283,9 @@ class Experiment(Engine):
         """Method to perform inference on test dataloader.
 
         Args:
-            test_dl: The dataloader to be use for testing.
-            device: The device on which you want to perform inference.
-            path_to_model: The full path to model
+            test_dl(DataLoader): The dataloader to be use for testing.
+            device(str): The device on which you want to perform inference.
+            path_to_model(str): The full path to model
 
         Yields:
             Output per batch.
@@ -312,11 +314,11 @@ class Experiment(Engine):
         """Method to perform inference on test data.
 
         Args:
-            x: A numpy array(or array-like) or torch.tensor for inputs to the model.
-            batch_size: The batch size to be used for inference.
-            device: The device on which you want to perform inference.
-            dataloader_kwargs: Keyword arguments to pass to the PyTorch dataloader which is created internally.
-            path_to_model: str,
+            x(numpy array or torch.Tensor): A numpy array(or array-like) or torch.tensor for inputs to the model.
+            batch_size(int): The batch size to be used for inference.
+            device(str): The device on which you want to perform inference.
+            dataloader_kwargs(Dict): Keyword arguments to pass to the PyTorch dataloader which is created internally.
+            path_to_model(str): The full path to the model.
         """
         if dataloader_kwargs is None:
             dataloader_kwargs = {}

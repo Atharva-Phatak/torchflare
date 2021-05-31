@@ -24,13 +24,7 @@ class ProgressBar(Callbacks):
         interval: float = 0.05,
         unit_name: str = "step",
     ):
-        """Constructor class for ProgressBar.
-
-        Args:
-            width: The width of progress bar.
-            interval: Minimum visual progress update interval (in seconds).
-            unit_name: Display name for step counts (usually "step" or "sample").
-        """
+        """Constructor class for ProgressBar."""
         super(ProgressBar, self).__init__(order=CallbackOrder.EXTERNAL)
         self.num_epochs = None
         self.width = width

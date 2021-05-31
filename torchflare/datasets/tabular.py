@@ -28,7 +28,7 @@ class TabularDataset(Dataset):
         df: pd.DataFrame,
         feature_cols: Union[str, List[str]],
         label_cols: Union[str, List[str]] = None,
-    ) -> TabularDataset:
+    ):
         """Classmethod to create pytorch style dataset from dataframes.
 
         Args:
@@ -52,7 +52,7 @@ class TabularDataset(Dataset):
         csv_path,
         feature_cols: Union[str, List[str]],
         label_cols: Union[str, List[str]] = None,
-    ) -> TabularDataset:
+    ):
         """Classmethod to create pytorch style dataset from csv file.
 
         Args:

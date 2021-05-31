@@ -28,14 +28,14 @@ def prepare_data(logs: dict):
 
 
 class SlackNotifierCallback(Callbacks, ABC):
-    """Class to Dispatch Training progress to your Slack channel."""
+    """Class to Dispatch Training progress to your Slack channel.
+
+    Args:
+            webhook_url : Slack webhook url
+    """
 
     def __init__(self, webhook_url: str):
-        """Constructor method for SlackNotifierCallback.
-
-        Args:
-            webhook_url : Slack webhook url
-        """
+        """Constructor method for SlackNotifierCallback."""
         super(SlackNotifierCallback, self).__init__(order=CallbackOrder.EXTERNAL)
         self.webhook_url = webhook_url
 
@@ -54,16 +54,16 @@ class SlackNotifierCallback(Callbacks, ABC):
 
 
 class DiscordNotifierCallback(Callbacks, ABC):
-    """Class to Dispatch Training progress and plots to your Discord Sever."""
+    """Class to Dispatch Training progress and plots to your Discord Sever.
 
-    def __init__(self, exp_name: str, webhook_url: str, send_figures: bool = False):
-        """Constructor method for DiscordNotifierCallback.
-
-        Args:
+    Args:
             exp_name : The name of your experiment bot. (Can be anything)
             webhook_url : The webhook url of your discord server/channel.
             send_figures: Whether to send the plots of model history to the server.
-        """
+    """
+
+    def __init__(self, exp_name: str, webhook_url: str, send_figures: bool = False):
+        """Constructor method for DiscordNotifierCallback."""
         super(DiscordNotifierCallback, self).__init__(order=CallbackOrder.EXTERNAL)
         self.exp_name = exp_name
         self.webhook_url = webhook_url

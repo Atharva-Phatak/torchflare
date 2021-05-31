@@ -3,19 +3,33 @@
 from abc import ABC
 from typing import TYPE_CHECKING, List
 
-import comet_ml
-
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.states import CallbackOrder
+from torchflare.utils.imports_check import module_available
 
 if TYPE_CHECKING:
     from torchflare.experiments.experiment import Experiment
+
+_AVAILABLE = module_available("come_ml")
+if _AVAILABLE:
+    import comet_ml
+else:
+    comet_ml = None
 
 
 class CometLogger(Callbacks, ABC):
     """Callback to log your metrics and loss values to Comet to track your experiments.
 
     For more information about Comet look at [Comet.ml](https://www.comet.ml/site/)
+
+    Args:
+            api_token: Your API key obtained from comet.ml
+            params: The hyperparameters for your model and experiment as a dictionary
+            project_name: Send your experiment to a specific project.
+                    Otherwise, will be sent to Uncategorized Experiments.
+            workspace: Attach an experiment to a project that belongs to this workspace
+            tags: List of strings.
+
     """
 
     def __init__(
@@ -26,16 +40,7 @@ class CometLogger(Callbacks, ABC):
         workspace: str,
         tags: List[str],
     ):
-        """Constructor for CometLogger class.
-
-        Args:
-            api_token: Your API key obtained from comet.ml
-            params: The hyperparameters for your model and experiment as a dictionary
-            project_name: Send your experiment to a specific project.
-                    Otherwise, will be sent to Uncategorized Experiments.
-            workspace: Attach an experiment to a project that belongs to this workspace
-            tags: List of strings.
-        """
+        """Constructor for CometLogger class."""
         super(CometLogger, self).__init__(order=CallbackOrder.LOGGING)
         self.api_token = api_token
         self.project_name = project_name

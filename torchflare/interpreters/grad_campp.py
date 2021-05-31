@@ -8,18 +8,17 @@ from torchflare.interpreters.base_cam import BaseCam
 
 
 class GradCamPP(BaseCam, ABC):
-    """Implementation of GradCam++.
+    """Implementation of `GradCam++` _.
 
-    GradCam++ : [Improved Visual Explanations forDeep Convolutional Networks](https://arxiv.org/pdf/1710.11063.pdf)
+    .. _GradCam++: https://arxiv.org/pdf/1710.11063.pdf
+
+    Args:
+            model: The model to be used for gradcam.
+            target_layer: The target layer to be used for cam extraction.
     """
 
     def __init__(self, model, target_layer):
-        """Constructor method for GradCam.
-
-        Args:
-            model: The model to be used for gradcam.
-            target_layer: The target layer to be used for cam extraction.
-        """
+        """Constructor method for GradCam."""
         super(GradCamPP, self).__init__(model=model, target_layer=target_layer)
 
     def _get_cam_data(self, values, score, target_category):

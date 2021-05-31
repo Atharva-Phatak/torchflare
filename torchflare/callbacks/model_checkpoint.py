@@ -15,12 +15,9 @@ if TYPE_CHECKING:
 
 
 class ModelCheckpoint(Callbacks, ABC):
-    """Callback for Checkpointing your model."""
+    """Callback for Checkpointing your model.
 
-    def __init__(self, mode: str, monitor: str = "val_loss", save_dir: str = "./models", file_name: str = "model.bin"):
-        """Constructor for ModelCheckpoint class.
-
-        Args:
+    Args:
             mode: One of {"min", "max"}.
                 In min mode, training will stop when the quantity monitored has stopped decreasing
                 in "max" mode it will stop when the quantity monitored has stopped increasing.
@@ -38,7 +35,10 @@ class ModelCheckpoint(Callbacks, ABC):
             2) 'optimizer_state_dict'  : The state dictionary of optimizer
 
             Model checkpoint will be saved based on the values of metrics/loss obtained from validation set.
-        """
+    """
+
+    def __init__(self, mode: str, monitor: str = "val_loss", save_dir: str = "./models", file_name: str = "model.bin"):
+        """Constructor for ModelCheckpoint class."""
         super(ModelCheckpoint, self).__init__(order=CallbackOrder.CHECKPOINT)
         self.mode = mode
         self.eps = 1e-7

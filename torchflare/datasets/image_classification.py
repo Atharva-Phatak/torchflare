@@ -88,7 +88,7 @@ class ImageDataset(Dataset):
         augmentations: Union[A.Compose, torchvision.transforms.Compose] = None,
         extension: str = None,
         convert_mode: str = "RGB",
-    ) -> ImageDataset:
+    ):
         """Classmethod to create pytorch dataset from the given dataframe.
 
         Args:
@@ -127,7 +127,7 @@ class ImageDataset(Dataset):
         path: str,
         augmentations: Union[A.Compose, torchvision.transforms.Compose] = None,
         convert_mode: str = "RGB",
-    ) -> ImageDataset:
+    ):
         """Classmethod to create pytorch dataset from folders.
 
         Args:

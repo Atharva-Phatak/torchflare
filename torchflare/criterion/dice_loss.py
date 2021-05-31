@@ -6,14 +6,14 @@ from torchflare.metrics.dice_meter import DiceScore
 
 
 class DiceLoss(nn.Module):
-    """Implementation of Dice Loss."""
+    """Implementation of Dice Loss.
+
+    Args:
+            class_dim: The dimension indication class.
+    """
 
     def __init__(self, class_dim=1):
-        """Constructor method for Dice Loss.
-
-        Args:
-            class_dim: The dimension indication class.
-        """
+        """Constructor method for Dice Loss."""
         super(DiceLoss, self).__init__()
         self.dice = DiceScore(threshold=None, class_dim=class_dim)
 

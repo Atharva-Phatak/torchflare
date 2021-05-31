@@ -34,7 +34,7 @@ class SegmentationDataloader:
         num_classes: List = None,
         extension: Optional[str] = None,
         image_convert_mode: str = "RGB",
-    ) -> SegmentationDataloader:
+    ):
         """Classmethod to create a dataset for segmentation when you have, rule length encodings stored in a dataframe.
 
         Args:
@@ -81,7 +81,7 @@ class SegmentationDataloader:
         augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
         image_convert_mode: str = "L",
         mask_convert_mode: str = "L",
-    ) -> SegmentationDataloader:
+    ):
         """Classmethod to create pytorch dataset from folders.
 
         Args:

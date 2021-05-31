@@ -8,6 +8,16 @@ class FBeta(_BaseInputHandler, MetricMeter):
     """Computes Fbeta Score.
 
     Supports binary,multiclass and multilabel cases.
+
+    Args:
+        num_classes(int) : The number of num_classes(For binary case , use out_features : 1)
+        threshold(float): The value of threshold for masking. Input is raw logits.
+        average(str): One of "micro" or "macro"
+        beta(float): weight of precision in harmonic mean.
+        multilabel(bool): Whether problem is multilabel or not.
+
+    Note:
+        In case of binary classification, set num_classes = 1
     """
 
     def __init__(
@@ -18,18 +28,7 @@ class FBeta(_BaseInputHandler, MetricMeter):
         average: str = "macro",
         multilabel: bool = False,
     ):
-        """Constructor method for Fbeta score.
-
-        Args:
-            num_classes : The number of num_classes(For binary case , use out_features : 1)
-            threshold: The value of threshold for masking. Input is raw logits.
-            average : One of "micro" or "macro"
-            beta : weight of precision in harmonic mean.
-            multilabel: Whether problem is multilabel or not.
-
-        Note:
-            In case of binary classification, set num_classes = 1
-        """
+        """Constructor method for Fbeta score."""
         super(FBeta, self).__init__(
             num_classes=num_classes,
             multilabel=multilabel,
@@ -57,8 +56,8 @@ class FBeta(_BaseInputHandler, MetricMeter):
         """Method to accumulate the outputs and targets.
 
         Args:
-            outputs : raw logits from the network.
-            targets : Ground truth targets
+            outputs(torch.Tensor) : raw logits from the network.
+            targets(torch.Tensor) : Ground truth targets
         """
         outputs, targets = self.detach_tensor(outputs), self.detach_tensor(targets)
 

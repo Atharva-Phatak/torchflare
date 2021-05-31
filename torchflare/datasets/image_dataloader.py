@@ -32,7 +32,7 @@ class ImageDataloader:
         augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
         convert_mode: str = "RGB",
         extension: str = None,
-    ) -> ImageDataloader:
+    ):
         """Classmethod to create a dataset for image data when you have image names/ids , labels in dataframe.
 
         Args:
@@ -76,7 +76,7 @@ class ImageDataloader:
         augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
         convert_mode: str = "RGB",
         extension: str = None,
-    ) -> ImageDataloader:
+    ):
         """Classmethod to create a dataset for image data when you have image names/ids , labels in a csv.
 
         Args:
@@ -116,7 +116,7 @@ class ImageDataloader:
         path: str,
         augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
         convert_mode: str = "RGB",
-    ) -> ImageDataloader:
+    ):
         """Classmethod to create pytorch dataset from folders.
 
         Args:

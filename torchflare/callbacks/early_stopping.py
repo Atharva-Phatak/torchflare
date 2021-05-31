@@ -12,18 +12,9 @@ if TYPE_CHECKING:
 
 
 class EarlyStopping(Callbacks, ABC):
-    """Implementation of Early Stopping Callback."""
+    """Implementation of Early Stopping Callback.
 
-    def __init__(
-        self,
-        mode: str,
-        monitor: str = "val_loss",
-        patience: int = 5,
-        min_delta: float = 1e-7,
-    ):
-        """Constructor for EarlyStopping class.
-
-        Args:
+    Args:
             monitor: The quantity to be monitored. (Default : val_loss)
                     If you want to monitor other metric just pass in the name of the metric.
             patience: Number of epochs with no improvement after which training will be stopped.
@@ -34,7 +25,16 @@ class EarlyStopping(Callbacks, ABC):
         Note:
 
             EarlyStopping will only use the values of metrics/loss obtained on validation set.
-        """
+    """
+
+    def __init__(
+        self,
+        mode: str,
+        monitor: str = "val_loss",
+        patience: int = 5,
+        min_delta: float = 1e-7,
+    ):
+        """Constructor for EarlyStopping class."""
         super(EarlyStopping, self).__init__(order=CallbackOrder.STOPPING)
 
         if "val_" not in monitor:

@@ -7,10 +7,7 @@ import torch.nn.functional as F
 
 
 class ArcFace(nn.Module):
-    """Implementation of ArcFace.
-
-    ArcFace: : [Additive Angular Margin Loss for Deep Face Recognition](https://arxiv.org/abs/1801.07698)
-    """
+    """Implementation of 'ArcFace Loss <https://arxiv.org/abs/1801.07698>`_."""
 
     def __init__(self, in_features, out_features, s=30.0, m=0.35):
         """Class Constructor.

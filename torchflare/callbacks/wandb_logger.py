@@ -2,10 +2,16 @@
 from abc import ABC
 from typing import TYPE_CHECKING, Dict, List, Optional
 
-import wandb
-
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.states import CallbackOrder
+from torchflare.utils.imports_check import module_available
+
+_AVAILABLE = module_available("wandb")
+if _AVAILABLE:
+    import wandb
+else:
+    wandb = None
+
 
 if TYPE_CHECKING:
     from torchflare.experiments.experiment import Experiment
@@ -15,21 +21,8 @@ class WandbLogger(Callbacks, ABC):
     """Callback to log your metrics and loss values to  wandb platform.
 
     For more information about wandb take a look at [Weights and Biases](https://wandb.ai/)
-    """
 
-    def __init__(
-        self,
-        project: str,
-        entity: str,
-        name: str = None,
-        config: Dict = None,
-        tags: List[str] = None,
-        notes: Optional[str] = None,
-        directory: str = None,
-    ):
-        """Constructor of WandbLogger.
-
-        Args:
+    Args:
             project: The name of the project where you're sending the new run
             entity:  An entity is a username or team name where you're sending runs.
             name: A short display name for this run
@@ -42,8 +35,19 @@ class WandbLogger(Callbacks, ABC):
         Note:
             set os.environ['WANDB_SILENT'] = True to silence wandb log statements.
             If this is set all logs will be written to WANDB_DIR/debug.log
+    """
 
-        """
+    def __init__(
+        self,
+        project: str,
+        entity: str,
+        name: str = None,
+        config: Dict = None,
+        tags: List[str] = None,
+        notes: Optional[str] = None,
+        directory: str = None,
+    ):
+        """Constructor of WandbLogger."""
         super(WandbLogger, self).__init__(order=CallbackOrder.LOGGING)
         self.entity = entity
         self.project = project

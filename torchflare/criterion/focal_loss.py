@@ -7,7 +7,8 @@ import torch.nn.functional as F
 class BCEFocalLoss(nn.Module):
     """Implementation of Focal Loss for Binary Classification Problems.
 
-    Focal loss was proposed in [Focal Loss for Dense Object Detection](https://arxiv.org/abs/1708.02002).
+    Focal loss was proposed in `Focal Loss for Dense Object Detection_.
+    <https://arxiv.org/abs/1708.02002>`_.
     """
 
     def __init__(self, gamma=0, eps=1e-7, reduction="mean"):
@@ -44,17 +45,17 @@ class BCEFocalLoss(nn.Module):
 class FocalLoss(nn.Module):
     """Implementation of Focal Loss.
 
-    Focal loss was proposed in [Focal Loss for Dense Object Detection](https://arxiv.org/abs/1708.02002).
-    """
+    Focal loss was proposed in `Focal Loss for Dense Object Detection_.
+    <https://arxiv.org/abs/1708.02002>`_.
 
-    def __init__(self, gamma=0, eps=1e-7, reduction="mean"):
-        """Constructor Method for FocalLoss class.
-
-        Args:
+    Args:
             gamma : The focal parameter. Defaults to 0.
             eps : Constant for computational stability.
             reduction: The reduction parameter for Cross Entropy Loss.
-        """
+    """
+
+    def __init__(self, gamma=0, eps=1e-7, reduction="mean"):
+        """Constructor Method for FocalLoss class."""
         super(FocalLoss, self).__init__()
         self.gamma = gamma
         self.reduction = reduction
@@ -65,7 +66,7 @@ class FocalLoss(nn.Module):
         """Forward method.
 
         Args:
-            logits: The raw logits from the network of shape (N,C,*) where C = number of classes , * = extra dims
+            logits: The raw logits from the network of shape (N,C,*) where C = number of classes and (*) = extra dims
             targets: The targets of shape (N , *).
 
         Returns:
@@ -80,10 +81,7 @@ class FocalLoss(nn.Module):
 class FocalCosineLoss(nn.Module):
     """Implementation Focal cosine loss.
 
-    [Data-Efficient Deep Learning Method for Image Classification
-    Using Data Augmentation, Focal Cosine Loss, and Ensemble](https://arxiv.org/abs/2007.07805).
-
-    Source : <https://www.kaggle.com/c/cassava-leaf-disease-classification/discussion/203271>
+    Source : https://www.kaggle.com/c/cassava-leaf-disease-classification/discussion/203271
     """
 
     def __init__(self, alpha: float = 1, gamma: float = 2, xent: float = 0.1, reduction="mean"):

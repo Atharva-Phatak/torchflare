@@ -2,10 +2,16 @@
 from abc import ABC
 from typing import TYPE_CHECKING, List
 
-import neptune.new as neptune
-
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.states import CallbackOrder
+from torchflare.utils.imports_check import module_available
+
+_AVAILABLE = module_available("neptune")
+if _AVAILABLE:
+    import neptune.new as neptune
+else:
+    neptune = None
+
 
 if TYPE_CHECKING:
     from torchflare.experiments.experiment import Experiment
@@ -15,6 +21,13 @@ class NeptuneLogger(Callbacks, ABC):
     """Callback to log your metrics and loss values to Neptune to track your experiments.
 
     For more information about Neptune take a look at  [Neptune](https://neptune.ai/)
+
+    Args:
+            project_dir: The qualified name of a project in a form of namespace/project_name
+            params: The hyperparameters for your model and experiment as a dictionary
+            experiment_name: The name of the experiment
+            api_token: User’s API token
+            tags:  List of strings.
     """
 
     def __init__(
@@ -25,15 +38,7 @@ class NeptuneLogger(Callbacks, ABC):
         experiment_name: str = None,
         tags: List[str] = None,
     ):
-        """Constructor for NeptuneLogger Class.
-
-        Args:
-            project_dir: The qualified name of a project in a form of namespace/project_name
-            params: The hyperparameters for your model and experiment as a dictionary
-            experiment_name: The name of the experiment
-            api_token: User’s API token
-            tags:  List of strings.
-        """
+        """Constructor for NeptuneLogger Class."""
         super(NeptuneLogger, self).__init__(order=CallbackOrder.LOGGING)
         self.project_dir = project_dir
         self.api_token = api_token

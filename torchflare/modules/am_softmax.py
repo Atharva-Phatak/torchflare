@@ -5,10 +5,7 @@ import torch.nn.functional as F
 
 
 class AMSoftmax(nn.Module):
-    """Implementation of Additive Margin Softmax for Face Verification.
-
-    Additive Margin Softmax: <https://arxiv.org/abs/1801.05599>
-    """
+    """Implementation of `Additive Margin Softmax <https://arxiv.org/abs/1801.05599>`_."""
 
     def __init__(self, in_features, out_features, m=0.35, s=32):
         """Class Constructor.

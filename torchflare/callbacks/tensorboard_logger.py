@@ -2,24 +2,30 @@
 from abc import ABC
 from typing import TYPE_CHECKING
 
-from torch.utils.tensorboard import SummaryWriter
-
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.states import CallbackOrder
+from torchflare.utils.imports_check import module_available
+
+_AVAILABLE = module_available("tensorboard")
+if _AVAILABLE:
+    from torch.utils.tensorboard import SummaryWriter
+else:
+    SummaryWriter = None
+
 
 if TYPE_CHECKING:
     from torchflare.experiments.experiment import Experiment
 
 
 class TensorboardLogger(Callbacks, ABC):
-    """Callback to use Tensorboard to log your metrics and losses."""
+    """Callback to use Tensorboard to log your metrics and losses.
+
+    Args:
+            log_dir: The directory where you want to save your experiments.
+    """
 
     def __init__(self, log_dir: str):
-        """Constructor for TensorboardLogger class.
-
-        Args:
-            log_dir: The directory where you want to save your experiments.
-        """
+        """Constructor for TensorboardLogger class."""
         super(TensorboardLogger, self).__init__(order=CallbackOrder.LOGGING)
         self.log_dir = log_dir
         self._experiment = None

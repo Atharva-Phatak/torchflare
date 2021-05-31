@@ -9,9 +9,9 @@ def visualize_cam(image: np.ndarray, cam: torch.Tensor, alpha: float = 0.6):
     """Method to visualize the generated cam superimposed on image.
 
     Args:
-        image: The image converted to numpy array
-        cam: The class activation map tensor.
-        alpha: weight for input image for transperancy/blending.
+        image(numpy array): The image converted to numpy array
+        cam(torch.Tensor): The class activation map tensor.
+        alpha(float): weight for input image for transperancy/blending.
     """
     heatmap = cam.squeeze().numpy()
     heatmap = cv2.resize(heatmap, (image.shape[1], image.shape[0]))

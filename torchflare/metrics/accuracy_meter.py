@@ -7,17 +7,16 @@ from torchflare.metrics.meters import MetricMeter, _BaseMetric
 class Accuracy(_BaseMetric, MetricMeter):
     """Computes Accuracy.
 
-    Support binary,multilabel and multiclass cases
+    Support binary,multilabel and multiclass cases.
+
+    Args:
+            num_classes(int): The number of num_classes.
+            threshold(float): The threshold value to transform probability predictions to binary values(0,1)
+            multilabel(bool): Set it to True if your problem is  multilabel classification.
     """
 
     def __init__(self, num_classes: int, threshold: float = 0.5, multilabel: bool = False):
-        """Constructor method for Accuracy Class.
-
-        Args:
-            num_classes(int): The number of num_classes.
-            threshold: The threshold value to transform probability predictions to binary values(0,1)
-            multilabel: Set it to True if your problem is  multilabel classification.
-        """
+        """Constructor method for Accuracy Class."""
         super(Accuracy, self).__init__(multilabel=multilabel)
 
         self.threshold = threshold
@@ -67,8 +66,8 @@ class Accuracy(_BaseMetric, MetricMeter):
         """Method to accumulate the outputs and targets.
 
         Args:
-            outputs : raw logits from the network.
-            targets : Ground truth targets
+            outputs(torch.Tensor) : raw logits from the network.
+            targets(torch.Tensor) : Ground truth targets
         """
         outputs, targets = self.detach_tensor(outputs), self.detach_tensor(targets)
         self._outputs.append(outputs)

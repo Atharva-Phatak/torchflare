@@ -122,7 +122,7 @@ class SegmentationDataset(Dataset):
         num_classes: int = None,
         extension: str = None,
         image_convert_mode: str = "RGB",
-    ) -> SegmentationDataset:
+    ):
         """Classmethod to create pytorch dataset when you have rule length encodings for masks stored in a dataframe.
 
         Args:
@@ -166,7 +166,7 @@ class SegmentationDataset(Dataset):
         augmentations: Union[A.Compose, torchvision.transforms.Compose] = None,
         image_convert_mode: str = "L",
         mask_convert_mode: str = "L",
-    ) -> SegmentationDataset:
+    ):
         """Classmethod to create pytorch dataset from folders.
 
         Args:

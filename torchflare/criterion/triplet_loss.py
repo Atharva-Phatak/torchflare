@@ -75,7 +75,13 @@ def weighted_example_mining(distance_matrix, pos_idxs, neg_idxs):
 
 
 class TripletLoss(nn.Module):
-    """Computes Triplet loss."""
+    """Computes Triplet loss.
+
+    Args:
+            normalize_features: Whether to normalize the features. Default = True
+            margin: The value for margin. Default = None.
+            hard_mining: Whether to use hard sample mining. Default = True.
+    """
 
     def __init__(
         self,
@@ -83,13 +89,7 @@ class TripletLoss(nn.Module):
         margin: float = None,
         hard_mining: bool = True,
     ):
-        """Constructor method for TripletLoss.
-
-        Args:
-            normalize_features: Whether to normalize the features. Default = True
-            margin: The value for margin. Default = None.
-            hard_mining: Whether to use hard sample mining. Default = True.
-        """
+        """Constructor method for TripletLoss."""
         super(TripletLoss, self).__init__()
 
         self.normalize_features = normalize_features

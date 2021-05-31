@@ -26,7 +26,7 @@ class TabularDataloader:
         df: pd.DataFrame,
         feature_cols: Union[str, List[str]],
         label_cols: Union[str, List[str]] = None,
-    ) -> TabularDataloader:
+    ):
         """Classmethod to create dataset for tabular data from dataframe.
 
         Args:
@@ -45,7 +45,7 @@ class TabularDataloader:
         csv_path: str,
         feature_cols: Union[str, List[str]],
         label_cols: Union[str, List[str]] = None,
-    ) -> TabularDataloader:
+    ):
         """Classmethod to create a dataset for tabular data from csv.
 
         Args:

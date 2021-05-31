@@ -50,8 +50,8 @@ class AUC(MetricMeter, ABC):
         """Method to accumulate the outputs and targets.
 
         Args:
-            outputs : raw logits from the network.
-            targets : Ground truth targets
+            outputs(torch.Tensor) : raw logits from the network.
+            targets(torch.Tensor) : Ground truth targets
         """
         outputs, targets = _detach_tensor(outputs), _detach_tensor(targets)
         outputs, targets = _auc_check(x=outputs, y=targets)

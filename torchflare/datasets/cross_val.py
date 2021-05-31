@@ -12,7 +12,21 @@ from torchflare.datasets.text_dataset import TextClassificationDataset
 
 
 class CVSplit:
-    """Class to perform cross validation on given dataset."""
+    """Class to perform cross validation on given dataset.
+
+    Args:
+        dataset: A PyTorch style dataset. Dataset must be the one implemented in torchflare.
+        cv: The cross-validation splitting strategy.
+        n_splits: The number of splits.
+        **kwargs: keyword arguments related to cross validation strategy.
+
+    Note:
+        Only supports KFold, ShuffleSplit, StratifiedKFold, StratifiedShuffleSplit, RepeatedKFold,
+        RepeatedStratifiedKFold cross validation schemes.
+
+    Raises:
+        ValueError if cv strategy not in the specified ones.
+    """
 
     def __init__(self, dataset: Dataset, cv: str, n_splits: int, **kwargs):
         """Constructor class for CVSplit class.
