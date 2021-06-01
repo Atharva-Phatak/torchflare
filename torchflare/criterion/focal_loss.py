@@ -66,8 +66,8 @@ class FocalLoss(nn.Module):
         """Forward method.
 
         Args:
-            logits: The raw logits from the network of shape (N,C,*) where C = number of classes and (*) = extra dims
-            targets: The targets of shape (N , *).
+            logits: The raw logits from the network of shape (N,C,k) where C = number of classes and (k) = extra dims
+            targets: The targets of shape (N , k).
 
         Returns:
             The computed loss value
