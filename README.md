@@ -44,7 +44,7 @@ Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU
 ***
 ### ***Documentation***
 
-The Documentation is available [here](https://atharva-phatak.github.io/torchflare/)
+The Documentation is available [here](https://torchflare.readthedocs.io/en/latest/)
 
 ***
 ### ***Stability***
