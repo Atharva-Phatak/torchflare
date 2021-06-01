@@ -115,6 +115,7 @@ class Engine:
 
     def backward_loss(self) -> None:
         """Method to propogate loss backward."""
+        # skipcq: PYL-W0106
         self.scaler.scale(self.loss).backward() if self.fp16 else self.loss.backward()
 
     def optimizer_step(self) -> None:
@@ -133,6 +134,7 @@ class Engine:
 
     def _model_to_device(self):
         """Function to move model to device."""
+        # skipcq : PTC-W0063
         if next(self.model.parameters()).is_cuda is False:
             self.model.to(self.device)
 
