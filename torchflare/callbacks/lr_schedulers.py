@@ -50,6 +50,13 @@ class LRSchedulerCallback(Callbacks, ABC):
 class LambdaLR(LRSchedulerCallback, ABC):
     """Multiply learning rate by a factor computed with a given function.
     The function should take int value number of epochs as the only argument.
+
+    Args:
+            lr_lambda (function or list of functions): Lambda function for the
+                learning rate factor computation.
+            last_epoch (int): The index of last epoch. Default: -1.
+            step_on_batch (bool): Step on each training iteration rather than each epoch.
+                Defaults to False.
     """
 
     def __init__(
@@ -58,33 +65,25 @@ class LambdaLR(LRSchedulerCallback, ABC):
         last_epoch: int = -1,
         step_on_batch: bool = False,
     ):
-        """Constructor for lambda scheduler.
-
-        Args:
-            lr_lambda (function or list of functions): Lambda function for the
-                learning rate factor computation.
-            last_epoch (int): The index of last epoch. Default: -1.
-            step_on_batch (bool): Step on each training iteration rather than each epoch.
-                Defaults to False.
-        """
+        """Constructor for lambda scheduler."""
         super().__init__(
             lambda opt: _schedulers.LambdaLR(opt, lr_lambda, last_epoch=last_epoch), step_on_batch=step_on_batch
         )
 
 
 class StepLR(LRSchedulerCallback, ABC):
-    """Multiply learning rate by a given factor with a given period."""
+    """Multiply learning rate by a given factor with a given period.
 
-    def __init__(self, step_size: int, gamma: float = 0.1, last_epoch: int = -1, step_on_batch: bool = False):
-        """Constructor for StepLR.
-
-        Args:
+    Args:
             step_size (int): Period of learning rate update in epochs.
             gamma (float, optional): The multiplicative factor. Defaults to 0.1.
             last_epoch (int): The index of last epoch. Default: -1.
             step_on_batch (bool): Step on each training iteration rather than each epoch.
                 Defaults to False.
-        """
+    """
+
+    def __init__(self, step_size: int, gamma: float = 0.1, last_epoch: int = -1, step_on_batch: bool = False):
+        """Constructor for StepLR."""
         super().__init__(
             lambda opt: _schedulers.StepLR(opt, step_size, gamma=gamma, last_epoch=last_epoch),
             step_on_batch=step_on_batch,
@@ -92,20 +91,20 @@ class StepLR(LRSchedulerCallback, ABC):
 
 
 class MultiStepLR(LRSchedulerCallback, ABC):
-    """Multiply learning rate by a given factor on each epoch from a given list."""
+    """Multiply learning rate by a given factor on each epoch from a given list.
 
-    def __init__(
-        self, milestones: Iterable[int], gamma: float = 0.1, last_epoch: int = -1, step_on_batch: bool = False
-    ):
-        """Constructor class for MultiStepLR.
-
-        Args:
+    Args:
             milestones (list of int): List of epochs number to perform lr step.
             gamma (float, optional): The multiplicative factor. Defaults to 0.1.
             last_epoch (int): The index of last epoch. Default: -1.
             step_on_batch (bool): Step on each training iteration rather than each epoch.
                 Defaults to False.
-        """
+    """
+
+    def __init__(
+        self, milestones: Iterable[int], gamma: float = 0.1, last_epoch: int = -1, step_on_batch: bool = False
+    ):
+        """Constructor class for MultiStepLR."""
         super().__init__(
             lambda opt: _schedulers.MultiStepLR(opt, milestones, gamma=gamma, last_epoch=last_epoch),
             step_on_batch=step_on_batch,
@@ -113,35 +112,35 @@ class MultiStepLR(LRSchedulerCallback, ABC):
 
 
 class ExponentialLR(LRSchedulerCallback, ABC):
-    """Multiply learning rate by a given factor on each epoch."""
+    """Multiply learning rate by a given factor on each epoch.
+
+    Args:
+           gamma (float, optional): The multiplicative factor. Defaults to 0.1.
+           last_epoch (int): The index of last epoch. Default: -1.
+           step_on_batch (bool): Step on each training iteration rather than each epoch.
+               Defaults to False.
+    """
 
     def __init__(self, gamma: float, last_epoch: int = -1, step_on_batch: bool = False):
-        """Constructor for ExponentialLR.
-
-        Args:
-            gamma (float, optional): The multiplicative factor. Defaults to 0.1.
-            last_epoch (int): The index of last epoch. Default: -1.
-            step_on_batch (bool): Step on each training iteration rather than each epoch.
-                Defaults to False.
-        """
+        """Constructor for ExponentialLR."""
         super().__init__(
             lambda opt: _schedulers.ExponentialLR(opt, gamma, last_epoch=last_epoch), step_on_batch=step_on_batch
         )
 
 
 class CosineAnnealingLR(LRSchedulerCallback, ABC):
-    """Set the learning rate of each parameter group using a cosine annealing schedule."""
+    """Set the learning rate of each parameter group using a cosine annealing schedule.
 
-    def __init__(self, T_max: int, eta_min: float = 0, last_epoch: int = -1, step_on_batch: bool = True):  # noqa
-        """Constructor for CosineAnnealingLR.
-
-        Args:
+    Args:
             T_max (int): Max number of epochs or iterations.
             eta_min (float, optional): Min learning rate. Defaults to 0.
             last_epoch (int): The index of last epoch. Default: -1.
             step_on_batch (bool): Step on each training iteration rather than each epoch.
                 Defaults to True.
-        """
+    """
+
+    def __init__(self, T_max: int, eta_min: float = 0, last_epoch: int = -1, step_on_batch: bool = True):  # noqa
+        """Constructor for CosineAnnealingLR."""
         super().__init__(
             lambda opt: _schedulers.CosineAnnealingLR(opt, T_max, eta_min=eta_min, last_epoch=last_epoch),
             step_on_batch=step_on_batch,
@@ -149,23 +148,10 @@ class CosineAnnealingLR(LRSchedulerCallback, ABC):
 
 
 class ReduceLROnPlateau(LRSchedulerCallback, ABC):
-    """Reduce learning rate when a metric has stopped improving."""
+    """Reduce learning rate when a metric has stopped improving.
 
-    def __init__(
-        self,
-        mode="min",
-        factor=0.1,
-        patience=10,
-        verbose=False,
-        threshold=1e-4,
-        threshold_mode="rel",
-        cooldown=0,
-        min_lr=0,
-        eps=1e-8,
-    ):
-        """Constructor for ReduceLRonPlateau.
 
-        Args:
+    Args:
             mode: One of {"min", "max"}. In min mode, training will stop when the quantity monitored
                 has stopped decreasing.In "max" mode it will stop when the quantity monitored has stopped increasing.
             factor (float, optional): The multiplicative factor. Defaults to 0.1.
@@ -183,7 +169,21 @@ class ReduceLROnPlateau(LRSchedulerCallback, ABC):
                 Defaults to 0.
             eps (float, optional): Min significant learning rate update.
                 Defaults to 1e-8.
-        """
+    """
+
+    def __init__(
+        self,
+        mode="min",
+        factor=0.1,
+        patience=10,
+        verbose=False,
+        threshold=1e-4,
+        threshold_mode="rel",
+        cooldown=0,
+        min_lr=0,
+        eps=1e-8,
+    ):
+        """Constructor for ReduceLRonPlateau."""
         super().__init__(
             lambda opt: _schedulers.ReduceLROnPlateau(
                 opt,
@@ -202,27 +202,9 @@ class ReduceLROnPlateau(LRSchedulerCallback, ABC):
 
 
 class CyclicLR(LRSchedulerCallback, ABC):
-    """Sets the learning rate of each parameter group according to cyclical learning rate policy."""
+    """Sets the learning rate of each parameter group according to cyclical learning rate policy.
 
-    def __init__(
-        self,
-        base_lr: float,
-        max_lr: float,
-        step_size_up: int = 2000,
-        step_size_down: Optional[int] = None,
-        mode: str = "triangular",
-        gamma: float = 1.0,
-        scale_fn: Optional[Callable[[float], float]] = None,
-        scale_mode: str = "cycle",
-        cycle_momentum: bool = True,
-        base_momentum: float = 0.8,
-        max_momentum: float = 0.9,
-        last_epoch: int = -1,
-        step_on_batch: bool = True,
-    ):
-        """Constructor for CyclicLR.
-
-        Args:
+    Args:
             base_lr (float or list of float): Initial learning rate.
             max_lr (float or list of float): Max learning rate.
             step_size_up (int, optional): Increase phase duration in epochs or iterations.
@@ -249,7 +231,25 @@ class CyclicLR(LRSchedulerCallback, ABC):
             last_epoch (int): The index of last epoch. Default: -1.
             step_on_batch (bool): Step on each training iteration rather than each epoch.
                 Defaults to True.
-        """
+    """
+
+    def __init__(
+        self,
+        base_lr: float,
+        max_lr: float,
+        step_size_up: int = 2000,
+        step_size_down: Optional[int] = None,
+        mode: str = "triangular",
+        gamma: float = 1.0,
+        scale_fn: Optional[Callable[[float], float]] = None,
+        scale_mode: str = "cycle",
+        cycle_momentum: bool = True,
+        base_momentum: float = 0.8,
+        max_momentum: float = 0.9,
+        last_epoch: int = -1,
+        step_on_batch: bool = True,
+    ):
+        """Constructor for CyclicLR."""
         super().__init__(
             lambda opt: _schedulers.CyclicLR(
                 opt,
@@ -271,21 +271,21 @@ class CyclicLR(LRSchedulerCallback, ABC):
 
 
 class CosineAnnealingWarmRestarts(LRSchedulerCallback, ABC):
-    """Set the learning rate of each parameter group using a cosine annealing schedule with a warm restart."""
+    """Set the learning rate of each parameter group using a cosine annealing schedule with a warm restart.
+
+    Args:
+           T_0 (int): Number of epochs or iterations for the first restart.
+           T_mult (int): T increase factor after a restart.
+           eta_min (float, optional): Min learning rate. Defaults to 0.
+           last_epoch (int): The index of last epoch. Default: -1.
+           step_on_batch (bool): Step on each training iteration rather than each epoch.
+               Defaults to True.
+    """
 
     def __init__(
         self, T_0: int, T_mult: int = 1, eta_min: int = 0, last_epoch: int = -1, step_on_batch: bool = True
     ):  # noqa
-        """Constructor for CosineAnnealingWarmRestarts.
-
-        Args:
-            T_0 (int): Number of epochs or iterations for the first restart.
-            T_mult (int): T increase factor after a restart.
-            eta_min (float, optional): Min learning rate. Defaults to 0.
-            last_epoch (int): The index of last epoch. Default: -1.
-            step_on_batch (bool): Step on each training iteration rather than each epoch.
-                Defaults to True.
-        """
+        """Constructor for CosineAnnealingWarmRestarts."""
         super().__init__(
             lambda opt: _schedulers.CosineAnnealingWarmRestarts(
                 opt, T_0, T_mult=T_mult, eta_min=eta_min, last_epoch=last_epoch
@@ -295,7 +295,16 @@ class CosineAnnealingWarmRestarts(LRSchedulerCallback, ABC):
 
 
 class MultiplicativeLR(LRSchedulerCallback, ABC):
-    """Multiply the learning rate of each parameter group by the factor given in the specified function."""
+    """Multiply the learning rate of each parameter group by the factor given in the specified function.
+
+    Args:
+            lr_lambda (function or list of functions): A function which computes a
+                multiplicative factor given an integer parameter epoch, or a list
+                of such functions, one for each group in an optimizer.param_groups.
+            last_epoch (int): The index of last epoch. Default: -1.
+            step_on_batch (bool): Step on each training iteration rather than each epoch.
+                Defaults to False.
+    """
 
     def __init__(
         self,
@@ -303,16 +312,7 @@ class MultiplicativeLR(LRSchedulerCallback, ABC):
         last_epoch: int = -1,
         step_on_batch: bool = False,
     ):
-        """Constructor for MultiplicativeLR.
-
-        Args:
-            lr_lambda (function or list of functions): A function which computes a
-                multiplicative factor given an integer parameter epoch, or a list
-                of such functions, one for each group in an optimizer.param_groups.
-            last_epoch (int): The index of last epoch. Default: -1.
-            step_on_batch (bool): Step on each training iteration rather than each epoch.
-                Defaults to False.
-        """
+        """Constructor for MultiplicativeLR."""
         super().__init__(
             lambda opt: _schedulers.MultiplicativeLR(opt, lr_lambda, last_epoch=last_epoch),
             step_on_batch=step_on_batch,
@@ -324,26 +324,8 @@ class OneCycleLR(LRSchedulerCallback, ABC):
     The 1cycle policy anneals
     the learning rate from an initial learning rate to some maximum learning rate
     and then from that maximum learning rate to some minimum learning rate much lower than the initial learning rate.
-    """
 
-    def __init__(
-        self,
-        max_lr: Union[float, List[float]],
-        total_steps: Optional[int] = None,
-        epochs: Optional[int] = None,
-        steps_per_epoch: Optional[int] = None,
-        pct_start: float = 0.3,
-        anneal_strategy: str = "cos",
-        cycle_momentum: bool = True,
-        base_momentum: Union[float, List[float]] = 0.85,
-        max_momentum: Union[float, List[float]] = 0.95,
-        div_factor: float = 25.0,
-        final_div_factor: float = 1e4,
-        last_epoch: int = -1,
-    ):
-        """Constructor for OneCycleLR.
-
-        Args:
+    Args:
             max_lr (float or list of float): Upper learning rate boundaries in the
                 cycle for each parameter group.
             total_steps (int): The total number of steps in the cycle. Note that
@@ -387,7 +369,24 @@ class OneCycleLR(LRSchedulerCallback, ABC):
                 min_lr = initial_lr/final_div_factor
                 Defaults to 1e4.
             last_epoch (int): The index of last epoch. Default: -1.
-        """
+    """
+
+    def __init__(
+        self,
+        max_lr: Union[float, List[float]],
+        total_steps: Optional[int] = None,
+        epochs: Optional[int] = None,
+        steps_per_epoch: Optional[int] = None,
+        pct_start: float = 0.3,
+        anneal_strategy: str = "cos",
+        cycle_momentum: bool = True,
+        base_momentum: Union[float, List[float]] = 0.85,
+        max_momentum: Union[float, List[float]] = 0.95,
+        div_factor: float = 25.0,
+        final_div_factor: float = 1e4,
+        last_epoch: int = -1,
+    ):
+        """Constructor for OneCycleLR."""
         super().__init__(
             lambda opt: _schedulers.OneCycleLR(
                 opt,

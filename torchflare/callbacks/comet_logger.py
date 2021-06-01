@@ -19,17 +19,30 @@ else:
 
 class CometLogger(Callbacks, ABC):
     """Callback to log your metrics and loss values to Comet to track your experiments.
-
     For more information about Comet look at [Comet.ml](https://www.comet.ml/site/)
 
     Args:
-            api_token: Your API key obtained from comet.ml
-            params: The hyperparameters for your model and experiment as a dictionary
-            project_name: Send your experiment to a specific project.
-                    Otherwise, will be sent to Uncategorized Experiments.
-            workspace: Attach an experiment to a project that belongs to this workspace
-            tags: List of strings.
+        api_token: Your API key obtained from comet.ml
+        params: The hyperparameters for your model and experiment as a dictionary
+        project_name: Send your experiment to a specific project.
+                Otherwise, will be sent to Uncategorized Experiments.
+        workspace: Attach an experiment to a project that belongs to this workspace
+        tags: List of strings.
 
+    Examples:
+        .. code-block::
+
+            from torchflare.callbacks import CometLogger
+
+            params = {"bs": 16, "lr": 0.3}
+
+            logger = CometLogger(
+                project_name="experiment_10",
+                workspace="username",
+                params=params,
+                tags=["Experiment", "fold_0"],
+                api_token="your_secret_api_token",
+            )
     """
 
     def __init__(

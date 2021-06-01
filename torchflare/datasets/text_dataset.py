@@ -87,6 +87,18 @@ class TextClassificationDataset(Dataset):
 
         Returns:
             A list of sentences and corresponding labels if label_cols is provided else return a list of sentences.
+
+        Examples:
+
+            .. code-block:: python
+
+                import transformers
+                from torchflare.datasets import TextClassificationDataset
+
+                tokenizer = transformers.BertTokenizer.from_pretrained("bert-base-uncased")
+
+                ds = TextClassificationDataset.from_df(
+                    df=df, input_col="tweet", label_cols="label", tokenizer=tokenizer, max_len=128)
         """
         inputs = df.loc[:, input_col].values.tolist()
 

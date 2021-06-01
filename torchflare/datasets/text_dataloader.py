@@ -40,6 +40,25 @@ class TextDataloader:
 
         Returns:
                 pytorch dataset for text classification using huggingface.
+
+        Examples:
+
+            .. code-block:: python
+
+                from torchflare.datasets import TextDataloader
+
+                dl = TextDataloader.data_from_df(df=df,
+                                  input_col="tweet",
+                                  label_cols="label",
+                                  tokenizer=tokenizer,
+                                   max_len=128
+                                   ).get_loader(batch_size=64, # Required Args.
+                                                       shuffle=True, # Required Args.
+                                                       num_workers = 0, # keyword Args.
+                                                       collate_fn = collate_fn # keyword Args.
+                                                       )
+
+
         """
         return cls(
             TextClassificationDataset.from_df(

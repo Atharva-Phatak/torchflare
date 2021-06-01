@@ -6,13 +6,7 @@ Datasets
 .. contents::
    :local:
 
-torchflare.datasets.cross\_val module
--------------------------------------
 
-.. automodule:: torchflare.datasets.cross_val
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 Image Dataset
 ------------------------------------------------
@@ -74,5 +68,11 @@ Tabular Dataloader
 Text Dataloader
 -------------------------------------------
 
-.. automodule:: torchflare.datasets.text_dataloader.TextDataloader
+.. autoclass:: torchflare.datasets.text_dataloader.TextDataloader
    :members: from_df
+
+Cross Validation
+-------------------------------------
+
+.. autoclass:: torchflare.datasets.cross_val.CVSplit
+   :members:

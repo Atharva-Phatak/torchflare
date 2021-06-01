@@ -26,7 +26,7 @@ class ModelCheckpoint(Callbacks, ABC):
             save_dir: The directory where you want to save the model files.
             file_name: The name of file. Default : model.bin
 
-        Note:
+    Note:
 
              ModelCheckpoint will save state_dictionaries for model , optimizer , scheduler
              and the value of epoch with following key values:
@@ -35,6 +35,12 @@ class ModelCheckpoint(Callbacks, ABC):
             2) 'optimizer_state_dict'  : The state dictionary of optimizer
 
             Model checkpoint will be saved based on the values of metrics/loss obtained from validation set.
+
+    Example:
+        .. code-block::
+
+            import torchflare.callbacks as cbs
+            model_ckpt = cbs.ModelCheckpoint(monitor="val_accuracy", mode="max")
     """
 
     def __init__(self, mode: str, monitor: str = "val_loss", save_dir: str = "./models", file_name: str = "model.bin"):

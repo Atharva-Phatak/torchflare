@@ -13,6 +13,20 @@ class Accuracy(_BaseMetric, MetricMeter):
             num_classes(int): The number of num_classes.
             threshold(float): The threshold value to transform probability predictions to binary values(0,1)
             multilabel(bool): Set it to True if your problem is  multilabel classification.
+
+    Examples:
+        .. code-block:: python
+
+            from torchflare.metrics import Accuracy
+
+            # Binary-Classification Problems
+            acc = Accuracy(num_classes=2, threshold=0.7, multilabel=False)
+
+            # Mutliclass-Classification Problems
+            multiclass_acc = Accuracy(num_classes=4, multilabel=False)
+
+            # Multilabel-Classification Problems
+            multilabel_acc = Accuracy(num_classes=5, multilabel=True, threshold=0.7)
     """
 
     def __init__(self, num_classes: int, threshold: float = 0.5, multilabel: bool = False):

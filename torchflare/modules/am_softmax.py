@@ -5,17 +5,18 @@ import torch.nn.functional as F
 
 
 class AMSoftmax(nn.Module):
-    """Implementation of `Additive Margin Softmax <https://arxiv.org/abs/1801.05599>`_."""
+    """Implementation of `Additive Margin Softmax <https://arxiv.org/abs/1801.05599>`_.
 
-    def __init__(self, in_features, out_features, m=0.35, s=32):
-        """Class Constructor.
-
-        Args:
+    Args:
             in_features: Size of the input features
             out_features: The size of output features(usually number of num_classes)
             s: The norm for input features.
             m: margin
-        """
+
+    """
+
+    def __init__(self, in_features, out_features, m=0.35, s=32):
+        """Class Constructor."""
         super(AMSoftmax, self).__init__()
 
         self.in_features = in_features

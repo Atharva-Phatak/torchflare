@@ -1,7 +1,7 @@
 # flake8: noqa
 import os
 
-from torchflare.callbacks.notifiers import DiscordNotifierCallback, SlackNotifierCallback
+from torchflare.callbacks.message_notifiers import DiscordNotifierCallback, SlackNotifierCallback
 import pytest
 
 """

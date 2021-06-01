@@ -6,27 +6,27 @@ Li-ArcFace
 ---------------------------------
 
 .. autoclass:: torchflare.modules.airface.LiArcFace
-   :members: __init__
+   :members:
 
 
 Additive Margin Softmax
 -------------------------------------
 
 .. autoclass:: torchflare.modules.am_softmax.AMSoftmax
-   :members: __init__ , forward
+   :members:
 
 
 ArcFace
 ---------------------------------
 
 .. autoclass:: torchflare.modules.arcface.ArcFace
-   :members: __init__ , forward
+   :members:
 
 CosFace
 ---------------------------------
 
 .. autoclass:: torchflare.modules.CosFace
-   :members: __init__ , forward
+   :members:
 
 Squeeze and Excitation - CSE
 -------------------------------------

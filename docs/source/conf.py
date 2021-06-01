@@ -15,7 +15,7 @@ import sys
 
 import sphinx_rtd_theme
 
-autodoc_mock_imports = ["torch", "numpy", "pandas", "matplotlib"]
+autodoc_mock_imports = ["torch", "numpy", "matplotlib", "pandas", "sklearn"]
 sys.path.insert(0, os.path.abspath("../.."))
 
 
@@ -41,8 +41,8 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
     "sphinx.ext.githubpages",
-    "myst_parser",
     "sphinx_rtd_theme",
+    "sphinx.ext.todo",
 ]
 
 # Add any paths that contain templates here, relative to this directory.

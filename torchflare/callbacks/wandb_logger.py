@@ -32,9 +32,23 @@ class WandbLogger(Callbacks, ABC):
                 If set to None it will use experiments save_dir argument.
             notes: A longer description of the run, like a -m commit message in git
 
-        Note:
+    Note:
             set os.environ['WANDB_SILENT'] = True to silence wandb log statements.
             If this is set all logs will be written to WANDB_DIR/debug.log
+
+    Examples:
+        .. code-block::
+
+            from torchflare.callbacks import WandbLogger
+
+            params = {"bs": 16, "lr": 0.3}
+
+            logger = WandbLogger(
+                project="Experiment",
+                entity="username",
+                name="Experiment_10",
+                config=params,
+                tags=["Experiment", "fold_0"])
     """
 
     def __init__(

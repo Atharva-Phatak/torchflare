@@ -7,17 +7,17 @@ import torch.nn.functional as F
 
 
 class ArcFace(nn.Module):
-    """Implementation of 'ArcFace Loss <https://arxiv.org/abs/1801.07698>`_."""
+    """Implementation of 'ArcFace Loss <https://arxiv.org/abs/1801.07698>`_.
+
+    Args:
+           in_features: Size of the input features
+           out_features: The size of output features(usually number of num_classes)
+           s: The norm for input features.
+           m: margin
+    """
 
     def __init__(self, in_features, out_features, s=30.0, m=0.35):
-        """Class Constructor.
-
-        Args:
-            in_features: Size of the input features
-            out_features: The size of output features(usually number of num_classes)
-            s: The norm for input features.
-            m: margin
-        """
+        """Class Constructor."""
         super(ArcFace, self).__init__()
 
         self.in_features = in_features

@@ -28,6 +28,22 @@ class NeptuneLogger(Callbacks, ABC):
             experiment_name: The name of the experiment
             api_token: User’s API token
             tags:  List of strings.
+
+    Examples:
+        .. code-block::
+
+            from torchflare.callbacks import NeptuneLogger
+
+            params = {"bs": 16, "lr": 0.3}
+
+            logger = NeptuneLogger(
+                project_dir="username/Experiments",
+                params=params,
+                experiment_name="Experiment_10",
+                tags=["Experiment", "fold_0"],
+                api_token="your_secret_api_token",
+            )
+
     """
 
     def __init__(

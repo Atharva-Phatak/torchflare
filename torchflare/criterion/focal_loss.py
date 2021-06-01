@@ -85,11 +85,7 @@ class FocalCosineLoss(nn.Module):
     """
 
     def __init__(self, alpha: float = 1, gamma: float = 2, xent: float = 0.1, reduction="mean"):
-        """Constructor for FocalCosineLoss.
-
-        Todo:
-        Add documentation.
-        """
+        """Constructor for FocalCosineLoss."""
         super(FocalCosineLoss, self).__init__()
         self.alpha = alpha
         self.gamma = gamma

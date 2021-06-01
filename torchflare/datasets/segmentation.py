@@ -143,6 +143,24 @@ class SegmentationDataset(Dataset):
         Note:
             If you want to create a dataset for testing set mask_cols = None, mask_size = None, num_classes = None.
             The created masks will be binary.
+
+        Examples:
+            .. code-block:: python
+
+                from torchflare.datasets import SegmentationDataset
+
+                ds = SegmentationDataset.from_rle(
+                    df=df,
+                    path="/train/images",
+                    image_col="image_id",
+                    mask_cols=["EncodedPixles"],
+                    extension=".jpg",
+                    mask_size=(320, 320),
+                    num_classes=4,
+                    augmentations=augs,
+                    image_convert_mode="RGB",
+                )
+
         """
         image_list = cls._join_paths(path=path, file_names=df[image_col].values.tolist(), extension=extension)
 
@@ -181,6 +199,20 @@ class SegmentationDataset(Dataset):
 
         Note:
              If you want to create a dataset for testing just set mask_path = None.
+
+
+        Examples:
+            .. code-block:: python
+
+                from torchflare.datasets import SegmentationDataset
+                ds = SegmentationDataset.from_folders(
+                    image_path="/train/images",
+                    mask_path="/train/masks",
+                    augmentations=augs,
+                    image_convert_mode="L",
+                    mask_convert_mode="L",
+                )
+
         """
         image_files = cls._join_paths(image_path, os.listdir(image_path))
         mask_files = cls._join_paths(mask_path, os.listdir(mask_path)) if mask_path is not None else None

@@ -31,7 +31,14 @@ class SlackNotifierCallback(Callbacks, ABC):
     """Class to Dispatch Training progress to your Slack channel.
 
     Args:
-            webhook_url : Slack webhook url
+        webhook_url : Slack webhook url.
+
+    Examples:
+        .. code-block:: python
+
+            import torchflare.callbacks as cbs
+            slack_notif = cbs.SlackNotifierCallback(webhook_url="YOUR_SECRET_URL")
+
     """
 
     def __init__(self, webhook_url: str):
@@ -57,9 +64,19 @@ class DiscordNotifierCallback(Callbacks, ABC):
     """Class to Dispatch Training progress and plots to your Discord Sever.
 
     Args:
-            exp_name : The name of your experiment bot. (Can be anything)
-            webhook_url : The webhook url of your discord server/channel.
-            send_figures: Whether to send the plots of model history to the server.
+        exp_name : The name of your experiment bot. (Can be anything)
+        webhook_url : The webhook url of your discord server/channel.
+        send_figures: Whether to send the plots of model history to the server.
+
+    Examples:
+        .. code-block::
+
+            import torchflare.callbacks as cbs
+
+            discord_notif = cbs.DiscordNotifierCallback(
+                webhook_url="YOUR_SECRET_URL", exp_name="MODEL_RUN"
+            )
+
     """
 
     def __init__(self, exp_name: str, webhook_url: str, send_figures: bool = False):

@@ -58,6 +58,27 @@ class SegmentationDataloader:
 
             If you want to create a dataloader for testing set mask_cols = None, mask_size = None, num_classes = None.
 
+        Examples:
+
+            .. code-block:: python
+
+                from torchflare.datasets import SegmentationDataloader
+
+                dl = SegmentationDataloader.from_rle(df=df,
+                                path="/train/images",
+                                image_col="image_id",
+                                mask_cols=["EncodedPixles"],
+                                extension=".jpg",
+                                mask_size=(320,320),
+                                num_classes=4,
+                                augmentations=augs,
+                                image_convert_mode="RGB"
+                                ).get_loader(batch_size=64, # Required Args.
+                                                           shuffle=True, # Required Args.
+                                                           num_workers = 0, # keyword Args.
+                                                           collate_fn = collate_fn # keyword Args.)
+
+
         """
         return cls(
             SegmentationDataset.from_rle(
@@ -93,6 +114,23 @@ class SegmentationDataloader:
 
         Returns:
             Pytorch Segmentation dataset created from folders.
+
+        Example:
+
+            .. code-block:: python
+
+                from torchflare.datasets import SegmentationDataloader
+                dl = SegmentationDataloader.from_folders(
+                                    image_path="/train/images",
+                                    mask_path="/train/masks",
+                                    augmentations=augs,
+                                    image_convert_mode="L",
+                                    mask_convert_mode="L",
+                                    ).get_loader(batch_size=64, # Required Args.
+                                                           shuffle=True, # Required Args.
+                                                           num_workers = 0, # keyword Args.
+                                                           collate_fn = collate_fn # keyword Args.)
+
         """
         return cls(
             SegmentationDataset.from_folders(

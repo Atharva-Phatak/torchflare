@@ -10,18 +10,17 @@ GradCam
 ----------------------------------------
 
 .. autoclass:: torchflare.interpreters.grad_cam.GradCam
-   :members: __init__
+   :members:
 
 
 GradCam++
 ------------------------------------------
 
 .. autoclass:: torchflare.interpreters.grad_campp.GradCamPP
-   :members: __init__
+   :members:
 
 
 visualize
 ----------------------------------------
 
-.. automodule:: torchflare.interpreters.visualize
-   :members:
+.. autofunction:: torchflare.interpreters.visualize.visualize_cam

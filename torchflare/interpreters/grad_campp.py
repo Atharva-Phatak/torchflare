@@ -15,6 +15,16 @@ class GradCamPP(BaseCam, ABC):
     Args:
             model: The model to be used for gradcam.
             target_layer: The target layer to be used for cam extraction.
+
+    Examples:
+
+        .. code-block:: python
+
+            from torchflare.interpreters import GradCamPP, visualize_cam
+
+            cam_model = GradCamPP(model=model, target_layer=target_layer)
+            cam = cam_model(tensor, target_category=282)
+            visualize_cam(image=image, cam=cam)
     """
 
     def __init__(self, model, target_layer):

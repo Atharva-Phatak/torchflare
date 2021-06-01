@@ -1,7 +1,7 @@
 import pytest
 
 from torchflare.utils.average_meter import AverageMeter
-
+from torchflare.utils.imports_check import module_available
 
 def test_avg_meter():
     x = 0
@@ -23,3 +23,9 @@ def test_avg_meter():
     assert meter.avg == 0
     assert meter.val == 0
     assert meter.sum == 0
+
+
+def test_imports():
+
+    available = module_available("torch")
+    assert available is True

@@ -5,17 +5,17 @@
 
 TorchFlare
 ======================================
-**TorchFlare** is a simple, beginner-friendly and an easy-to-use PyTorch Framework train your models without much effort. It provides an almost Keras-like experience for training your models with all the callbacks, metrics, etc
+`TorchFlare <https://github.com/Atharva-Phatak/torchflare>`_ is a simple, beginner-friendly and an easy-to-use PyTorch Framework train your models without much effort. It provides an almost Keras-like experience for training your models with all the callbacks, metrics, etc
 
 **Features**
 
-    * A high-level module for Keras-like training.
-    * Off-the-shelf Pytorch style Datasets/Dataloaders for standard tasks such as Image classification, Image segmentation, Text Classification, etc
-    * Callbacks for model checkpoints, early stopping, and much more!
-    * Metrics and much more.
-    * Reduction of the boiler plate code required for training your models.
+    * *A high-level module for Keras-like training.*
+    * *Off-the-shelf Pytorch style Datasets/Dataloaders for standard tasks such as Image classification, Image segmentation, Text Classification, etc.*
+    * *Callbacks for model checkpoints, early stopping, and much more!*
+    * *Metrics and much more.*
+    * *Reduction of the boiler plate code required for training your models.*
 
-Currently, TorchFlare supports CPU and GPU training. DDP and TPU support will be coming soon!
+**Currently, TorchFlare supports CPU and GPU training. DDP and TPU support will be coming soon!**
 
 *Installation*
 ------------------
@@ -96,6 +96,7 @@ Indices and tables
    :maxdepth: 2
    :caption: API
 
+   quickstart.rst
    API/torchflare.experiments.rst
    API/torchflare.callbacks.rst
    API/torchflare.datasets.rst

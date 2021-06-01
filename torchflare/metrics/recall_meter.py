@@ -16,6 +16,21 @@ class Recall(_BaseInputHandler, MetricMeter):
             micro: calculate metrics globally for each sample and class.
         threshold(float): The threshold value to transform probability predictions to binary values(0,1)
         multilabel(bool): Set it to True if your problem is  multilabel classification.
+
+    Examples:
+        .. code-block:: python
+
+            from torchflare.metrics import Recall
+
+            # Binary-Classification Problems
+            acc = Recall(num_classes=2 , threshold=0.7 , multilabel=False , average = "macro")
+
+            # Mutliclass-Classification Problems
+            multiclass_acc = Recall(num_classes=4 , multilabel=False , average = "macro")
+
+            # Multilabel-Classification Problems
+            multilabel_acc = Recallnum_classes=5 , multilabel=True, threshold=0.7,
+                                        average = "macro")
     """
 
     def __init__(

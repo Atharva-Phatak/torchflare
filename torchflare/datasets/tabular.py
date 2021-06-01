@@ -40,6 +40,14 @@ class TabularDataset(Dataset):
 
         Returns:
             np.array of inputs , labels if label_cols is not None else return np.array of inputs.
+
+        Examples:
+
+            .. code-block::
+
+                from torchflare.datasets import TabularDataset
+                ds = TabularDataset.from_df(df=df, feature_cols=["col1", "col2"], label_cols="labels")
+
         """
         features = df.loc[:, feature_cols].values
         labels = df.loc[:, label_cols].values if label_cols is not None else None
@@ -64,6 +72,16 @@ class TabularDataset(Dataset):
 
         Returns:
             np.array of inputs , labels if label_cols is not None else return np.array of inputs.
+
+        Examples:
+
+            .. code-block:: python
+
+                from torchflare.datasets import TabularDataset
+                ds = TabularDataset.from_csv(
+                    csv_path="/train/train_data.csv", feature_cols=["col1", "col2"], label_cols="labels"
+                )
+
         """
         return cls.from_df(df=pd.read_csv(csv_path), feature_cols=feature_cols, label_cols=label_cols)
 
