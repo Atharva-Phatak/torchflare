@@ -50,7 +50,7 @@ Here is an easy-to-understand example to show how Experiment class works.
    callbacks = [cbs.EarlyStopping(monitor="accuracy", mode="max"), cbs.ModelCheckpoint(monitor="accuracy"),
             cbs.ReduceLROnPlateau(mode="max" , patience = 2)]
 
-      # Set some constants for training
+   # Set some constants for training
    exp = Experiment(
        num_epochs=5,
        fp16=False,

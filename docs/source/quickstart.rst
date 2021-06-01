@@ -68,7 +68,7 @@ Simple Example - MNIST Dataset
 
     from torchflare.experiments import Experiment
 
-    #Define some params for the experiment
+    # Define some params for the experiment
     exp = Experiment(num_epochs=10,
                 fp16=True,
                 device="cuda",
