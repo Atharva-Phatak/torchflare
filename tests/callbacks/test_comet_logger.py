@@ -1,7 +1,4 @@
 # flake8: noqa
-from torchflare.callbacks.logging.comet_logger import CometLogger
-import os
-import pytest
 
 """
 @pytest.mark.skip(reason="Comet ML requires first import. Logic running properly but will fail CI Tests.")

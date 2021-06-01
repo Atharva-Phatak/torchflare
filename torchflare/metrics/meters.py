@@ -12,7 +12,7 @@ class _BaseMetric:
         """Constructor class for BaseMetric class.
 
         Args:
-            multilabel: Set to True if problem type is multilabel.
+            multilabel(bool): Set to True if problem type is multilabel.
         """
         self.multilabel = multilabel
         self.case_type = None
@@ -22,8 +22,8 @@ class _BaseMetric:
         """Function to check if there is a mismatch between outputs and targets.
 
         Args:
-            outputs: The outputs of the net.
-            targets: The targets.
+            outputs(torch.Tensor): The outputs of the net.
+            targets(torch.Tensor): The targets.
 
         Raises:
             ValueError:  If shapes does not match.
@@ -36,8 +36,8 @@ class _BaseMetric:
         """Converts tensor to one_hot representation.
 
         Args:
-            num_classes: The number of classes.
-            indices: torch.Tensor.
+            num_classes(int): The number of classes.
+            indices(torch.Tensor): torch.Tensor.
 
         Returns:
             one_hot converted tensor.
@@ -84,10 +84,10 @@ class _BaseInputHandler(_BaseMetric):
         """Constructor method.
 
         Args:
-            num_classes: The number of classes.
-            threshold: The threshold for binarization.
-            multilabel: Whether the problem is multilabel or not.
-            average: One of macro or micro.
+            num_classes(int): The number of classes.
+            threshold(float): The threshold for binarization.
+            multilabel(bool): Whether the problem is multilabel or not.
+            average(str): One of macro or micro.
         """
         super(_BaseInputHandler, self).__init__(multilabel=multilabel)
         self.num_classes = num_classes
@@ -119,8 +119,8 @@ class _BaseInputHandler(_BaseMetric):
         """Computes true_positives, false_positives, true_negatives, false_negatives.
 
         Args:
-            outputs: The outputs of the net.
-            targets: The targets.
+            outputs(torch.Tensor): The outputs of the net.
+            targets(torch.Tensor): The targets.
 
         Returns:
             True positives , false positives, true negatives , false negatives.
@@ -180,10 +180,10 @@ def calculate_segmentation_statistics(outputs: torch.Tensor, targets: torch.Tens
     """Compute calculate segmentation statistics.
 
     Args:
-        outputs: torch.Tensor.
-        targets: torch.Tensor.
-        threshold: threshold for binarization of predictions.
-        class_dim: indicates class dimension (K).
+        outputs(torch.Tensor): torch.Tensor.
+        targets(torch.Tensor): torch.Tensor.
+        threshold(float): threshold for binarization of predictions.
+        class_dim(int): indicates class dimension (K).
 
     Returns:
         True positives , false positives , false negatives for segmentation task.

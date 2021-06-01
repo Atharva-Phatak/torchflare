@@ -1,48 +1,44 @@
 """Simple utilities required by experiment."""
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 import numpy as np
 import torch
+
+from torchflare.callbacks.callback import Callbacks
+from torchflare.callbacks.states import CallbackOrder
 
 if TYPE_CHECKING:
     from torchflare.experiments.experiment import Experiment
 
 
-class AvgLoss:
+class AvgLoss(Callbacks):
     """Class for averaging the loss."""
 
     def __init__(self):
+        super(AvgLoss, self).__init__(order=CallbackOrder.LOSS)
         self.total, self.count = 0, 0
-        self.loss_dict = None
         self.reset()
 
     def reset(self):
         """Reset the variables."""
         self.total, self.count = 0, 0
 
-    def accumulate(self, experiment: "Experiment"):
+    def on_batch_end(self, experiment: "Experiment"):
         """Accumulate values."""
         bs = experiment.dataloaders.get(experiment.stage).batch_size
         self.total += experiment.loss.item() * bs
         self.count += bs
 
-    def value(self, experiment: "Experiment"):
+    def on_loader_end(self, experiment: "Experiment"):
         """Method to return computed dictionary."""
-        self.loss_dict = {experiment.get_prefix() + "loss": self.total / self.count}
+        prefix = experiment.get_prefix()
+        loss_dict = {prefix + "loss": self.total / self.count}
         self.reset()
-        return self.loss_dict
+        experiment.monitors[experiment.stage] = loss_dict
 
 
-def wrap_metric_names(metric_list: List):
-    """Method to  get the metric names from metric list.
-
-    Args:
-        metric_list : A list of metrics.
-
-    Returns:
-        list of metric name.s
-    """
-    return [metric.handle() for metric in metric_list]
+def _has_intersection(key, event):
+    return True if key in event else False
 
 
 def to_device(value, device):

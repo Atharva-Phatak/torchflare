@@ -52,8 +52,8 @@ class MAE(MetricMeter):
         """Accumulates the batch outputs and targets.
 
         Args:
-            outputs : raw logits from the network.
-            targets : targets to use for computing accuracy
+            outputs(torch.Tensor): raw logits from the network.
+            targets(torch.Tensor) : targets to use for computing accuracy
         """
         outputs, targets = detach_tensor(outputs), detach_tensor(targets)
         _check_shape(outputs, targets)
@@ -97,8 +97,8 @@ class MSE(MetricMeter):
         """Accumulates the batch outputs and targets.
 
         Args:
-            outputs : raw logits from the network.
-            targets : targets to use for computing accuracy
+            outputs(torch.Tensor) : raw logits from the network.
+            targets(torch.Tensor) : targets to use for computing accuracy
         """
         outputs, targets = detach_tensor(outputs), detach_tensor(targets)
         _check_shape(outputs, targets)
@@ -141,8 +141,8 @@ class MSLE(MetricMeter):
         """Accumulates the batch outputs and targets.
 
         Args:
-            outputs : raw logits from the network.
-            targets : targets to use for computing accuracy
+            outputs(torch.Tensor) : raw logits from the network.
+            targets(torch.Tensor) : targets to use for computing accuracy
         """
         outputs, targets = detach_tensor(outputs), detach_tensor(targets)
         _check_shape(outputs, targets)
@@ -195,8 +195,8 @@ class R2Score(MetricMeter):
         """Accumulates the batch outputs and targets.
 
         Args:
-            outputs : raw logits from the network.
-            targets : targets to use for computing accuracy
+            outputs(torch.Tensor) : raw logits from the network.
+            targets(torch.Tensor) : targets to use for computing accuracy
         """
         self._num_examples += outputs.shape[0]
         self._sum_of_errors += torch.sum(torch.pow(outputs - targets, 2))

@@ -16,7 +16,7 @@ class LoadCheckpoint(Callbacks, ABC):
 
     def __init__(self, path_to_model: str = None):
         """Constructor method for LoadCheckpoint Class."""
-        super(LoadCheckpoint, self).__init__(order=CallbackOrder.INTERNAL)
+        super(LoadCheckpoint, self).__init__(order=CallbackOrder.MODEL_INIT)
         self.path = path_to_model
 
     def on_experiment_start(self, experiment: "Experiment"):

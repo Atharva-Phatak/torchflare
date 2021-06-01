@@ -12,7 +12,27 @@ if TYPE_CHECKING:
 
 
 class EarlyStopping(Callbacks, ABC):
-    """Implementation of Early Stopping Callback."""
+    """Implementation of Early Stopping Callback.
+
+    Args:
+            monitor: The quantity to be monitored. (Default : val_loss)
+                    If you want to monitor other metric just pass in the name of the metric.
+            patience: Number of epochs with no improvement after which training will be stopped.
+            mode: One of {"min", "max"}. In min mode, training will stop when the quantity monitored
+                has stopped decreasing.In "max" mode it will stop when the quantity monitored has stopped increasing.
+            min_delta: Minimum change in the monitored quantity to qualify as an improvement.
+
+    Note:
+
+        EarlyStopping will only use the values of metrics/loss obtained on validation set.
+
+    Example:
+        .. code-block:: python
+
+            import torchflare.callbacks as cbs
+            early_stop = cbs.EarlyStopping(monitor="val_accuracy", patience=5, mode="max")
+
+    """
 
     def __init__(
         self,
@@ -21,20 +41,7 @@ class EarlyStopping(Callbacks, ABC):
         patience: int = 5,
         min_delta: float = 1e-7,
     ):
-        """Constructor for EarlyStopping class.
-
-        Args:
-            monitor: The quantity to be monitored. (Default : val_loss)
-                    If you want to monitor other metric just pass in the name of the metric.
-            patience: Number of epochs with no improvement after which training will be stopped.
-            mode: One of {"min", "max"}. In min mode, training will stop when the quantity monitored
-                has stopped decreasing.In "max" mode it will stop when the quantity monitored has stopped increasing.
-            min_delta: Minimum change in the monitored quantity to qualify as an improvement.
-
-        Note:
-
-            EarlyStopping will only use the values of metrics/loss obtained on validation set.
-        """
+        """Constructor for EarlyStopping class."""
         super(EarlyStopping, self).__init__(order=CallbackOrder.STOPPING)
 
         if "val_" not in monitor:

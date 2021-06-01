@@ -34,17 +34,17 @@ def BCEFlat(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
 
 
 class LabelSmoothingCrossEntropy(nn.Module):
-    """NLL loss with targets smoothing."""
+    """NLL loss with targets smoothing.
+
+    Args:
+           smoothing : targets smoothing factor
+
+       Raises:
+           ValueError: value error is raised if smoothing  > 1.0.
+    """
 
     def __init__(self, smoothing: float = 0.1):
-        """Constructor method for LabelSmoothingCrossEntropy.
-
-        Args:
-            smoothing : targets smoothing factor
-
-        Raises:
-            ValueError: value error is raised if smoothing  > 1.0.
-        """
+        """Constructor method for LabelSmoothingCrossEntropy."""
         super(LabelSmoothingCrossEntropy, self).__init__()
         if smoothing > 1.0:
             raise ValueError("Smoothing value must be less than 1.")
@@ -73,16 +73,15 @@ class SymmetricCE(nn.Module):
     """Pytorch Implementation of Symmetric Cross Entropy.
 
     Paper: https://arxiv.org/abs/1908.06112
-    """
 
-    def __init__(self, num_classes, alpha: float = 1.0, beta: float = 1.0):
-        """Constructor method for symmetric CE.
-
-        Args:
+    Args:
             alpha: The alpha value for symmetricCE.
             beta: The beta value for symmetricCE.
             num_classes: The number of classes.
-        """
+    """
+
+    def __init__(self, num_classes, alpha: float = 1.0, beta: float = 1.0):
+        """Constructor method for symmetric CE."""
         super(SymmetricCE, self).__init__()
         self.alpha = alpha
         self.beta = beta

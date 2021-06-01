@@ -7,20 +7,17 @@ import torch.nn.functional as F
 
 
 class LiArcFace(nn.Module):
-    """Implementation of Li-ArcFace.
+    """Implementation of `Li-ArcFace <https://arxiv.org/abs/1907.12256>`_.
 
-    AirFace: [Lightweight and Efficient Model for Face Recognition](https://arxiv.org/abs/1907.12256)
+    Args:
+           in_features: Size of the input features
+           out_features: The size of output features(usually number of num_classes)
+           s: The norm for input features.
+           m: margin
     """
 
     def __init__(self, in_features, out_features, s=64, m=0.45):
-        """Constructor class of LiArcFace.
-
-        Args:
-            in_features: Size of the input features
-            out_features: The size of output features(usually number of num_classes)
-            s: The norm for input features.
-            m: margin
-        """
+        """Constructor class of LiArcFace."""
         super(LiArcFace, self).__init__()
 
         self.in_features = in_features

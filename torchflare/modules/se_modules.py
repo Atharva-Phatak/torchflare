@@ -8,20 +8,20 @@ import torch.nn.functional as F
 class CSE(nn.Module):
     """Implementation of Channel Wise Squeeze and Excitation Block.
 
-    Paper : <https://arxiv.org/abs/1709.01507>
+    Paper : https://arxiv.org/abs/1709.01507
 
     Adapted from
-    <https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/65939>
+    https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/65939
     and
-    <https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/66178>
+    https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/66178
     """
 
     def __init__(self, in_channels: int, r: int = 16):
         """Constructor for CSE class.
 
         Args:
-            in_channels : The number of input channels in the feature map.
-            r : The reduction ration (Default : 16)
+            in_channels(int): The number of input channels in the feature map.
+            r(int): The reduction ration (Default : 16)
         """
         super(CSE, self).__init__()
 
@@ -34,7 +34,7 @@ class CSE(nn.Module):
         """Forward Method.
 
         Args:
-            x: The input tensor of shape (batch, channels, height, width)
+            x(torch.Tensor): The input tensor of shape (batch, channels, height, width)
 
         Returns:
             Tensor of same shape
@@ -55,17 +55,17 @@ class CSE(nn.Module):
 class SSE(nn.Module):
     """SSE : Channel Squeeze and Spatial Excitation block.
 
-    Paper : <https://arxiv.org/abs/1803.02579>
+    Paper : https://arxiv.org/abs/1803.02579
 
     Adapted from
-    <https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/66178>
+    https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/66178
     """
 
     def __init__(self, in_channels):
         """Constructor method for SSE class.
 
         Args:
-            in_channels : The number of input channels in the feature map.
+            in_channels(int): The number of input channels in the feature map.
         """
         super(SSE, self).__init__()
 
@@ -77,7 +77,7 @@ class SSE(nn.Module):
         """Forward Method.
 
         Args:
-            x: The input tensor of shape (batch, channels, height, width)
+            x(torch.Tensor): The input tensor of shape (batch, channels, height, width)
 
         Returns:
             Tensor of same shape
@@ -95,19 +95,19 @@ class SSE(nn.Module):
 class SCSE(nn.Module):
     """Implementation of SCSE : Concurrent Spatial and Channel Squeeze and Channel Excitation block.
 
-    Paper : <https://arxiv.org/abs/1803.02579>
+    Paper : https://arxiv.org/abs/1803.02579
 
 
     Adapted from
-    <https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/66178>
+    https://www.kaggle.com/c/tgs-salt-identification-challenge/discussion/66178
     """
 
     def __init__(self, in_channels, r=16):
         """Constructor for SCSE class.
 
         Args:
-            in_channels : The number of input channels in the feature map.
-            r : The reduction ration (Default : 16)
+            in_channels(int): The number of input channels in the feature map.
+            r(int): The reduction ration (Default : 16)
         """
         super(SCSE, self).__init__()
 
@@ -121,7 +121,7 @@ class SCSE(nn.Module):
         """Forward method.
 
         Args:
-            x: The input tensor of shape (batch, channels, height, width)
+            x(torch.Tensor): The input tensor of shape (batch, channels, height, width)
 
         Returns:
             Tensor of same shape

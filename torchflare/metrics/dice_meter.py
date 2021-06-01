@@ -6,18 +6,18 @@ from torchflare.metrics.meters import MetricMeter, calculate_segmentation_statis
 
 # To-Do better implementation for Dice
 class DiceScore(MetricMeter):
-    """Class to compute Dice Score."""
+    """Class to compute Dice Score.
+
+    Args:
+        threshold(float): threshold for binarization of predictions
+        class_dim(int): indicates class dimension (K)
+
+    Note:
+        Supports only binary cases
+    """
 
     def __init__(self, threshold: float = None, class_dim: int = 1):
-        """Constructor method for DiceScore.
-
-        Args:
-            threshold: threshold for binarization of predictions
-            class_dim: indicates class dimension (K)
-
-        Note:
-             Supports only binary cases
-        """
+        """Constructor method for DiceScore."""
         self.threshold = threshold
         self.class_dim = class_dim
         self.eps = 1e-20
@@ -38,10 +38,10 @@ class DiceScore(MetricMeter):
         """Class to accumulate the outputs and targets.
 
         Args:
-            outputs: [N, K, ...] tensor that for each of the N samples
+            outputs(torch.Tensor): [N, K, ...] tensor that for each of the N samples
                 indicates the probability of the sample belonging to each of
                 the K num_classes.
-            targets:  binary [N, K, ...] tensor that encodes which of the K
+            targets(torch.Tensor): binary [N, K, ...] tensor that encodes which of the K
                 num_classes are associated with the N-th sample.
         """
         self._outputs.append(outputs)

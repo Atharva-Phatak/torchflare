@@ -29,12 +29,9 @@ metric:
 
 experiment:
  constant_params:
-  num_epochs: 5
-  save_dir: ./models
-  model_name: hydra_cifar10.bin
+  num_epochs: 2
   fp16: True
   device: cuda
-  compute_train_metrics: True
   seed: 42
 
  compile_params:

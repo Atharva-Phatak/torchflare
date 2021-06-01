@@ -1,22 +1,80 @@
 """Implements Base class."""
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 
-from torchflare.data_config.base import DataPipe
-from torchflare.experiments.simple_utils import to_device
-from torchflare.experiments.state import BaseState
-
-if TYPE_CHECKING:
-    from torchflare.data_config.base import BaseConfig
+from torchflare.experiments.engine import Engine
+from torchflare.experiments.simple_utils import _has_intersection, to_device
 
 
-class Experiment(BaseState):
-    """Simple class for handling boilerplate code for training, validation and Inference."""
+class Experiment(Engine):
+    """Simple class for handling boilerplate code for training, validation and Inference.
+
+    Args:
+           num_epochs(int) : The number of epochs to save model.
+           fp16(bool) : Set this to True if you want to use mixed precision training.
+           device(str) : The device where you want train your model. One of **cuda** or **cpu**.
+           seed(int): The seed to ensure reproducibility.
+
+    Examples:
+        .. code-block:: python
+
+            import torch
+            import torchflare.callbacks as cbs
+            import torchflare.metrics as metrics
+            from torchflare.experiments import Experiment
+
+            # Defining Training/Validation Dataloaders
+            train_dl = SomeTrainDataloader()
+            valid_dl = SomeValidDataloader()
+
+            # Defining params
+            optimizer = "Adam"
+            optimizer_params = {"lr" : 1e-4}
+            criterion = "cross_entropy"
+            num_epochs = 10
+            num_classes = 4
+
+            # Defining the list of metrics
+            metric_list = [
+                metrics.Accuracy(num_classes=num_classes, multilabel=False),
+                metrics.F1Score(num_classes=num_classes, multilabel=False),
+            ]
+
+            # Defining the list of callbacks
+            callbacks = [
+                cbs.EarlyStopping(monitor="accuracy", mode="max"),
+                cbs.ModelCheckpoint(monitor="accuracy", mode = "max"),
+                cbs.ReduceLROnPlateau(mode = "max" , patience = 3) #Defining Scheduler callback.
+            ]
+
+            # Creating Experiment and setting the params.
+            exp = Experiment(
+                num_epochs=num_epochs,
+                fp16=True,
+                device=device,
+                seed=42,
+            )
+
+            # Compiling the experiment
+            exp.compile_experiment(
+                module=SomeModelClass,
+                module_params = {"num_features" : 200 , "num_classes" : 5} #Params to init the model class
+                metrics=metric_list,
+                callbacks=callbacks,
+                main_metric="accuracy",
+                optimizer=optimizer,
+                optimizer_params=optimizer_params,
+                criterion=criterion,
+            )
+
+
+            # Running the experiment
+            exp.fit_loader(train_dl=train_dl, valid_dl=valid_dl)
+    """
 
     def __init__(
         self,
@@ -25,14 +83,7 @@ class Experiment(BaseState):
         device: str = "cuda",
         seed: int = 42,
     ):
-        """Init method to set up important variables for training and validation.
-
-        Args:
-            num_epochs : The number of epochs to save model.
-            fp16 : Set this to True if you want to use mixed precision training.
-            device : The device where you want train your model.
-            seed: The seed to ensure reproducibility.
-        """
+        """Init method to set up important variables for training and validation."""
         super(Experiment, self).__init__(
             num_epochs=num_epochs,
             fp16=fp16,
@@ -42,41 +93,42 @@ class Experiment(BaseState):
 
     def compile_experiment(
         self,
-        model_class: nn.Module,
+        module: nn.Module,
+        module_params: Optional[Dict],
         optimizer: Union[torch.optim.Optimizer, str, Any],
-        criterion: Union[Callable[[torch.Tensor], torch.Tensor], str],
+        optimizer_params: Optional[Dict],
+        criterion: Union[Callable, str],
         callbacks: List = None,
         metrics: List = None,
         main_metric: Optional[str] = None,
-        **kwargs,
     ):
         """Configures the model for training and validation.
 
         Args:
-            model_class: An uninstantiated PyTorch class which defines the model. The init arguments for your
-                        model class should be passed to ***compile_experiment*** with prefix **model_**.
-            optimizer: The optimizer to be used or name of optimizer. The init arguments for your optimizer
-                        should be passed to ***compile_experiment*** with prefix **optimizer_**.
+            module(nn.Module): An uninstantiated PyTorch class which defines the model.
+            module_params(Dict): The params required to initialize model class.
+            optimizer(torch.optim.Optimizer, str): The optimizer to be used or name of optimizer.
                         If you pass in the name of the optimizer, only optimizers available in pytorch are supported.
-            criterion: The loss function to optimize or name of the loss function.
+            optimizer_params(Dict): The parameters for optimizer.
+            criterion(callable , str): The loss function to optimize or name of the loss function.
                     If you pass in the name of the loss function,
                     only loss functions available in pytorch can be supported.
-            callbacks: The list of callbacks to be used.
-            metrics: The list of metrics to be used.
-            main_metric: The name of main metric to be monitored. Use lower case version.
+            callbacks(List): The list of callbacks to be used.
+            metrics(List): The list of metrics to be used.
+            main_metric(str): The name of main metric to be monitored. Use lower case version.
                         For examples , use 'accuracy' instead of 'Accuracy'.
 
         Note:
             Supports all the schedulers implemented in pytorch/transformers except SWA.
             Support for custom scheduling will be added soon.
         """
-        vars(self).update(kwargs)
         self.main_metric = main_metric
-        self._set_model(model_class=model_class)
-        self._set_optimizer(optimizer=optimizer)
         self._set_metrics(metrics=metrics)
-        self._set_callbacks(callbacks=callbacks)
+        self._set_model(model_class=module, model_params=module_params)
+        self._set_optimizer(optimizer=optimizer, optimizer_params=optimizer_params)
+        self._set_metrics(metrics=metrics)
         self._set_criterion(criterion=criterion)
+        self._set_callbacks(callbacks=callbacks)
 
     def _process_inputs(self, *args):
         args = to_device(args, self.device)
@@ -98,30 +150,9 @@ class Experiment(BaseState):
             x = self._process_inputs(x)
             self.x = x[0] if len(x) == 1 else x
 
-    def _update_logs(self):
-
-        # To-do : Better logs updating
-        self.exp_logs = {self.epoch_key: self.current_epoch, **self._train_monitor, **self._val_monitor}
-
-    def _update_monitors(self):
-        if self.stage == "train":
-            self._train_monitor = self.metrics
-        else:
-            self._val_monitor = self.metrics
-
-    def _update_metrics(self):
-
-        metrics = {} if self._metric_runner is None else self._metric_runner.value(self)
-        self.metrics = {**self.loss_meter.value(self), **metrics}
-        self._update_monitors()
-
     def compute_loss(self) -> None:
         """Computes loss given the inputs and targets."""
-        if isinstance(self.preds, (list, tuple)):
-            vals = [self.criterion(ele, self.y) for ele in self.preds]
-            self.loss = sum(vals)
-        else:
-            self.loss = self.criterion(self.preds, self.y)
+        self.loss = self.criterion(self.preds, self.y)
 
     def model_forward_pass(self):
         """Forward pass of the model."""
@@ -132,14 +163,18 @@ class Experiment(BaseState):
         else:
             self.preds = self.model(self.x)
 
-    def _calculate_loss(self) -> None:
+    def _handle_batch(self) -> None:
         """Function to calculate loss and update metric states."""
         self.model_forward_pass()
-        self.compute_loss()
+        if self.fp16:
+            with torch.cuda.amp.autocast():
+                self.compute_loss()
+        else:
+            self.compute_loss()
 
     def set_dataloaders(self, train_dl, valid_dl):
         """Setup dataloader variables."""
-        self.dataloaders = {"train": train_dl, "valid": valid_dl}
+        self.dataloaders = {"Train": train_dl, "Valid": valid_dl}
 
     def on_experiment_start(self):
         """Event on experiment start."""
@@ -151,11 +186,12 @@ class Experiment(BaseState):
 
     def on_loader_start(self):
         """Event on loader start."""
-        self._step = {"train": self.train_step, "valid": self.val_step}
+        self._step = {"Train": self.train_step, "Valid": self.val_step}
 
     def on_epoch_start(self):
         """Event on epoch start."""
         self.current_epoch += 1
+        self.exp_logs = {self.epoch_key: self.current_epoch}
 
     def on_experiment_end(self):
         """Event on experiment end."""
@@ -163,25 +199,24 @@ class Experiment(BaseState):
 
     def on_batch_end(self):
         """Event on batch end."""
-        self.loss_meter.accumulate(self)
-        # accumulate values for metric computation
-        if self._metric_runner is not None:
-            self._metric_runner.accumulate(self)
+        pass
 
     def on_loader_end(self):
         """Event of loader end."""
-        self._update_metrics()
+        self.exp_logs.update(**self.monitors[self.stage])
 
     def on_epoch_end(self):
         """Event on epoch end."""
-        self._update_logs()
+        pass
 
     def _run_event(self, event: str):
         """Method to run events."""
-        getattr(self, event)()
+        if _has_intersection(key="_start", event=event):
+            getattr(self, event)()
         # As soon as event ends, we run callbacks.
-        for callback in self.callbacks:
-            _ = getattr(callback, event)(self)
+        self._run_callbacks(event=event)
+        if _has_intersection(key="_end", event=event):
+            getattr(self, event)()
 
     def run_batch(self) -> None:
         """Run batch with batch event."""
@@ -198,44 +233,28 @@ class Experiment(BaseState):
         # Stdout  computed metrics/update monitors.
         self._run_event("on_loader_end")
 
-    def fp16_step(self) -> None:
-        """Method to perform mixed precision type update."""
-        self.optimizer.zero_grad()
-
-        with torch.cuda.amp.autocast():
-            self._calculate_loss()
-
-        self.scaler.scale(self.loss).backward()
-        self.scaler.step(self.optimizer)
-        self.scaler.update()
-
-    def standard_step(self) -> None:
-        """Method to perform the standard update."""
-        self.optimizer.zero_grad()
-        self._calculate_loss()
-        self.loss.backward()
-        self.optimizer.step()
-
-    def train_step(self) -> None:
-        """Method to perform the train step and step scheduler."""
-        # skipcq: PYL-W0106
-        self.fp16_step() if self.fp16 else self.standard_step()
+    def train_step(self):
+        """Method to perform train step."""
+        self.zero_grad()
+        self._handle_batch()
+        self.backward_loss()
+        self.optimizer_step()
 
     def val_step(self) -> None:
         """Method to perform validation step."""
         with torch.no_grad():
-            self._calculate_loss()
+            self._handle_batch()
 
     def _do_train_epoch(self):
         """Method to train the model for one epoch."""
         self.model.train()
-        self.stage = "train"
+        self.stage = "Train"
         self.run_loader()
 
     def _do_val_epoch(self):
         """Method to validate model for one epoch."""
         self.model.eval()
-        self.stage = "valid"
+        self.stage = "Valid"
         self.run_loader()
 
     def _do_epoch(self):
@@ -257,35 +276,6 @@ class Experiment(BaseState):
         self._run()
         self._run_event("on_experiment_end")
 
-    def fit_config(
-        self,
-        train_data_cfg: Union["BaseConfig", dataclass],
-        val_data_cfg: Union["BaseConfig", dataclass],
-        batch_size: int = 64,
-        dataloader_kwargs: Dict = None,
-    ):
-        """Train and validate the model on dataset created using train and validation data configs.
-
-        Args:
-            train_data_cfg: The training data config.
-            val_data_cfg: The validation data config.
-            batch_size: The batch size to be used for training and validation.
-            dataloader_kwargs: Keyword arguments to pass to the PyTorch dataloaders created
-                internally. By default, shuffle=True is passed for the training dataloader but this can be
-                overriden by using this argument.
-
-        Note:
-            Model will only be saved when ModelCheckpoint callback is used.
-        """
-        if dataloader_kwargs is None:
-            dataloader_kwargs = {}
-
-        dataloader_kwargs = {"batch_size": batch_size, **dataloader_kwargs}
-        data_pipe = DataPipe(train_data_cfg=train_data_cfg, valid_data_cfg=val_data_cfg)
-        train_dl = DataLoader(data_pipe.train_ds, **{"shuffle": True, **dataloader_kwargs})
-        valid_dl = DataLoader(data_pipe.valid_ds, **dataloader_kwargs)
-        self.fit_loader(train_dl=train_dl, valid_dl=valid_dl)
-
     def fit(
         self,
         x: Union[torch.Tensor, np.ndarray],
@@ -297,11 +287,13 @@ class Experiment(BaseState):
         """Train and validate the model on training and validation dataset.
 
         Args:
-            x: A numpy array(or array-like) or torch.tensor for inputs to the model.
-            y: Target data. Same type as input data coule numpy array(or array-like) or torch.tensors.
-            val_data: A tuple or list (x_val , y_val) of numpy arrays or torch.tensors.
-            batch_size: The batch size to be used for training and validation.
-            dataloader_kwargs: Keyword arguments to pass to the PyTorch dataloaders created
+            x(numpy array or torch.Tensor): A numpy array(or array-like) or torch.tensor for inputs to the model.
+            y(numpy array or torch.Tensor): Target data. Same type as input data coule numpy array(or array-like)
+                                        or torch.tensors.
+            val_data(tuple of 2 torch.Tensors or numpy arrays: (input, target): A tuple or list (x_val , y_val) of
+                                                                numpy arrays or torch.tensors.
+            batch_size(int): The batch size to be used for training and validation.
+            dataloader_kwargs(Dict): Keyword arguments to pass to the PyTorch dataloaders created
                 internally. By default, shuffle=True is passed for the training dataloader but this can be
                 overriden by using this argument.
 
@@ -320,8 +312,8 @@ class Experiment(BaseState):
         """Train and validate the model using dataloaders.
 
         Args:
-            train_dl : The training dataloader.
-            valid_dl : The validation dataloader.
+            train_dl(DataLoader) : The training dataloader.
+            valid_dl(DataLoader) : The validation dataloader.
 
         Note:
             Model will only be saved when ModelCheckpoint callback is used.
@@ -347,9 +339,9 @@ class Experiment(BaseState):
         """Method to perform inference on test dataloader.
 
         Args:
-            test_dl: The dataloader to be use for testing.
-            device: The device on which you want to perform inference.
-            path_to_model: The full path to model
+            test_dl(DataLoader): The dataloader to be use for testing.
+            device(str): The device on which you want to perform inference.
+            path_to_model(str): The full path to model
 
         Yields:
             Output per batch.
@@ -378,11 +370,11 @@ class Experiment(BaseState):
         """Method to perform inference on test data.
 
         Args:
-            x: A numpy array(or array-like) or torch.tensor for inputs to the model.
-            batch_size: The batch size to be used for inference.
-            device: The device on which you want to perform inference.
-            dataloader_kwargs: Keyword arguments to pass to the PyTorch dataloader which is created internally.
-            path_to_model: str,
+            x(numpy array or torch.Tensor): A numpy array(or array-like) or torch.tensor for inputs to the model.
+            batch_size(int): The batch size to be used for inference.
+            device(str): The device on which you want to perform inference.
+            dataloader_kwargs(Dict): Keyword arguments to pass to the PyTorch dataloader which is created internally.
+            path_to_model(str): The full path to the model.
         """
         if dataloader_kwargs is None:
             dataloader_kwargs = {}

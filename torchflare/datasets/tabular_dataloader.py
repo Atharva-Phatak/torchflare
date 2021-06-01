@@ -26,7 +26,7 @@ class TabularDataloader:
         df: pd.DataFrame,
         feature_cols: Union[str, List[str]],
         label_cols: Union[str, List[str]] = None,
-    ) -> TabularDataloader:
+    ):
         """Classmethod to create dataset for tabular data from dataframe.
 
         Args:
@@ -35,7 +35,21 @@ class TabularDataloader:
             label_cols: name(str) or list containing names label columns.
 
         Returns:
-            Tabular pytorch dataset
+            Tabular pytorch dataset.
+
+        Examples:
+            .. code-block:: python
+
+                from torchflare.datasets import TabularDataloader
+
+                dl = TabularDataloader.from_df(df=df,
+                                            feature_cols= ["col1" , "col2"],
+                                            label_cols="labels"
+                                            ).get_loader(batch_size=64, # Required Args.
+                                                           shuffle=True, # Required Args.
+                                                           num_workers = 0, # keyword Args.
+                                                           collate_fn = collate_fn # keyword Args.)
+
         """
         return cls(TabularDataset.from_df(df=df, feature_cols=feature_cols, label_cols=label_cols))
 
@@ -45,7 +59,7 @@ class TabularDataloader:
         csv_path: str,
         feature_cols: Union[str, List[str]],
         label_cols: Union[str, List[str]] = None,
-    ) -> TabularDataloader:
+    ):
         """Classmethod to create a dataset for tabular data from csv.
 
         Args:
@@ -55,6 +69,20 @@ class TabularDataloader:
 
         Returns:
             Tabular pytorch dataset.
+
+        Examples:
+
+            .. code-block:: python
+
+                from torchflare.datasets import TabularDataloader
+                dl = TabularDataloader.from_csv(csv_path="/train/train_data.csv",
+                                feature_cols=["col1" , "col2"],
+                                label_cols="labels"
+                                ).get_loader(batch_size=64, # Required Args.
+                                           shuffle=True, # Required Args.
+                                           num_workers = 0, # keyword Args.
+                                           collate_fn = collate_fn # keyword Args.)
+
         """
         return cls(TabularDataset.from_csv(csv_path=csv_path, feature_cols=feature_cols, label_cols=label_cols))
 

@@ -8,7 +8,7 @@ import torchvision
 
 from torchflare.datasets.segmentation import SegmentationDataset
 from torchflare.datasets.segmentation_dataloader import SegmentationDataloader
-from torchflare.data_config.segmentation_configs import SegmentationDataConfig
+
 
 df = pd.read_csv("tests/datasets/data/image_segmentation/csv_data/dummy.csv")
 df_inputs = collections.namedtuple(
@@ -188,48 +188,3 @@ def test_segmentation_dataloaders():
 
     test_segmentation_data_from_folders()
     test_segmentation_data_from_rle()
-
-
-def test_data_configs():
-    def test_config_rle():
-        augmentations = A.Compose([A.Resize(256, 256)])
-
-        cfg = SegmentationDataConfig.from_rle(
-            path=df_inputs.path,
-            df=df,
-            image_col=df_inputs.image_col,
-            mask_cols=df_inputs.mask_cols,
-            extension=df_inputs.extension,
-            mask_size=df_inputs.mask_size,
-            num_classes=df_inputs.num_classes,
-            augmentations=augmentations,
-            image_convert_mode="RGB",
-        )
-        ds = cfg.data_method(**cfg.config)
-        x, y = ds[0]
-        assert isinstance(ds, SegmentationDataset) is True
-        assert torch.is_tensor(x) is True
-        assert torch.is_tensor(x) is True
-        assert x.shape == (3, 256, 256)
-        assert y.shape == (df_inputs.num_classes, 256, 256)
-
-    def test_config_folders():
-        augmentations = A.Compose([A.Resize(256, 256)])
-
-        cfg = SegmentationDataConfig.from_folders(
-            image_path=folder_inputs.image_path,
-            mask_path=folder_inputs.mask_path,
-            augmentations=augmentations,
-            image_convert_mode="L",
-            mask_convert_mode="L",
-        )
-        ds = cfg.data_method(**cfg.config)
-        x, y = ds[0]
-        assert isinstance(ds, SegmentationDataset) is True
-        assert torch.is_tensor(x) is True
-        assert torch.is_tensor(x) is True
-        assert x.shape == (1, 256, 256)
-        assert y.shape == (1, 256, 256)
-
-    test_config_rle()
-    test_config_folders()

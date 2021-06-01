@@ -32,7 +32,7 @@ class ImageDataloader:
         augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
         convert_mode: str = "RGB",
         extension: str = None,
-    ) -> ImageDataloader:
+    ):
         """Classmethod to create a dataset for image data when you have image names/ids , labels in dataframe.
 
         Args:
@@ -53,6 +53,22 @@ class ImageDataloader:
             For inference do not pass in the label_cols, keep it None.
 
             Augmentations must be Compose objects from albumentations or torchvision.
+
+        Examples:
+
+            .. code-block:: python
+
+                from torchflare.datasets import ImageDataloader
+                dl = ImageDataloader.from_df(df = train_df,
+                                  path = "/train/images",
+                                  image_col = "image_id",
+                                  label_cols="label",
+                                  augmentations=augs,
+                                  extension='.jpg'
+                                  ).get_loader(batch_size=64, # Required Args.
+                                               shuffle=True, # Required Args.
+                                               num_workers = 0, # keyword Args.
+                                               collate_fn = collate_fn # keyword Args.)
         """
         return cls(
             ImageDataset.from_df(
@@ -76,13 +92,13 @@ class ImageDataloader:
         augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
         convert_mode: str = "RGB",
         extension: str = None,
-    ) -> ImageDataloader:
+    ):
         """Classmethod to create a dataset for image data when you have image names/ids , labels in a csv.
 
         Args:
             path: The path where images are saved.
             csv_path: The full path to csv. Example: ./train/train_data.csv
-            image_col: The name of the image column containing the image name/ids along with image extension.
+            image_col: The name of the image column containing the image name/ids along with image extension
                 i.e. the images should have names like img_215.jpg or img_name.png ,etc
             augmentations: The batch_mixers to be used on images.
             label_cols: The list of columns containing targets.
@@ -95,8 +111,23 @@ class ImageDataloader:
         Note:
 
             For inference do not pass in the label_cols, keep it None.
-
             Augmentations must be Compose objects from albumentations or torchvision.
+
+        Examples:
+
+            .. code-block:: python
+
+                from torchflare.datasets import ImageDataloader
+                dl = ImageDataloader.from_csv(csv_path = "train/train.csv",
+                                  path = "/train/images",
+                                  image_col = "image_id",
+                                  label_cols="label",
+                                  augmentations=augs,
+                                  extension='.jpg'
+                                  ).get_loader(batch_size=64, # Required Args.
+                                               shuffle=True, # Required Args.
+                                               num_workers = 0, # keyword Args.
+                                               collate_fn = collate_fn # keyword Args.)
         """
         return cls(
             ImageDataset.from_df(
@@ -116,7 +147,7 @@ class ImageDataloader:
         path: str,
         augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
         convert_mode: str = "RGB",
-    ) -> ImageDataloader:
+    ):
         """Classmethod to create pytorch dataset from folders.
 
         Args:
@@ -141,6 +172,18 @@ class ImageDataloader:
                 test_dir/xxx.jpg
                 test_dir/xyz.jpg
                 test_dir/ppp.jpg
+
+        Examples:
+            .. code-block:: python
+
+                from torchflare.datasets import ImageDataloader
+                dl = ImageDataloader.from_folders(path="/train/images",
+                                       augmentations=augs,
+                                       convert_mode="RGB"
+                                  ).get_loader(batch_size=64, # Required Args.
+                                               shuffle=True, # Required Args.
+                                               num_workers = 0, # keyword Args.
+                                               collate_fn = collate_fn # keyword Args.)
         """
         return cls(ImageDataset.from_folders(path=path, augmentations=augmentations, convert_mode=convert_mode))
 

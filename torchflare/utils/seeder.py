@@ -10,7 +10,7 @@ def seed_all(seed: int = 42):
     """Method to seed the experiment.
 
     Args:
-        seed : The value for the seed.
+        seed(int): The value for the seed.
     """
     os.environ["PYTHONHASHSEED"] = str(seed)  # set PYTHONHASHSEED env var at fixed value
     np.random.seed(seed)  # for numpy pseudo-random generator

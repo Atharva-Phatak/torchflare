@@ -79,14 +79,26 @@ class TextClassificationDataset(Dataset):
         """Classmethod to create the dataset from dataframe.
 
         Args:
-            df: The dataframe which has the input sentences and targets.
-            input_col: The column containing the inputs.
-            label_cols: The column which contains corresponding labels.
+            df(pd.DataFrame): The dataframe which has the input sentences and targets.
+            input_col(str): The column containing the inputs.
+            label_cols(str or List(str): The column which contains corresponding labels.
             tokenizer: The tokenizer to be used.(Use only tokenizer available in huggingface.
-            max_len: The max_len to be used.
+            max_len(int): The max_len to be used.
 
         Returns:
             A list of sentences and corresponding labels if label_cols is provided else return a list of sentences.
+
+        Examples:
+
+            .. code-block:: python
+
+                import transformers
+                from torchflare.datasets import TextClassificationDataset
+
+                tokenizer = transformers.BertTokenizer.from_pretrained("bert-base-uncased")
+
+                ds = TextClassificationDataset.from_df(
+                    df=df, input_col="tweet", label_cols="label", tokenizer=tokenizer, max_len=128)
         """
         inputs = df.loc[:, input_col].values.tolist()
 

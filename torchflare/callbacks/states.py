@@ -5,10 +5,14 @@ from enum import IntEnum
 class CallbackOrder(IntEnum):
     """Callback orders."""
 
-    INTERNAL = 0
-    LOGGING = 1
-    STOPPING = 2
-    EXTERNAL = 3
+    MODEL_INIT = 0
+    LOSS = 1
+    METRICS = 2
+    SCHEDULER = 3
+    CHECKPOINT = 4
+    LOGGING = 5
+    STOPPING = 6
+    EXTERNAL = 7
 
 
 __all__ = ["CallbackOrder"]

@@ -2,7 +2,7 @@
 import torch
 
 from torchflare.metrics.accuracy_meter import Accuracy
-from torchflare.metrics.metric_utils import MetricContainer
+from torchflare.callbacks.metric_utils import MetricCallback
 from torchflare.metrics.precision_meter import Precision
 
 torch.manual_seed(42)
@@ -13,44 +13,44 @@ class Experiment:
 
         self.train_metric = train
         self.val_metrics = True
-        self._metric_runner = MetricContainer(metrics=metrics)
-        self.compute_metric_flag = None
+        self._metric_runner = MetricCallback(metrics=metrics)
         self.preds = torch.randn(100, 1)
         self.y = torch.randint(0, 2, size=(100,))
+        self.monitors = {"Train" : {} , "Valid" : {}}
+        self.stage = None
         self.is_training = False
 
     def get_prefix(self):
-        return "train_" if self.is_training else "val_"
-
+        if self.stage == "Train":
+            return "train_"
+        else:
+            return "val_"
     def train_fn(self):
 
-        self.is_training = True
-        self._metric_runner.reset()
-        self.compute_metric_flag = self.train_metric
+        self.stage = "Train"
+        self._metric_runner.on_experiment_start(self)
         loss = 10
         for _ in range(10):
 
             loss = loss * 0.1
-            self._metric_runner.accumulate(self)
+            self._metric_runner.on_batch_end(self)
 
-        metrics = self._metric_runner.value(self)
-        assert isinstance(metrics, dict) is True
-        loss_bool = "train_accuracy" in metrics
+        self._metric_runner.on_loader_end(self)
+        #assert isinstance(metric, dict) is True
+        loss_bool = "train_accuracy" in self.monitors[self.stage]
         assert loss_bool is True
 
     def val_fn(self):
 
-        self.is_training = False
-        self.compute_metric_flag = self.val_metrics
-        self._metric_runner.reset()
+        self.stage = "Valid"
+        self._metric_runner.on_experiment_start(self)
         loss = 20
         for _ in range(10):
             loss = loss * 0.1
-            self._metric_runner.accumulate(self)
+            self._metric_runner.on_batch_end(self)
 
-        metrics = self._metric_runner.value(self)
-        assert isinstance(metrics, dict) is True
-        loss_bool = "val_accuracy" in metrics
+        self._metric_runner.on_loader_end(self)
+        loss_bool = "val_accuracy" in self.monitors[self.stage]
         assert loss_bool is True
 
     def fit(self):

@@ -5,20 +5,17 @@ import torch.nn.functional as F
 
 
 class CosFace(nn.Module):
-    """Implementation of CosFace.
+    """Implementation of `CosFace Loss  <https://arxiv.org/abs/1801.09414>`_.
 
-    CosFace: [Large Margin Cosine Loss for Deep Face Recognition](https://arxiv.org/abs/1801.09414)
+    Args:
+           in_features: Size of the input features
+           out_features: The size of output features(usually number of num_classes)
+           s: The norm for input features.
+           m: margin
     """
 
     def __init__(self, in_features, out_features, s=30.0, m=0.35):
-        """Class Constructor.
-
-        Args:
-            in_features: Size of the input features
-            out_features: The size of output features(usually number of num_classes)
-            s: The norm for input features.
-            m: margin
-        """
+        """Class Constructor."""
         super(CosFace, self).__init__()
 
         self.in_features = in_features

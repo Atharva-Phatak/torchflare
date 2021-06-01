@@ -88,7 +88,7 @@ class ImageDataset(Dataset):
         augmentations: Union[A.Compose, torchvision.transforms.Compose] = None,
         extension: str = None,
         convert_mode: str = "RGB",
-    ) -> ImageDataset:
+    ):
         """Classmethod to create pytorch dataset from the given dataframe.
 
         Args:
@@ -111,6 +111,20 @@ class ImageDataset(Dataset):
 
             extension : If you specify extension be it jpg,png,etc. Please include '.' in extension
                 i.e. '.jpg' or '.png'.
+
+        Examples:
+            .. code-block:: python
+
+                from torchflare.datasets import ImageDataset
+                ds = ImageDataset.from_df(df = train_df,
+                                            path = "/train/images",
+                                            image_col = "image_id",
+                                            label_cols="label",
+                                            augmentations=augmentations,
+                                            extension='./jpg'
+                                            convert_mode = "RGB"
+                                            )
+
         """
         img_list = cls._join_paths(path=path, file_names=df.loc[:, image_col].values, extension=extension)
         label_list = cls._get_labels_from_df(df=df, label_cols=label_cols)
@@ -127,7 +141,7 @@ class ImageDataset(Dataset):
         path: str,
         augmentations: Union[A.Compose, torchvision.transforms.Compose] = None,
         convert_mode: str = "RGB",
-    ) -> ImageDataset:
+    ):
         """Classmethod to create pytorch dataset from folders.
 
         Args:
@@ -151,6 +165,19 @@ class ImageDataset(Dataset):
                 test_dir/xxx.jpg
                 test_dir/xyz.jpg
                 test_dir/ppp.jpg
+
+        Examples:
+
+            .. code-block:: python
+
+                from torchflare.datasets import ImageDataset
+
+                ds = ImageDataset.from_folders(path="/train/images",
+                                   augmentations=augs,
+                                   convert_mode="RGB"
+                              )
+
+
         """
         class_to_idx = cls._get_labels_from_folders(path)
         if class_to_idx:

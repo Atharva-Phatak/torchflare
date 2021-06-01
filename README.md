@@ -31,7 +31,7 @@ your models with all the callbacks, metrics, etc
 * _**Metrics** and much more._
 * _**Reduction** of the boiler plate code required for training your models._
 
-![compare](https://raw.githubusercontent.com/Atharva-Phatak/torchflare/main/docs/static/images/Compare.gif)
+
 ***
 
 Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU support will be coming soon!
@@ -82,11 +82,23 @@ test_dl = SomeTestingDataloader()
 Create a pytorch Model
 
 ``` python
-model = nn.Sequential(
-    nn.Linear(num_features, hidden_state_size),
-    nn.ReLU(),
-    nn.Linear(hidden_state_size, num_classes)
-)
+class Net(nn.Module):
+       def __init__(self, n_classes, p_dropout):
+            super().__init__()
+            self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
+            self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
+            self.conv2_drop = nn.Dropout2d(p=p_dropout)
+            self.fc1 = nn.Linear(320, 50)
+            self.fc2 = nn.Linear(50, n_classes)
+
+       def forward(self, x):
+            x = F.relu(F.max_pool2d(self.conv1(x), 2))
+            x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
+            x = x.view(-1, 320)
+            x = F.relu(self.fc1(x))
+            x = F.dropout(x, training=self.training)
+            x = self.fc2(x)
+            return x
 ```
 
 Define callbacks and metrics
@@ -109,16 +121,14 @@ exp = Experiment(
 )
 
 # Compile your experiment with model, optimizer, schedulers, etc
-exp.compile_experiment(
-    model = net,
-    optimizer = "Adam",
-    optimizer_params = {"lr" : 3e-4},
-    callbacks = callbacks,
-    criterion = "cross_entropy",
-    metrics = metric_list,
-    main_metric = "accuracy",
-)
-
+exp.compile_experiment(module = Net,
+                       module_params = {"n_classes" : 10 , "p_dropout" : 0.3},
+                       optimizer = "Adam"
+                       optimizer_params = {"lr" : 3e-4},
+                       criterion = "cross_entropy",
+                       callbacks = callbacks,
+                       metrics = metric_list,
+                       main_metrics = "accuracy")
 # Run your experiment with training dataloader and validation dataloader.
 exp.fit_loader(train_dl=train_dl, valid_dl= valid_dl)
 ```
@@ -147,7 +157,6 @@ exp.plot_history(keys = ["loss" , "accuracy"] , save_fig = False , plot_fig = Tr
 ### ***Examples***
 * [Image Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification.ipynb) on CIFAR-10 using TorchFlare.
 * [Text Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Imdb_classification.ipynb) on IMDB data.
-* [Binary Classification of Tabular Data](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/tabular_classification.ipynb) on previous [kaggle competition](https://www.kaggle.com/c/cat-in-the-dat-ii/overview)
 * Tutorial on using [Hydra and TorchFlare](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification_hydra.ipynb) for efficient workflow and parameter management.
 * Tutorial on [fit methods](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-Classification.ipynb) and how to dispatch training progress to your personal discord channel.
 * Tutorial on how to train [Variational Autoencoders](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-VAE.ipynb) using torchflare on MNIST Dataset.

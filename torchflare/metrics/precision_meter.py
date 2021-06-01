@@ -7,7 +7,30 @@ from torchflare.metrics.meters import MetricMeter, _BaseInputHandler
 class Precision(_BaseInputHandler, MetricMeter):
     """Class to compute Precision Score.
 
-    Support binary, multiclass and multilabel cases
+    Support binary, multiclass and multilabel cases.
+
+    Args:
+        num_classes(int): The number of num_classes.
+        average(str): The type of reduction to apply.
+            macro: calculate metrics for each class and averages them with equal weightage to each class.
+            micro: calculate metrics globally for each sample and class.
+        threshold(float): The threshold value to transform probability predictions to binary values(0,1)
+        multilabel(bool): Set it to True if your problem is  multilabel classification.
+
+    Examples:
+        .. code-block:: python
+
+            from torchflare.metrics import Precision
+
+            # Binary-Classification Problems
+            acc = Precision(num_classes=2, threshold=0.7, multilabel=False, average="macro")
+
+            # Mutliclass-Classification Problems
+            multiclass_acc = Precision(num_classes=4, multilabel=False, average="macro")
+
+            # Multilabel-Classification Problems
+            multilabel_acc = Precision(
+                num_classes=5, multilabel=True, threshold=0.7, average="macro")
     """
 
     def __init__(
@@ -17,16 +40,7 @@ class Precision(_BaseInputHandler, MetricMeter):
         threshold: float = 0.5,
         multilabel: bool = False,
     ):
-        """Constructor method for Precision Class.
-
-        Args:
-            num_classes: The number of num_classes.
-            average: The type of reduction to apply.
-                macro: calculate metrics for each class and averages them with equal weightage to each class.
-                micro: calculate metrics globally for each sample and class.
-            threshold: The threshold value to transform probability predictions to binary values(0,1)
-            multilabel: Set it to True if your problem is  multilabel classification.
-        """
+        """Constructor method for Precision Class."""
         super(Precision, self).__init__(
             threshold=threshold,
             num_classes=num_classes,
@@ -51,8 +65,8 @@ class Precision(_BaseInputHandler, MetricMeter):
         """Method to accumulate the outputs and targets.
 
         Args:
-            outputs : raw logits from the network.
-            targets : targets to use for computing accuracy
+            outputs(torch.Tensor) : raw logits from the network.
+            targets(torch.Tensor) : targets to use for computing accuracy
         """
         outputs, targets = self.detach_tensor(outputs), self.detach_tensor(targets)
         self._outputs.append(outputs)

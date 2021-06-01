@@ -1,6 +1,5 @@
 from torchflare.datasets.text_dataset import TextClassificationDataset
 from torchflare.datasets.text_dataloader import TextDataloader
-from torchflare.data_config.textdata_configs import TextDataConfig
 import transformers
 import pandas as pd
 import torch
@@ -49,20 +48,6 @@ def test_data():
         for key, item in x.items():
             assert torch.is_tensor(item) is True
 
-    def test_data_config():
-        cfg = TextDataConfig.from_df(
-            df=df, input_col="tweet", label_cols="label", tokenizer=tokenizer, max_len=max_len
-        )
-
-        ds = cfg.data_method(**cfg.config)
-        x, y = ds[0]
-        assert isinstance(x, dict) is True
-        assert torch.is_tensor(y) is True
-
-        for key, item in x.items():
-            assert torch.is_tensor(item) is True
-
     test_train()
     test_inference()
     test_dataloader()
-    test_data_config()

@@ -3,7 +3,7 @@ from torchflare.datasets.tabular import TabularDataset
 import pandas as pd
 import torch
 from torchflare.datasets.tabular_dataloader import TabularDataloader
-from torchflare.data_config.tabular_configs import TabularDataConfig
+
 
 def test_data():
     path = "tests/datasets/data/tabular_data/diabetes.csv"
@@ -71,24 +71,7 @@ def test_data():
         assert torch.is_tensor(y) is True
         assert x.shape == (2, len(input_cols))
 
-    def test_data_configs():
-        cfg = TabularDataConfig.from_df(df=df, feature_cols=input_cols, label_cols=label_col)
-        ds = cfg.data_method(**cfg.config)
-        x, y = ds[0]
-
-        assert torch.is_tensor(x) is True
-        assert torch.is_tensor(y) is True
-        assert x.shape == (len(input_cols),)
-
-        cfg_path = TabularDataConfig.from_csv(csv_path=path, feature_cols=input_cols, label_cols=label_col)
-        ds_path = cfg_path.data_method(**cfg_path.config)
-        x, y = ds_path[0]
-
-        assert torch.is_tensor(x) is True
-        assert torch.is_tensor(y) is True
-        assert x.shape == (len(input_cols),)
 
     test_from_df()
     test_from_csv()
     test_dataloaders()
-    test_data_configs()
