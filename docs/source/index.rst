@@ -5,6 +5,11 @@
 
 TorchFlare
 ======================================
+.. image:: https://raw.githubusercontent.com/Atharva-Phatak/torchflare/main/assets/TorchFlare_official.png
+   :target: https://github.com/Atharva-Phatak/torchflare
+   :alt: TorchFlare logo
+
+
 `TorchFlare <https://github.com/Atharva-Phatak/torchflare>`_ is a simple, beginner-friendly and an easy-to-use PyTorch Framework train your models without much effort. It provides an almost Keras-like experience for training your models with all the callbacks, metrics, etc
 
 **Features**

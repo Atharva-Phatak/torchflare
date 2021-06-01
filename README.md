@@ -1,11 +1,11 @@
-![image](https://raw.githubusercontent.com/Atharva-Phatak/torchflare/main/docs/static/images/TorchFlare_official.png)
+![image](https://raw.githubusercontent.com/Atharva-Phatak/torchflare/main/assets/TorchFlare_official.png)
 
 ![PyPI](https://img.shields.io/pypi/v/torchflare?color=success)
 ![API](https://img.shields.io/badge/API-stable-success)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Atharva-Phatak/torchflare?color=success)
 [![CodeFactor](https://www.codefactor.io/repository/github/atharva-phatak/torchflare/badge?s=8b602116b87a38ed9dbf6295933839ff7c85ac81)](https://www.codefactor.io/repository/github/atharva-phatak/torchflare)
 [![Test](https://github.com/Atharva-Phatak/torchflare/actions/workflows/test.yml/badge.svg)](https://github.com/Atharva-Phatak/torchflare/actions/workflows/test.yml)
-[![documentation](https://github.com/Atharva-Phatak/torchflare/actions/workflows/docs.yml/badge.svg)](https://github.com/Atharva-Phatak/torchflare/actions/workflows/docs.yml)
+[![Documentation Status](https://readthedocs.org/projects/torchflare/badge/?version=latest)](https://torchflare.readthedocs.io/en/latest/?badge=latest)
 [![Publish-PyPI](https://github.com/Atharva-Phatak/torchflare/actions/workflows/publish.yml/badge.svg)](https://github.com/Atharva-Phatak/torchflare/actions/workflows/publish.yml)
 [![DeepSource](https://deepsource.io/gh/Atharva-Phatak/torchflare.svg/?label=active+issues&token=_u890jqK5XjPmNlJCyQkxwmG)](https://deepsource.io/gh/Atharva-Phatak/torchflare/?ref=repository-badge)
 [![DeepSource](https://deepsource.io/gh/Atharva-Phatak/torchflare.svg/?label=resolved+issues&token=_u890jqK5XjPmNlJCyQkxwmG)](https://deepsource.io/gh/Atharva-Phatak/torchflare/?ref=repository-badge)
@@ -31,7 +31,7 @@ your models with all the callbacks, metrics, etc
 * _**Metrics** and much more._
 * _**Reduction** of the boiler plate code required for training your models._
 
-
+![compare](https://raw.githubusercontent.com/Atharva-Phatak/torchflare/main/assets/Compare.png)
 ***
 
 Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU support will be coming soon!
@@ -158,7 +158,7 @@ exp.plot_history(keys = ["loss" , "accuracy"] , save_fig = False , plot_fig = Tr
 * [Image Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification.ipynb) on CIFAR-10 using TorchFlare.
 * [Text Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Imdb_classification.ipynb) on IMDB data.
 * Tutorial on using [Hydra and TorchFlare](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification_hydra.ipynb) for efficient workflow and parameter management.
-* Tutorial on [fit methods](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-Classification.ipynb) and how to dispatch training progress to your personal discord channel.
+* Tutorial on [fit methods](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/fit_methods.ipynb) and how to dispatch training progress to your personal discord channel.
 * Tutorial on how to train [Variational Autoencoders](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-VAE.ipynb) using torchflare on MNIST Dataset.
 
 ***
