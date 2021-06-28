@@ -51,16 +51,15 @@ def on_experiment_start(order: CallbackOrder):
 
     Examples:
         .. code-block::python
-        from torchflare.callbacks import on_experiment_start, CallbackOrder
-        from torchflare.experiments import Experiment
+            from torchflare.callbacks import on_experiment_start, CallbackOrder
+            from torchflare.experiments import Experiment
 
-        #Creating a custom callback using the decorator.
+            #Creating a custom callback using the decorator.
 
-        @on_experiment_start(order=CallbackOrder.MODEL_INIT)
-        def print_on_start(experiment : "Experiment"):
-            print("Experiment started")
-
-        #This callback will print "Experiment started" at the start of experiment.
+            @on_experiment_start(order=CallbackOrder.MODEL_INIT)
+            def print_on_start(experiment : "Experiment"):
+                print("Experiment started")
+            #This callback will print "Experiment started" at the start of experiment.
 
     Returns:
         Callback: Initialised callback with method ``Callbacks.on_experiment_start``.
@@ -81,16 +80,16 @@ def on_epoch_start(order: CallbackOrder):
 
     Examples:
         .. code-block::python
-        from torchflare.callbacks import on_epoch_start, CallbackOrder
-        from torchflare.experiments import Experiment
+            from torchflare.callbacks import on_epoch_start, CallbackOrder
+            from torchflare.experiments import Experiment
 
-        #Creating a custom callback using the decorator.
+            #Creating a custom callback using the decorator.
 
-        @on_epoch_start(order=CallbackOrder.MODEL_INIT)
-        def print_on_start(experiment : "Experiment"):
-            print("Epoch started")
+            @on_epoch_start(order=CallbackOrder.MODEL_INIT)
+            def print_on_start(experiment : "Experiment"):
+                print("Epoch started")
 
-        #This callback will print "Epoch started" at the start of epoch.
+            #This callback will print "Epoch started" at the start of epoch.
 
     Returns:
         Callback: Initialised callback with method ``Callbacks.on_epoch_start``.
@@ -111,16 +110,16 @@ def on_loader_start(order: CallbackOrder):
 
     Examples:
         .. code-block::python
-        from torchflare.callbacks import on_loader_start, CallbackOrder
-        from torchflare.experiments import Experiment
+            from torchflare.callbacks import on_loader_start, CallbackOrder
+            from torchflare.experiments import Experiment
 
-        #Creating a custom callback using the decorator.
+            #Creating a custom callback using the decorator.
 
-        @on_loader_start(order=CallbackOrder.MODEL_INIT)
-        def print_on_start(experiment : "Experiment"):
-            print("Loader started")
+            @on_loader_start(order=CallbackOrder.MODEL_INIT)
+            def print_on_start(experiment : "Experiment"):
+                print("Loader started")
 
-        #This callback will print "Loader started" at the start of loader.
+            #This callback will print "Loader started" at the start of loader.
 
     Returns:
         Callback: Initialised callback with method ``Callbacks.on_loader_start``.
@@ -141,17 +140,17 @@ def on_batch_start(order: CallbackOrder):
 
     Examples:
         .. code-block::python
-        from torchflare.callbacks import on_batch_start, CallbackOrder
-        from torchflare.experiments import Experiment
+            from torchflare.callbacks import on_batch_start, CallbackOrder
+            from torchflare.experiments import Experiment
 
-        #Creating a custom callback using the decorator.
+            #Creating a custom callback using the decorator.
 
 
-        @on_batch_start(order=CallbackOrder.MODEL_INIT)
-        def print_on_start(experiment : "Experiment"):
-            print("Batch started")
+            @on_batch_start(order=CallbackOrder.MODEL_INIT)
+            def print_on_start(experiment : "Experiment"):
+                print("Batch started")
 
-        #This callback will print "Batch started" at the start of batch.
+            #This callback will print "Batch started" at the start of batch.
 
     Returns:
         Callback: Initialised callback with method ``Callbacks.on_batch_start``.
@@ -172,17 +171,17 @@ def on_experiment_end(order: CallbackOrder):
 
     Examples:
         .. code-block::python
-        from torchflare.callbacks import on_experiment_end, CallbackOrder
-        from torchflare.experiments import Experiment
+            from torchflare.callbacks import on_experiment_end, CallbackOrder
+            from torchflare.experiments import Experiment
 
-        #Creating a custom callback using the decorator.
+            #Creating a custom callback using the decorator.
 
 
-        @on_experiment_end(order=CallbackOrder.MODEL_INIT)
-        def print_on_start(experiment : "Experiment"):
-            print("Experiment Ended")
+            @on_experiment_end(order=CallbackOrder.MODEL_INIT)
+            def print_on_start(experiment : "Experiment"):
+                print("Experiment Ended")
 
-        #This callback will print "Experiment Ended" at the end of experiment.
+            #This callback will print "Experiment Ended" at the end of experiment.
 
     Returns:
         Callback: Initialised callback with method ``Callbacks.on_experiment_end``.
@@ -203,17 +202,17 @@ def on_epoch_end(order: CallbackOrder):
 
     Examples:
         .. code-block::python
-        from torchflare.callbacks import on_experiment_end, CallbackOrder
-        from torchflare.experiments import Experiment
+            from torchflare.callbacks import on_experiment_end, CallbackOrder
+            from torchflare.experiments import Experiment
 
-        #Creating a custom callback using the decorator.
+            #Creating a custom callback using the decorator.
 
 
-        @on_epoch_end(order=CallbackOrder.MODEL_INIT)
-        def print_on_start(experiment : "Experiment"):
-            print("Epoch Ended")
+            @on_epoch_end(order=CallbackOrder.MODEL_INIT)
+            def print_on_start(experiment : "Experiment"):
+                print("Epoch Ended")
 
-        #This callback will print "Epoch Ended" at the end of epoch.
+            #This callback will print "Epoch Ended" at the end of epoch.
 
     Returns:
         Callback: Initialised callback with method ``Callbacks.on_epoch_end``.
@@ -234,17 +233,17 @@ def on_loader_end(order: CallbackOrder):
 
     Examples:
         .. code-block::python
-        from torchflare.callbacks import on_loader_end, CallbackOrder
-        from torchflare.experiments import Experiment
+            from torchflare.callbacks import on_loader_end, CallbackOrder
+            from torchflare.experiments import Experiment
 
-        #Creating a custom callback using the decorator.
+            #Creating a custom callback using the decorator.
 
 
-        @on_loader_end(order=CallbackOrder.MODEL_INIT)
-        def print_on_start(experiment : "Experiment"):
-            print("loader Ended")
+            @on_loader_end(order=CallbackOrder.MODEL_INIT)
+            def print_on_start(experiment : "Experiment"):
+                print("loader Ended")
 
-        #This callback will print "loader Ended" at the end of loader.
+            #This callback will print "loader Ended" at the end of loader.
 
     Returns:
         Callback: Initialised callback with method ``Callbacks.on_loader_end``.
@@ -265,17 +264,17 @@ def on_batch_end(order: CallbackOrder):
 
     Examples:
         .. code-block::python
-        from torchflare.callbacks import on_batch_end, CallbackOrder
-        from torchflare.experiments import Experiment
+            from torchflare.callbacks import on_batch_end, CallbackOrder
+            from torchflare.experiments import Experiment
 
-        #Creating a custom callback using the decorator.
+            #Creating a custom callback using the decorator.
 
 
-        @on_batch_end(order=CallbackOrder.MODEL_INIT)
-        def print_on_start(experiment : "Experiment"):
-            print("Batch Ended")
+            @on_batch_end(order=CallbackOrder.MODEL_INIT)
+            def print_on_start(experiment : "Experiment"):
+                print("Batch Ended")
 
-        #This callback will print "Batch Ended" at the end of batch.
+            #This callback will print "Batch Ended" at the end of batch.
 
     Returns:
         Callback: Initialised callback with method ``Callbacks.on_batch_end``.
