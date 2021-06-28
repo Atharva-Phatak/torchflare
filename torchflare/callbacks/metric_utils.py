@@ -46,12 +46,12 @@ class MetricCallback(Callbacks):
         prefix = experiment.get_prefix()
         self.compute(prefix)
         self.reset()
-        experiment.monitors[experiment.stage].update(self.metric_dict)
+        experiment.monitors[experiment.which_loader].update(self.metric_dict)
 
     def on_batch_end(self, experiment: "Experiment"):
         """Accumulate values."""
         for metric in self.metrics:
-            metric.accumulate(experiment.preds, experiment.y)
+            metric.accumulate(experiment.preds, experiment.batch[experiment.target_key])
 
     def compute(self, prefix):
         """Compute values."""

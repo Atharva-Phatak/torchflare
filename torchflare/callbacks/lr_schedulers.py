@@ -29,18 +29,26 @@ class LRSchedulerCallback(Callbacks, ABC):
     def on_experiment_start(self, experiment: "Experiment"):
         """Set scheduler."""
         if self.scheduler is None:
-            self.scheduler = self._scheduler(experiment.optimizer)
+            if isinstance(experiment.state.optimizer, dict):
+                self.scheduler = {k + "_scheduler": self._scheduler(v) for k, v in experiment.state.optimizer.items()}
+            else:
+                self.scheduler = self._scheduler(experiment.state.optimizer)
 
     def on_batch_end(self, experiment: "Experiment"):
         """Step at end of batch."""
-        if self.scheduler is not None and self.step_on_batch:
+        if self.step_on_batch and (experiment.which_loader == experiment.train_stage):
             self.scheduler.step()
 
     def on_epoch_end(self, experiment: "Experiment"):
         """Step at the end of epoch."""
-        if self.scheduler is not None and not self.step_on_batch:
+        if not self.step_on_batch:
             if isinstance(self.scheduler, _schedulers.ReduceLROnPlateau):
-                val = experiment.exp_logs.get(experiment.val_key + experiment.main_metric)
+                key = (
+                    experiment.val_key
+                    if experiment.valid_stage in experiment.state.dataloaders.keys()
+                    else experiment.train_key
+                )
+                val = experiment.exp_logs.get(key + experiment.main_metric)
                 self.scheduler.step(val)
 
             else:

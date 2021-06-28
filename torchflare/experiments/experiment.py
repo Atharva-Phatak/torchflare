@@ -1,16 +1,18 @@
 """Implements Base class."""
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import torch
-import torch.nn as nn
 from torch.utils.data import DataLoader
 
-from torchflare.experiments.engine import Engine
+from torchflare.experiments.base_backend import BaseExperiment
 from torchflare.experiments.simple_utils import _has_intersection, to_device
 
+if TYPE_CHECKING:
+    from torchflare.experiments.config import ModelConfig
 
-class Experiment(Engine):
+
+class Experiment(BaseExperiment):
     """Simple class for handling boilerplate code for training, validation and Inference.
 
     Args:
@@ -58,20 +60,20 @@ class Experiment(Engine):
                 device=device,
                 seed=42,
             )
-
+            # Defining the model config which contains model, optimizer, criterion.
+            config = ModelConfig(nn_module = SomeModelClass,
+                                module_params = {"num_features" : 200 , "num_classes" : 5},
+                                optimizer=optimizer,
+                                optimizer_params=optimizer_params,
+                                criterion = criterion)
             # Compiling the experiment
             exp.compile_experiment(
-                module=SomeModelClass,
-                module_params = {"num_features" : 200 , "num_classes" : 5} #Params to init the model class
+                model_config = config,
                 metrics=metric_list,
                 callbacks=callbacks,
                 main_metric="accuracy",
-                optimizer=optimizer,
-                optimizer_params=optimizer_params,
-                criterion=criterion,
+
             )
-
-
             # Running the experiment
             exp.fit_loader(train_dl=train_dl, valid_dl=valid_dl)
     """
@@ -93,11 +95,7 @@ class Experiment(Engine):
 
     def compile_experiment(
         self,
-        module: nn.Module,
-        module_params: Optional[Dict],
-        optimizer: Union[torch.optim.Optimizer, str, Any],
-        optimizer_params: Optional[Dict],
-        criterion: Union[Callable, str],
+        model_config: "ModelConfig",
         callbacks: List = None,
         metrics: List = None,
         main_metric: Optional[str] = None,
@@ -105,14 +103,8 @@ class Experiment(Engine):
         """Configures the model for training and validation.
 
         Args:
-            module(nn.Module): An uninstantiated PyTorch class which defines the model.
-            module_params(Dict): The params required to initialize model class.
-            optimizer(torch.optim.Optimizer, str): The optimizer to be used or name of optimizer.
-                        If you pass in the name of the optimizer, only optimizers available in pytorch are supported.
-            optimizer_params(Dict): The parameters for optimizer.
-            criterion(callable , str): The loss function to optimize or name of the loss function.
-                    If you pass in the name of the loss function,
-                    only loss functions available in pytorch can be supported.
+            model_config: An ModelConfig object which holds information about models,
+                        optimizer and criterion.
             callbacks(List): The list of callbacks to be used.
             metrics(List): The list of metrics to be used.
             main_metric(str): The name of main metric to be monitored. Use lower case version.
@@ -123,58 +115,22 @@ class Experiment(Engine):
             Support for custom scheduling will be added soon.
         """
         self.main_metric = main_metric
-        self._set_metrics(metrics=metrics)
-        self._set_model(model_class=module, model_params=module_params)
-        self._set_optimizer(optimizer=optimizer, optimizer_params=optimizer_params)
-        self._set_metrics(metrics=metrics)
-        self._set_criterion(criterion=criterion)
-        self._set_callbacks(callbacks=callbacks)
+        self.init_state(config=model_config, callbacks=callbacks, metrics=metrics)
 
-    def _process_inputs(self, *args):
-        args = to_device(args, self.device)
-        return args
-
-    # noinspection DuplicatedCode
-    def process_inputs(self, x, y=None):
-        """Method to move the inputs and targets to the respective device.
-
-        Args:
-            x: The input to the model.
-            y: The targets. Defaults to None.
-        """
-        if y is not None:
-            x, y = self._process_inputs(x, y)
-            self.x, self.y = x, y
-
-        else:
-            x = self._process_inputs(x)
-            self.x = x[0] if len(x) == 1 else x
-
-    def compute_loss(self) -> None:
-        """Computes loss given the inputs and targets."""
-        self.loss = self.criterion(self.preds, self.y)
-
-    def model_forward_pass(self):
-        """Forward pass of the model."""
-        if isinstance(self.x, (list, tuple)):
-            self.preds = self.model(*self.x)
-        elif isinstance(self.x, dict):
-            self.preds = self.model(**self.x)
-        else:
-            self.preds = self.model(self.x)
-
-    def _handle_batch(self) -> None:
-        """Function to calculate loss and update metric states."""
-        self.model_forward_pass()
-        if self.fp16:
-            with torch.cuda.amp.autocast():
-                self.compute_loss()
-        else:
-            self.compute_loss()
+    def batch_step(self) -> None:
+        """Function to do model forward pass and compute loss."""
+        # Note if you overide the batch_step you have to define self.preds, self.loss
+        # It is mandatory to define self.loss_per_batch.
+        self.preds = self.state.model(self.batch[self.input_key])
+        self.loss = self.state.criterion(self.preds, self.batch[self.target_key])
+        self.loss_per_batch = {"loss": self.loss.item()}
 
     def set_dataloaders(self, train_dl, valid_dl):
         """Setup dataloader variables."""
-        self.dataloaders = {"Train": train_dl, "Valid": valid_dl}
+        dataloaders = {self.train_stage: train_dl}
+        if valid_dl is not None:
+            dataloaders[self.valid_stage] = valid_dl
+        self.state.update({"dataloaders": dataloaders})
 
     def on_experiment_start(self):
         """Event on experiment start."""
@@ -182,11 +138,11 @@ class Experiment(Engine):
 
     def on_batch_start(self):
         """Event on batch start."""
-        self.process_inputs(self.x, self.y)
+        self._process_batch(self.batch)
 
     def on_loader_start(self):
         """Event on loader start."""
-        self._step = {"Train": self.train_step, "Valid": self.val_step}
+        self._step = {self.train_stage: self.train_step, self.valid_stage: self.val_step}
 
     def on_epoch_start(self):
         """Event on epoch start."""
@@ -203,7 +159,7 @@ class Experiment(Engine):
 
     def on_loader_end(self):
         """Event of loader end."""
-        self.exp_logs.update(**self.monitors[self.stage])
+        self.exp_logs.update(**self.monitors[self.which_loader])
 
     def on_epoch_end(self):
         """Event on epoch end."""
@@ -221,45 +177,41 @@ class Experiment(Engine):
     def run_batch(self) -> None:
         """Run batch with batch event."""
         self._run_event("on_batch_start")
-        self._step.get(self.stage)()
+        self._step.get(self.which_loader)()
         self._run_event("on_batch_end")
 
-    def run_loader(self):
+    def run_loader(self, dataloader):
         """Function to iterate the dataloader through all the batches."""
         self._run_event("on_loader_start")
-        iterator = self.dataloaders.get(self.stage)
-        for self.batch_idx, (self.x, self.y) in enumerate(iterator):
-            self.run_batch()
-        # Stdout  computed metrics/update monitors.
+        mode = bool(self.train_stage in self.which_loader)
+        with torch.set_grad_enabled(mode=mode):
+            for self.batch_idx, self.batch in enumerate(dataloader):
+                with self.backend.autocast:
+                    self.run_batch()
         self._run_event("on_loader_end")
 
     def train_step(self):
-        """Method to perform train step."""
-        self.zero_grad()
-        self._handle_batch()
-        self.backward_loss()
-        self.optimizer_step()
+        """Method to perform train step.
+
+        Override this method to perform a custom Training step.
+        """
+        self.backend.zero_grad(optimizer=self.state.optimizer)
+        self.batch_step()
+        assert self.loss_per_batch is not None, "Please define self.loss_per_batch for progress bar."
+        self.backend.backward_loss(loss=self.loss)
+        self.backend.optimizer_step(optimizer=self.state.optimizer)
 
     def val_step(self) -> None:
-        """Method to perform validation step."""
-        with torch.no_grad():
-            self._handle_batch()
+        """Method to perform validation step.
 
-    def _do_train_epoch(self):
-        """Method to train the model for one epoch."""
-        self.model.train()
-        self.stage = "Train"
-        self.run_loader()
-
-    def _do_val_epoch(self):
-        """Method to validate model for one epoch."""
-        self.model.eval()
-        self.stage = "Valid"
-        self.run_loader()
+        Override this method to perform custom validation step.
+        """
+        self.batch_step()
 
     def _do_epoch(self):
-        self._do_train_epoch()
-        self._do_val_epoch()
+        for self.which_loader, dataloader in self.state.dataloaders.items():
+            self._set_model_stage(stage=self.which_loader)
+            self.run_loader(dataloader=dataloader)
 
     def _run(self):
         """Method to run experiment for full number of epochs."""
@@ -280,7 +232,7 @@ class Experiment(Engine):
         self,
         x: Union[torch.Tensor, np.ndarray],
         y: Union[torch.Tensor, np.ndarray],
-        val_data: Union[Tuple, List],
+        val_data: Optional[Union[Tuple, List]] = None,
         batch_size: int = 64,
         dataloader_kwargs: Dict = None,
     ):
@@ -305,10 +257,13 @@ class Experiment(Engine):
 
         dataloader_kwargs = {"batch_size": batch_size, **dataloader_kwargs}
         train_dl = self._dataloader_from_data((x, y), {"shuffle": True, **dataloader_kwargs})
-        valid_dl = self._dataloader_from_data(val_data, dataloader_kwargs)
+        if val_data is not None:
+            valid_dl = self._dataloader_from_data(val_data, dataloader_kwargs)
+        else:
+            valid_dl = None
         self.fit_loader(train_dl=train_dl, valid_dl=valid_dl)
 
-    def fit_loader(self, train_dl: DataLoader, valid_dl: DataLoader):
+    def fit_loader(self, train_dl: DataLoader, valid_dl: DataLoader = None):
         """Train and validate the model using dataloaders.
 
         Args:
@@ -320,14 +275,6 @@ class Experiment(Engine):
         """
         self.set_dataloaders(train_dl=train_dl, valid_dl=valid_dl)
         self._general_fit()
-
-    @torch.no_grad()
-    def _infer_on_batch(self, inp):
-
-        self.process_inputs(x=inp, y=None)
-        self.model_forward_pass()
-
-        return self.preds.detach().cpu()
 
     @torch.no_grad()
     def predict_on_loader(
@@ -350,13 +297,14 @@ class Experiment(Engine):
         self._model_to_device()
         ckpt = torch.load(path_to_model, map_location=torch.device(device))
         if isinstance(ckpt, dict):
-            self.model.load_state_dict(ckpt["model_state_dict"])
+            self.state.model.load_state_dict(ckpt["model_state_dict"])
         else:
-            self.model.load_state_dict(ckpt)
+            self.state.model.load_state_dict(ckpt)
 
         for inp in test_dl:
-            op = self._infer_on_batch(inp=inp)
-            yield op
+            inp = to_device(inp, device=device)
+            op = self.state.model(inp)
+            yield op.detach().cpu()
 
     @torch.no_grad()
     def predict(

@@ -10,132 +10,158 @@ Callbacks
 Early Stopping
 -------------------------------------------
 
-.. autoclass:: torchflare.callbacks.early_stopping.EarlyStopping
+.. autoclass:: torchflare.callbacks.EarlyStopping
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
 Model Checkpoint
 -------------------------------------------
 
-.. autoclass:: torchflare.callbacks.model_checkpoint.ModelCheckpoint
+.. autoclass:: torchflare.callbacks.ModelCheckpoint
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
 Load Checkpoint
 -------------------------------------------
 
-.. autoclass:: torchflare.callbacks.load_checkpoint.LoadCheckpoint
+.. autoclass:: torchflare.callbacks.LoadCheckpoint
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Scheduler - StepLR
-------------------------------------------
+Learning Rate Scheduler Callbacks
+---------------------------------------------
+**Callbacks for auto adjust the learning rate based on the number of epochs or other metrics measurements.**
+These callbacks are wrappers of native PyTorch :mod:`torch.optim.lr_scheduler`.
 
-.. autoclass:: torchflare.callbacks.lr_schedulers.StepLR
+StepLR
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: torchflare.callbacks.StepLR
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Scheduler - LambdaLR
-------------------------------------------
+LambdaLR
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: torchflare.callbacks.lr_schedulers.LambdaLR
+.. autoclass:: torchflare.callbacks.LambdaLR
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Scheduler - MultiStepLR
-------------------------------------------
+MultiStepLR
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: torchflare.callbacks.lr_schedulers.MultiStepLR
+.. autoclass:: torchflare.callbacks.MultiStepLR
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Scheduler - ExponentialLR
-------------------------------------------
+ExponentialLR
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: torchflare.callbacks.lr_schedulers.ExponentialLR
+.. autoclass:: torchflare.callbacks.ExponentialLR
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Scheduler - CosineAnnealingLR
-------------------------------------------
+CosineAnnealingLR
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: torchflare.callbacks.lr_schedulers.CosineAnnealingLR
+.. autoclass:: torchflare.callbacks.CosineAnnealingLR
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Scheduler - ReduceLROnPlateau
-------------------------------------------
+ReduceLROnPlateau
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: torchflare.callbacks.lr_schedulers.ReduceLROnPlateau
+.. autoclass:: torchflare.callbacks.ReduceLROnPlateau
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Scheduler - CyclicLR
-------------------------------------------
+CyclicLR
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: torchflare.callbacks.lr_schedulers.CyclicLR
+.. autoclass:: torchflare.callbacks.CyclicLR
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Scheduler - CosineAnnealingWarmRestarts
-------------------------------------------
+CosineAnnealingWarmRestarts
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: torchflare.callbacks.lr_schedulers.CosineAnnealingWarmRestarts
+.. autoclass:: torchflare.callbacks.CosineAnnealingWarmRestarts
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Scheduler - MultiplicativeLR
-------------------------------------------
+MultiplicativeLR
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: torchflare.callbacks.lr_schedulers.MultiplicativeLR
+.. autoclass:: torchflare.callbacks.MultiplicativeLR
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Scheduler - OneCycleLR
-------------------------------------------
+OneCycleLR
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: torchflare.callbacks.lr_schedulers.OneCycleLR
+.. autoclass:: torchflare.callbacks.OneCycleLR
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
+Logging Callbacks
+----------------------------------
 
-Logging - Comet Logger
------------------------------------------
+**Logging module integrates various logging services like neptune, comet, etc for logging the progress of experiments.**
 
-.. autoclass:: torchflare.callbacks.comet_logger.CometLogger
+Comet Logger
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: torchflare.callbacks.CometLogger
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Logging - Neptune Logger
------------------------------------------
+Neptune Logger
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: torchflare.callbacks.neptune_logger.NeptuneLogger
+.. autoclass:: torchflare.callbacks.NeptuneLogger
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Logging - Wandb Logger
------------------------------------------
+Wandb Logger
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: torchflare.callbacks.wandb_logger.WandbLogger
+.. autoclass:: torchflare.callbacks.WandbLogger
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Logging - Tensorboard Logger
------------------------------------------
+Tensorboard Logger
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: torchflare.callbacks.tensorboard_logger.TensorboardLogger
+.. autoclass:: torchflare.callbacks.TensorboardLogger
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
+Message Notifiers
+----------------------------
+**Message notifiers send training progress per epoch to your personal slack and discord channels.**
 
-Notification - Discord Notifier Callback
-----------------------------------------------------
-.. autoclass:: torchflare.callbacks.message_notifiers.DiscordNotifierCallback
+Discord Notifier Callback
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. autoclass:: torchflare.callbacks.DiscordNotifierCallback
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Notification - Slack Notifier Callback
--------------------------------------------------
-.. autoclass:: torchflare.callbacks.message_notifiers.SlackNotifierCallback
+Slack Notifier Callback
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. autoclass:: torchflare.callbacks.SlackNotifierCallback
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
+
+Decorators
+------------------------------------
+
+The main callback decorators simply take function , order as inputs and bind it to a callback point, returning the result.
+
+.. autofunction:: torchflare.callbacks.on_experiment_start
+.. autofunction:: torchflare.callbacks.on_epoch_start
+.. autofunction:: torchflare.callbacks.on_loader_start
+.. autofunction:: torchflare.callbacks.on_batch_start
+.. autofunction:: torchflare.callbacks.on_experiment_end
+.. autofunction:: torchflare.callbacks.on_epoch_end
+.. autofunction:: torchflare.callbacks.on_loader_end
+.. autofunction:: torchflare.callbacks.on_batch_end

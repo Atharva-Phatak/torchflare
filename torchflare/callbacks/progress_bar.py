@@ -54,14 +54,13 @@ class ProgressBar(Callbacks):
             sys.stdout.write(f"Epoch: {experiment.current_epoch}/{self.num_epochs}")
             sys.stdout.write("\n")
 
-    def _create_bar(self, stage: str, current_step: int):
+    def _create_bar(self, current_step: int):
         """Method to create the progress bar.
 
         Args:
             current_step: The current iteration step.
-            stage: The current stage of the experiment.
         """
-        bar = f"{stage}: {current_step}/{self.num_steps} ["
+        bar = f"{current_step}/{self.num_steps} ["
         prog = float(current_step) / self.num_steps
         prog_width = int(self.width * prog)
         if prog_width > 0:
@@ -75,13 +74,12 @@ class ProgressBar(Callbacks):
 
         return bar
 
-    def _update(self, stage: str, current_step: int, values: Dict[str, float]):
+    def _update(self, current_step: int, values: Dict[str, float]):
         """Update progress bar every step.
 
         Args:
             current_step: The current step of iteration.
             values: A dictionary containing the keys , values for metrics/loss to be displayed.
-            stage: The current stage whether Train or validation.
         """
         self._seen_so_far = current_step
         now = time.time()
@@ -96,7 +94,7 @@ class ProgressBar(Callbacks):
         else:
             sys.stdout.write("\n")
 
-        bar = self._create_bar(stage=stage, current_step=current_step)
+        bar = self._create_bar(current_step=current_step)
         self._total_width = len(bar)
         sys.stdout.write(bar)
 
@@ -144,14 +142,11 @@ class ProgressBar(Callbacks):
 
     def on_batch_end(self, experiment: "Experiment"):
         """On end of a batch."""
-        values = {"loss": experiment.loss.item()}
-        self._update(current_step=experiment.batch_idx, values=values, stage=experiment.stage)
+        self._update(current_step=experiment.batch_idx, values=experiment.loss_per_batch)
 
     def on_loader_end(self, experiment: "Experiment"):
         """On end of dataloader."""
-        self._update(
-            current_step=self._seen_so_far + 1, values=experiment.monitors[experiment.stage], stage=experiment.stage
-        )
+        self._update(current_step=self._seen_so_far + 1, values=experiment.monitors[experiment.which_loader])
         self.reset()
 
     # noinspection PyTypeChecker
@@ -170,7 +165,7 @@ class ProgressBar(Callbacks):
 
     def on_loader_start(self, experiment: "Experiment"):
         """On start of loader.."""
-        dl = experiment.dataloaders.get(experiment.stage)
+        dl = experiment.state.dataloaders.get(experiment.which_loader)
         self.num_steps = self.calculate_steps(dl=dl)
 
     def reset(self):

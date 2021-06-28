@@ -11,7 +11,6 @@ Subpackages
    torchflare.criterion
    torchflare.datasets
    torchflare.experiments
-   torchflare.interpreters
    torchflare.metrics
    torchflare.modules
    torchflare.utils

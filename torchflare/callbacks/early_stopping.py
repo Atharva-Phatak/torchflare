@@ -26,6 +26,9 @@ class EarlyStopping(Callbacks, ABC):
 
         EarlyStopping will only use the values of metrics/loss obtained on validation set.
 
+    Raises:
+        ValueError if monitor does not start with prefix ``val_`` or ``train_``.
+
     Example:
         .. code-block:: python
 
@@ -37,17 +40,17 @@ class EarlyStopping(Callbacks, ABC):
     def __init__(
         self,
         mode: str,
-        monitor: str = "val_loss",
+        monitor: str,
         patience: int = 5,
         min_delta: float = 1e-7,
     ):
         """Constructor for EarlyStopping class."""
         super(EarlyStopping, self).__init__(order=CallbackOrder.STOPPING)
 
-        if "val_" not in monitor:
-            self.monitor = "val_" + monitor
-        else:
+        if monitor.startswith("train_") or monitor.startswith("val_"):
             self.monitor = monitor
+        else:
+            raise ValueError("Monitor must have a prefix either train_ or val_.")
         self.patience = patience
         self.mode = mode
         self.min_delta = min_delta

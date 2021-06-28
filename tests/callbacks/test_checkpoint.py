@@ -6,16 +6,16 @@ import torch
 
 from torchflare.callbacks.load_checkpoint import LoadCheckpoint
 from torchflare.callbacks.model_checkpoint import ModelCheckpoint
+from torchflare.experiments.core import State
 
 
 class Experiment:
-    def __init__(self, model, cbs):
+    def __init__(self, model, optimizer, cbs):
 
-        self.model = model  # Dummy model just to see if the checkpoint callback works
+        self.state = State(model=model, optimizer=optimizer)  # Dummy model just to see if the checkpoint callback works
         # self.save_dir = save_dir
         # self.model_name = "DummyModel.bin"
         self.scheduler = None
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=3e-4)
         self._stop_training = False
         self._model_state = None
         self.cb = cbs
@@ -70,22 +70,37 @@ class Experiment:
 
         assert os.path.exists(self.path)
         ckpt = torch.load(self.path)
-        model_dict = self.model.state_dict()
+        model_dict = self.state.model.state_dict()
         self.cb_lc.on_experiment_start(self)
         for layer_name, weight in ckpt["model_state_dict"].items():
             assert layer_name in model_dict
             assert torch.all(model_dict[layer_name] == weight)
 
-        assert self.optimizer.state_dict() == ckpt["optimizer_state_dict"]
+        assert self.state.optimizer.state_dict() == ckpt["optimizer_state_dict"]
+
+    def check_checkpoints_dict(self):
+
+        assert os.path.exists(self.path)
+        ckpt = torch.load(self.path)
+
+        self.cb_lc.on_experiment_start(self)
+        for model_k in ckpt["model_state_dict"]:
+            model_dict = self.state.model[model_k].state_dict()
+            for layer_name, weight in self.state.model[model_k].state_dict().items():
+                assert layer_name in model_dict
+                assert torch.all(model_dict[layer_name] == weight)
+        for optimizer_key, optimizer in self.state.optimizer.items():
+            assert optimizer.state_dict() == ckpt["optimizer_state_dict"][optimizer_key]
 
 
 def test_checkpoint_on_loss(tmpdir):
 
     model = torch.nn.Linear(10, 2)
+    optimizer = torch.optim.SGD(model.parameters(), lr=3e-4)
     mckpt = ModelCheckpoint(
         mode="min", monitor="val_loss", save_dir=tmpdir.mkdir("/callbacks"), file_name="DummyModel.bin"
     )
-    trainer = Experiment(model=model, cbs=mckpt)
+    trainer = Experiment(model=model, cbs=mckpt, optimizer=optimizer)
 
     trainer.fit()
     trainer.check_checkpoints()
@@ -95,13 +110,31 @@ def test_checkpoint_on_loss(tmpdir):
 def test_checkpoint_on_acc(tmpdir):
 
     model = torch.nn.Linear(10, 2)
+    optimizer = torch.optim.SGD(model.parameters(), lr=3e-4)
     mckpt = ModelCheckpoint(
         mode="max", monitor="val_acc", save_dir=tmpdir.mkdir("/callbacks"), file_name="DummyModel.bin"
     )
-    trainer = Experiment(model=model, cbs=mckpt)
+    trainer = Experiment(model=model, cbs=mckpt, optimizer=optimizer)
 
     trainer.fit()
     trainer.check_checkpoints()
+    assert os.path.exists(trainer.path) is True
+
+
+def test_checkpoint_multiple_models(tmpdir):
+
+    model = {"model_A": torch.nn.Linear(10, 2), "model_B": torch.nn.Linear(10, 2)}
+    optimizer = {
+        "optimizer_A": torch.optim.SGD(model["model_A"].parameters(), lr=3e-4),
+        "optimizer_B": torch.optim.SGD(model["model_B"].parameters(), lr=3e-4),
+    }
+    mckpt = ModelCheckpoint(
+        mode="min", monitor="val_loss", save_dir=tmpdir.mkdir("/callbacks"), file_name="DummyModel.bin"
+    )
+    trainer = Experiment(model=model, cbs=mckpt, optimizer=optimizer)
+
+    trainer.fit()
+    trainer.check_checkpoints_dict()
     assert os.path.exists(trainer.path) is True
 
 
