@@ -25,15 +25,18 @@ class BaseBackend:
     def __init__(self):
         self.autocast = contextlib.nullcontext()
 
+    # skipcq :  PYL-R1705
     def zero_grad(self, optimizer) -> None:
         """Wrapper for optimizer.zero_grad()."""
         optimizer.zero_grad()
 
+    # skipcq :  PYL-R1705
     def backward_loss(self, loss) -> None:
         """Method to propogate loss backward."""
         # skipcq: PYL-W0106
         loss.backward()
 
+    # skipcq :  PYL-R1705
     def optimizer_step(self, optimizer) -> None:
         """Method to perform optimizer step."""
         optimizer.step()
@@ -47,6 +50,7 @@ class AMPBackend:
         self.scaler = torch.cuda.amp.GradScaler()
         self.autocast = torch.cuda.amp.autocast()
 
+    # skipcq :  PYL-R1705
     def zero_grad(self, optimizer) -> None:
         """Wrapper for optimizer.zero_grad()."""
         optimizer.zero_grad()
@@ -245,7 +249,7 @@ class BaseExperiment:
     def _check_model_on_device(model):
         try:
             return next(model.parameters()).is_cuda
-        except BaseException as e:  # noqa: B902
+        except StopIteration as e:
             print(str(e))
 
     def _model_to_device(self):

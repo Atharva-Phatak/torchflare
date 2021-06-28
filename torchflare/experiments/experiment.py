@@ -183,7 +183,7 @@ class Experiment(BaseExperiment):
     def run_loader(self, dataloader):
         """Function to iterate the dataloader through all the batches."""
         self._run_event("on_loader_start")
-        mode = True if self.train_stage in self.which_loader else False
+        mode = bool(self.train_stage in self.which_loader)
         with torch.set_grad_enabled(mode=mode):
             for self.batch_idx, self.batch in enumerate(dataloader):
                 with self.backend.autocast:

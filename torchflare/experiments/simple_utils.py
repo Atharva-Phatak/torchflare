@@ -113,8 +113,7 @@ def check_same_keys(d1, d2):
     """
     if d1.keys() == d2.keys():
         return True
-    else:
-        raise ValueError("Keys for both the dictionaries should be the same.")
+    raise ValueError("Keys for both the dictionaries should be the same.")
 
 
 def check_both_dicts(d1, d2):
