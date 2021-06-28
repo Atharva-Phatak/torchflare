@@ -139,3 +139,18 @@ Notification - Slack Notifier Callback
 .. autoclass:: torchflare.callbacks.message_notifiers.SlackNotifierCallback
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
+
+Decorators
+------------------------------------
+
+Main
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The main callback decorators simply take function , order as inputs and bind it to a callback point, returning the result.
+.. autofunction:: torchflare.callbacks.callback_decorators.on_experiment_start
+.. autofunction:: torchflare.callbacks.callback_decorators.on_epoch_start
+.. autofunction:: torchflare.callbacks.callback_decorators.on_loader_start
+.. autofunction:: torchflare.callbacks.callback_decorators.on_batch_start
+.. autofunction:: torchflare.callbacks.callback_decorators.on_experiment_end
+.. autofunction:: torchflare.callbacks.callback_decorators.on_epoch_end
+.. autofunction:: torchflare.callbacks.callback_decorators.on_loader_end
+.. autofunction:: torchflare.callbacks.callback_decorators.on_batch_end
