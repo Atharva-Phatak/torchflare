@@ -138,7 +138,7 @@ class Experiment(BaseExperiment):
 
     def on_batch_start(self):
         """Event on batch start."""
-        self.batch = self._process_batch(self.batch)
+        self._process_batch(self.batch)
 
     def on_loader_start(self):
         """Event on loader start."""
