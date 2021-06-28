@@ -144,9 +144,10 @@ class BaseExperiment:
     def _process_batch(self, batch):
         if len(batch) == 2:
             batch_dict = {self.input_key: batch[0], self.target_key: batch[1]}
+            return to_device(batch_dict, self.device)
         elif isinstance(batch, torch.Tensor) or len(batch) == 1:
             batch_dict = {self.input_key: batch}
-        return to_device(batch_dict, self.device)
+            return to_device(batch_dict, self.device)
 
     @staticmethod
     def get_params(model):
