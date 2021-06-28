@@ -25,13 +25,12 @@ your models with all the callbacks, metrics, etc
 
 ### ***Features***
 * _A high-level module for Keras-like training._
+* _Flexibility to write custom training and validation loops for advanced use cases._
 * _Off-the-shelf Pytorch style Datasets/Dataloaders for standard tasks such as **Image classification, Image segmentation,
   Text Classification**, etc_
 * _**Callbacks** for model checkpoints, early stopping, and much more!_
 * _**Metrics** and much more._
 * _**Reduction** of the boiler plate code required for training your models._
-
-![compare](https://raw.githubusercontent.com/Atharva-Phatak/torchflare/main/assets/Compare.png)
 ***
 
 Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU support will be coming soon!
@@ -46,14 +45,7 @@ Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU
 
 The Documentation is available [here](https://torchflare.readthedocs.io/en/latest/)
 
-***
-### ***Stability***
 
-
-The library isn't mature or stable for production use yet.
-
-
-The best of the library currently would be for **non production use and rapid prototyping**.
 
 ***
 ### ***Getting Started***
@@ -70,7 +62,7 @@ Here is an easy-to-understand example to show how Experiment class works.
 ``` python
 import torch
 import torch.nn as nn
-from torchflare.experiments import Experiment
+from torchflare.experiments import Experiment, ModelConfig
 import torchflare.callbacks as cbs
 import torchflare.metrics as metrics
 
@@ -106,7 +98,7 @@ Define callbacks and metrics
 metric_list = [metrics.Accuracy(num_classes=num_classes, multilabel=False),
                 metrics.F1Score(num_classes=num_classes, multilabel=False)]
 
-callbacks = [cbs.EarlyStopping(monitor="accuracy", mode="max"), cbs.ModelCheckpoint(monitor="accuracy"),
+callbacks = [cbs.EarlyStopping(monitor="val_accuracy", mode="max"), cbs.ModelCheckpoint(monitor="val_accuracy"),
             cbs.ReduceLROnPlateau(mode="max" , patience = 2)]
 ```
 
@@ -121,11 +113,13 @@ exp = Experiment(
 )
 
 # Compile your experiment with model, optimizer, schedulers, etc
-exp.compile_experiment(module = Net,
-                       module_params = {"n_classes" : 10 , "p_dropout" : 0.3},
-                       optimizer = "Adam"
-                       optimizer_params = {"lr" : 3e-4},
-                       criterion = "cross_entropy",
+config = ModelConfig(nn_module = Net,
+                          module_params = {"n_classes" : 10 , "p_dropout" : 0.3},
+                          optimizer = "Adam"
+                          optimizer_params = {"lr" : 3e-4},
+                          criterion = "cross_entropy")
+
+exp.compile_experiment(model_config = config,
                        callbacks = callbacks,
                        metrics = metric_list,
                        main_metrics = "accuracy")
@@ -148,9 +142,6 @@ If you want to access your experiments history or plot it. You can do it as foll
 
 history = exp.history # This will return a dict
 
-# If you want to plot progress of particular metric as epoch progress use this.
-
-exp.plot_history(keys = ["loss" , "accuracy"] , save_fig = False , plot_fig = True)
 ```
 
 ***
@@ -169,6 +160,15 @@ exp.plot_history(keys = ["loss" , "accuracy"] , save_fig = False , plot_fig = Tr
 </a>
 
 
+***
+
+### ***Stability***
+
+
+The library isn't mature or stable for production use yet.
+
+
+The best of the library currently would be for **non production use and rapid prototyping**.
 ***
 ### ***Contribution***
 

@@ -40,7 +40,7 @@ Here is an easy-to-understand example to show how Experiment class works.
    import torch
    import torch.nn as nn
    import torch.nn.functional as F
-   from torchflare.experiment import Experiment
+   from torchflare.experiment import Experiment, ModelConfig
    import torchflare.callbacks as cbs
    import torchflare.metrics as metrics
 
@@ -52,7 +52,7 @@ Here is an easy-to-understand example to show how Experiment class works.
    metric_list = [metrics.Accuracy(num_classes=num_classes, multilabel=False),
                 metrics.F1Score(num_classes=num_classes, multilabel=False)]
 
-   callbacks = [cbs.EarlyStopping(monitor="accuracy", mode="max"), cbs.ModelCheckpoint(monitor="accuracy"),
+   callbacks = [cbs.EarlyStopping(monitor="val_accuracy", mode="max"), cbs.ModelCheckpoint(monitor="val_accuracy"),
             cbs.ReduceLROnPlateau(mode="max" , patience = 2)]
 
 
@@ -64,12 +64,15 @@ Here is an easy-to-understand example to show how Experiment class works.
        seed=42,
    )
 
-   # Compile your experiment with model, optimizer, schedulers, etc
-   exp.compile_experiment(
-       module = ModelClass,
+   #Defining the model config
+   config = ModelConfig(module = ModelClass,
        module_params = {"in_features" : 200 , "num_classes" : 5}
        optimizer = "Adam",
-       optimizer_params = {"lr" : 3e-4},
+       optimizer_params = {"lr" : 3e-4})
+
+   # Compile your experiment with model, optimizer, schedulers, etc
+   exp.compile_experiment(
+       model_config = config
        callbacks = callbacks,
        criterion = "cross_entropy",
        metrics = metric_list,
