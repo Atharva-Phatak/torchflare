@@ -146,6 +146,7 @@ Decorators
 Main
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The main callback decorators simply take function , order as inputs and bind it to a callback point, returning the result.
+
 .. autofunction:: torchflare.callbacks.callback_decorators.on_experiment_start
 .. autofunction:: torchflare.callbacks.callback_decorators.on_epoch_start
 .. autofunction:: torchflare.callbacks.callback_decorators.on_loader_start
