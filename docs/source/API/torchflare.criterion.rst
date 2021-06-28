@@ -10,25 +10,25 @@ Criterion
 BCEWithLogitsFlat
 ------------------------------------------
 
-.. autoclass:: torchflare.criterion.cross_entropy.BCEWithLogitsFlat
+.. autoclass:: torchflare.criterion.BCEWithLogitsFlat
    :members:
 
 BCEFlat
 ------------------------------------------
 
-.. autoclass:: torchflare.criterion.cross_entropy.BCEFlat
+.. autoclass:: torchflare.criterion.BCEFlat
    :members:
 
 Label Smoothing CrossEntropy Loss
 ------------------------------------------
 
-.. autoclass:: torchflare.criterion.cross_entropy.LabelSmoothingCrossEntropy
+.. autoclass:: torchflare.criterion.LabelSmoothingCrossEntropy
    :members:
 
 Symmetric CrossEntropy Loss
 ------------------------------------------
 
-.. autoclass:: torchflare.criterion.cross_entropy.SymmetricCE
+.. autoclass:: torchflare.criterion.SymmetricCE
    :members:
 
 
@@ -36,23 +36,23 @@ Symmetric CrossEntropy Loss
 Binary Focal Loss
 ---------------------------------------
 
-.. autoclass:: torchflare.criterion.focal_loss.BCEFocalLoss
+.. autoclass:: torchflare.criterion.BCEFocalLoss
    :members:
 
 Focal Loss
 ---------------------------------------
 
-.. autoclass:: torchflare.criterion.focal_loss.FocalLoss
+.. autoclass:: torchflare.criterion.FocalLoss
    :members:
 
 IOULoss
 -------------------------------------
 
-.. autoclass:: torchflare.criterion.iou_loss.IOULoss
+.. autoclass:: torchflare.criterion.IOULoss
    :members:
 
 Triplet Loss
 -----------------------------------------
 
-.. autoclass:: torchflare.criterion.triplet_loss.TripletLoss
+.. autoclass:: torchflare.criterion.TripletLoss
    :members:

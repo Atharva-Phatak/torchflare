@@ -15,7 +15,24 @@ def _validate_inputs(d1, d2):
 
 @dataclass
 class ModelConfig:
-    """Model Config to initialize model related parameters, optimizers and criterion."""
+    """Model Config to initialize model related parameters, optimizers and criterion.
+
+    Args:
+        nn_module: Uninstantiated PyTorch model class or dictionary of model classes.
+        module_params: The params required to init the nn_module.
+        optimizer: The name or uninstantiated optimizer class or dictionary of optimizer classes to be used.
+        optimizer_params: The params to init the optimizer class.
+        critertion: The critertion or dictionary of criterion to be used.
+
+    Example:
+        .. code-block:: python
+
+            from torchflare.experiments import ModelConfig
+
+            config = ModelConfig(nn_module = SomeModelClass, module_params = {"in_features" : 100 , "out_features": 50},
+                            optimizer = "Adam", optimizer_params = {"lr" : 3e-4},
+                            criterion = "binary_cross_entropy")
+    """
 
     nn_module: Union[nn.Module, Dict] = field(
         default=MISSING,

@@ -66,7 +66,7 @@ Simple Example - MNIST Dataset
 
 .. code-block:: python
 
-    from torchflare.experiments import Experiment
+    from torchflare.experiments import Experiment, ModelConfig
 
     # Define some params for the experiment
     exp = Experiment(num_epochs=10,
@@ -74,12 +74,15 @@ Simple Example - MNIST Dataset
                 device="cuda",
                 seed=42)
 
-    # Compile the experiment
-    exp.compile_experiment(module = Net,
+    #Define model config
+    config = ModelConfig(nn_module = Net,
                           module_params = {"n_classes" : 10 , "p_dropout" : 0.3},
                           optimizer = "Adam"
                           optimizer_params = {"lr" : 3e-4},
-                          criterion = "cross_entropy",
+                          criterion = "cross_entropy")
+
+    # Compile the experiment
+    exp.compile_experiment(model_config = config
                           callbacks = callbacks,
                           metrics = metric_list,
                           main_metrics = "accuracy")
@@ -88,7 +91,6 @@ Simple Example - MNIST Dataset
     exp.fit_loader(train_dl = train_dl , valid_dl)
 
     # Get logs for the experiment
-
     logs = exp.get_logs()
 
 More examples are available in `Github repo <https://github.com/Atharva-Phatak/torchflare/tree/main/examples>`_.

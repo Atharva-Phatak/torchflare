@@ -63,7 +63,7 @@ def on_experiment_start(order: CallbackOrder):
             #This callback will print "Experiment started" at the start of experiment.
 
     Returns:
-        Callback: Initialised callback with method ``Callbacks.on_experiment_start``.
+            Initialised callback with method ``Callbacks.on_experiment_start``.
     """
 
     @functools.wraps(order)
@@ -94,7 +94,7 @@ def on_epoch_start(order: CallbackOrder):
             #This callback will print "Epoch started" at the start of epoch.
 
     Returns:
-        Callback: Initialised callback with method ``Callbacks.on_epoch_start``.
+            Initialised callback with method ``Callbacks.on_epoch_start``.
     """
 
     @functools.wraps(order)
@@ -125,7 +125,7 @@ def on_loader_start(order: CallbackOrder):
             #This callback will print "Loader started" at the start of loader.
 
     Returns:
-        Callback: Initialised callback with method ``Callbacks.on_loader_start``.
+            Initialised callback with method ``Callbacks.on_loader_start``.
     """
 
     @functools.wraps(order)
@@ -156,7 +156,7 @@ def on_batch_start(order: CallbackOrder):
             #This callback will print "Batch started" at the start of batch.
 
     Returns:
-        Callback: Initialised callback with method ``Callbacks.on_batch_start``.
+            Initialised callback with method ``Callbacks.on_batch_start``.
     """
 
     @functools.wraps(order)
@@ -187,7 +187,7 @@ def on_experiment_end(order: CallbackOrder):
             #This callback will print "Experiment Ended" at the end of experiment.
 
     Returns:
-        Callback: Initialised callback with method ``Callbacks.on_experiment_end``.
+            Initialised callback with method ``Callbacks.on_experiment_end``.
     """
 
     @functools.wraps(order)
@@ -218,7 +218,7 @@ def on_epoch_end(order: CallbackOrder):
             #This callback will print "Epoch Ended" at the end of epoch.
 
     Returns:
-        Callback: Initialised callback with method ``Callbacks.on_epoch_end``.
+            Initialised callback with method ``Callbacks.on_epoch_end``.
     """
 
     @functools.wraps(order)
@@ -232,6 +232,7 @@ def on_loader_end(order: CallbackOrder):
     """The method ``on_loader_end`` is used to initialise a class with method ``Callbacks.on_loader_end``.
 
     Args:
+
         order: The callback order.
 
     Example:
@@ -249,7 +250,7 @@ def on_loader_end(order: CallbackOrder):
             #This callback will print "loader Ended" at the end of loader.
 
     Returns:
-        Callback: Initialised callback with method ``Callbacks.on_loader_end``.
+            Initialised callback with method ``Callbacks.on_loader_end``.
     """
 
     @functools.wraps(order)
@@ -263,6 +264,7 @@ def on_batch_end(order: CallbackOrder):
     """The method ``on_batch_end`` is used to initialise a class with method ``Callbacks.on_batch_end``.
 
     Args:
+
         order: The callback order.
 
     Example:
@@ -273,7 +275,6 @@ def on_batch_end(order: CallbackOrder):
 
             #Creating a custom callback using the decorator.
 
-
             @on_batch_end(order=CallbackOrder.MODEL_INIT)
             def print_on_start(experiment : "Experiment"):
                 print("Batch Ended")
@@ -281,7 +282,7 @@ def on_batch_end(order: CallbackOrder):
             #This callback will print "Batch Ended" at the end of batch.
 
     Returns:
-        Callback: Initialised callback with method ``Callbacks.on_batch_end``.
+            Initialised callback with method ``Callbacks.on_batch_end``.
     """
 
     @functools.wraps(order)

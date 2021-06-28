@@ -124,9 +124,6 @@ class Experiment(BaseExperiment):
         self.preds = self.state.model(self.batch[self.input_key])
         self.loss = self.state.criterion(self.preds, self.batch[self.target_key])
         self.loss_per_batch = {"loss": self.loss.item()}
-        # Override this result dictionary if you want to do customisation.
-        # assert self.preds is not None
-        # assert self.loss is not None
 
     def set_dataloaders(self, train_dl, valid_dl):
         """Setup dataloader variables."""
@@ -194,7 +191,10 @@ class Experiment(BaseExperiment):
         self._run_event("on_loader_end")
 
     def train_step(self):
-        """Method to perform train step."""
+        """Method to perform train step.
+
+        Override this method to perform a custom Training step.
+        """
         self.backend.zero_grad(optimizer=self.state.optimizer)
         self.batch_step()
         assert self.loss_per_batch is not None, "Please define self.loss_per_batch for progress bar."
@@ -202,7 +202,10 @@ class Experiment(BaseExperiment):
         self.backend.optimizer_step(optimizer=self.state.optimizer)
 
     def val_step(self) -> None:
-        """Method to perform validation step."""
+        """Method to perform validation step.
+
+        Override this method to perform custom validation step.
+        """
         self.batch_step()
 
     def _do_epoch(self):

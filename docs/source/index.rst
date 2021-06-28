@@ -109,4 +109,3 @@ Indices and tables
    API/torchflare.metrics.rst
    API/torchflare.criterion.rst
    API/torchflare.modules.rst
-   API/torchflare.interpreters.rst

@@ -11,7 +11,7 @@ Datasets
 Image Dataset
 ------------------------------------------------
 
-.. autoclass:: torchflare.datasets.image_classification.ImageDataset
+.. autoclass:: torchflare.datasets.ImageDataset
    :members: from_df , from_folders
    :exclude-members: __init__
 
@@ -19,21 +19,21 @@ Image Dataset
 Segmentation Dataset
 ---------------------------------------
 
-.. autoclass:: torchflare.datasets.segmentation.SegmentationDataset
+.. autoclass:: torchflare.datasets.SegmentationDataset
    :members: from_rle , from_folders
    :exclude-members: create_mask_list
 
 Tabular Dataset
 ----------------------------------
 
-.. autoclass:: torchflare.datasets.tabular.TabularDataset
+.. autoclass:: torchflare.datasets.TabularDataset
    :members: from_df , from_csv
 
 
 Text Dataset
 ----------------------------------------
 
-.. autoclass:: torchflare.datasets.text_dataset.TextClassificationDataset
+.. autoclass:: torchflare.datasets.TextClassificationDataset
    :members: from_df
 
 Dataloaders
@@ -47,14 +47,14 @@ Dataloaders
 Image Dataloader
 --------------------------------------------
 
-.. autoclass:: torchflare.datasets.image_dataloader.ImageDataloader
+.. autoclass:: torchflare.datasets.ImageDataloader
    :members: from_df, from_csv, from_folders, get_loader
 
 
 Segmentation Dataloader
 ---------------------------------------------------
 
-.. autoclass:: torchflare.datasets.segmentation_dataloader.SegmentationDataloader
+.. autoclass:: torchflare.datasets.SegmentationDataloader
    :members: from_rle , from_folders, get_loader
 
 
@@ -62,17 +62,17 @@ Segmentation Dataloader
 Tabular Dataloader
 ----------------------------------------------
 
-.. autoclass:: torchflare.datasets.tabular_dataloader.TabularDataloader
+.. autoclass:: torchflare.datasets.TabularDataloader
    :members: from_df , from_csv , get_loader
 
 Text Dataloader
 -------------------------------------------
 
-.. autoclass:: torchflare.datasets.text_dataloader.TextDataloader
+.. autoclass:: torchflare.datasets.TextDataloader
    :members: from_df
 
 Cross Validation
 -------------------------------------
 
-.. autoclass:: torchflare.datasets.cross_val.CVSplit
+.. autoclass:: torchflare.datasets.CVSplit
    :members:
