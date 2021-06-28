@@ -49,8 +49,8 @@ def on_experiment_start(order: CallbackOrder):
     Args:
         order: The callback order.
 
-    Examples:
-        .. code-block::python
+    Example:
+        .. code-block:: python
 
             from torchflare.callbacks import on_experiment_start, CallbackOrder
             from torchflare.experiments import Experiment
@@ -79,8 +79,8 @@ def on_epoch_start(order: CallbackOrder):
     Args:
         order: The callback order.
 
-    Examples:
-        .. code-block::python
+    Example:
+        .. code-block:: python
 
             from torchflare.callbacks import on_epoch_start, CallbackOrder
             from torchflare.experiments import Experiment
@@ -110,8 +110,8 @@ def on_loader_start(order: CallbackOrder):
     Args:
         order: The callback order.
 
-    Examples:
-        .. code-block::python
+    Example:
+        .. code-block:: python
 
             from torchflare.callbacks import on_loader_start, CallbackOrder
             from torchflare.experiments import Experiment
@@ -141,14 +141,13 @@ def on_batch_start(order: CallbackOrder):
     Args:
         order: The callback order.
 
-    Examples:
-        .. code-block::python
+    Example:
+        .. code-block:: python
 
             from torchflare.callbacks import on_batch_start, CallbackOrder
             from torchflare.experiments import Experiment
 
             #Creating a custom callback using the decorator.
-
 
             @on_batch_start(order=CallbackOrder.MODEL_INIT)
             def print_on_start(experiment : "Experiment"):
@@ -173,14 +172,13 @@ def on_experiment_end(order: CallbackOrder):
     Args:
         order: The callback order.
 
-    Examples:
-        .. code-block::python
+    Example:
+        .. code-block:: python
 
             from torchflare.callbacks import on_experiment_end, CallbackOrder
             from torchflare.experiments import Experiment
 
             #Creating a custom callback using the decorator.
-
 
             @on_experiment_end(order=CallbackOrder.MODEL_INIT)
             def print_on_start(experiment : "Experiment"):
@@ -205,14 +203,13 @@ def on_epoch_end(order: CallbackOrder):
     Args:
         order: The callback order.
 
-    Examples:
-        .. code-block::python
+    Example:
+        .. code-block:: python
 
             from torchflare.callbacks import on_experiment_end, CallbackOrder
             from torchflare.experiments import Experiment
 
             #Creating a custom callback using the decorator.
-
 
             @on_epoch_end(order=CallbackOrder.MODEL_INIT)
             def print_on_start(experiment : "Experiment"):
@@ -237,14 +234,13 @@ def on_loader_end(order: CallbackOrder):
     Args:
         order: The callback order.
 
-    Examples:
-        .. code-block::python
+    Example:
+        .. code-block:: python
 
             from torchflare.callbacks import on_loader_end, CallbackOrder
             from torchflare.experiments import Experiment
 
             #Creating a custom callback using the decorator.
-
 
             @on_loader_end(order=CallbackOrder.MODEL_INIT)
             def print_on_start(experiment : "Experiment"):
@@ -269,8 +265,8 @@ def on_batch_end(order: CallbackOrder):
     Args:
         order: The callback order.
 
-    Examples:
-        .. code-block::python
+    Example:
+        .. code-block:: python
 
             from torchflare.callbacks import on_batch_end, CallbackOrder
             from torchflare.experiments import Experiment
