@@ -137,11 +137,11 @@ for op in exp.predict_on_loader(test_loader=test_dl , path_to_model='./models/mo
 
 ```
 
-If you want to access your experiments history or plot it. You can do it as follows.
+If you want to access your experiments history or get as a dataframe. You can do it as follows.
 ``` python
 
 history = exp.history # This will return a dict
-
+exp.get_logs() #This will return a dataframe constructed from model-history.
 ```
 
 ***
@@ -151,7 +151,7 @@ history = exp.history # This will return a dict
 * Tutorial on using [Hydra and TorchFlare](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification_hydra.ipynb) for efficient workflow and parameter management.
 * Tutorial on [fit methods](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/fit_methods.ipynb) and how to dispatch training progress to your personal discord channel.
 * Tutorial on how to train [Variational Autoencoders](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-VAE.ipynb) using torchflare on MNIST Dataset.
-
+* Tutorial to train [GAN's](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-GAN.ipynb) with custom training loop.
 ***
 ### ***Current Contributors***
 
