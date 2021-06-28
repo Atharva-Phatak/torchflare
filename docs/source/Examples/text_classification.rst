@@ -102,3 +102,5 @@ Text Classfication
 
     # Training the models.
     exp.fit_loader(train_dl = train_dl , valid_dl = valid_dl)
+
+More examples are available in `Github repo <https://github.com/Atharva-Phatak/torchflare/tree/main/examples>`_.

@@ -243,3 +243,5 @@ Training DCGANs
 
     exp.compile_experiment(model_config=exp_config, callbacks=callbacks)
     exp.fit_loader(dataloader)
+
+More examples are available in `Github repo <https://github.com/Atharva-Phatak/torchflare/tree/main/examples>`_.

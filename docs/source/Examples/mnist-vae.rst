@@ -115,3 +115,6 @@ Data generation using Variational Autoencoders
     exp = VAEExperiment(num_epochs=30, fp16=False, device="cuda", seed=42)
     exp.compile_experiment(model_config=config)
     exp.fit_loader(train_loader, val_loader)
+
+
+More examples are available in `Github repo <https://github.com/Atharva-Phatak/torchflare/tree/main/examples>`_.
