@@ -102,10 +102,20 @@ Indices and tables
    :maxdepth: 2
    :caption: API
 
-   quickstart.rst
+
    API/torchflare.experiments.rst
    API/torchflare.callbacks.rst
    API/torchflare.datasets.rst
    API/torchflare.metrics.rst
    API/torchflare.criterion.rst
    API/torchflare.modules.rst
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Examples
+
+   Examples/quickstart.rst
+   Examples/text_classification.rst
+   Examples/mnist-vae.rst
+   Examples/gans.rst

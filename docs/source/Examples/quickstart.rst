@@ -1,9 +1,5 @@
-Quick Start
-==============
-
-
-Simple Example - MNIST Dataset
------------------------------------
+Image Classification
+==============================================
 
 1. Define Pytorch Model
 
