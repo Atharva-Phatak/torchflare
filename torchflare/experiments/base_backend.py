@@ -144,10 +144,9 @@ class BaseExperiment:
     def _process_batch(self, batch):
         if len(batch) == 2:
             batch_dict = {self.input_key: batch[0], self.target_key: batch[1]}
-            return to_device(batch_dict, self.device)
         elif isinstance(batch, torch.Tensor) or len(batch) == 1:
             batch_dict = {self.input_key: batch}
-            return to_device(batch_dict, self.device)
+        return to_device(batch_dict, self.device)
 
     @staticmethod
     def get_params(model):
@@ -168,11 +167,11 @@ class BaseExperiment:
             grad_params = {
                 opt_key: self.get_params(self.state.model[m_key]) for m_key, opt_key in zip(self.state.model, optimizer)
             }
-            return grad_params
 
         else:
             grad_params = self.get_params(self.state.model)
-            return grad_params
+
+        return grad_params
 
     def init_optimizer(self, config):
         """Method to initialise the optimizer.
@@ -217,9 +216,9 @@ class BaseExperiment:
         """
         if config.model_dict:
             models = {k: m_class(**config.module_params[k]) for k, m_class in config.nn_module.items()}
-            return models
         else:
-            return config.nn_module(**config.module_params)
+            models = config.nn_module(**config.module_params)
+        return models
 
     @staticmethod
     def init_criterion(config):
@@ -243,7 +242,11 @@ class BaseExperiment:
 
     @staticmethod
     def _check_model_on_device(model):
-        return next(model.parameters()).is_cuda
+        try:
+            return next(model.parameters()).is_cuda
+        # flake8: noqa
+        except BaseException as e:
+            print(str(e))
 
     def _model_to_device(self):
         """Function to move model to device."""

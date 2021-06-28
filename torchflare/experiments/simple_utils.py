@@ -136,6 +136,7 @@ def get_name(obj):
         obj: The input object.
     """
     if isinstance(obj, FunctionalCallback):
-        return obj.__name__
+        name = obj.__name__
     else:
-        return type(obj).__name__
+        name = type(obj).__name__
+    return name
