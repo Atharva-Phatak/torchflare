@@ -3,8 +3,9 @@ import torch
 import torchflare.callbacks as cbs
 import torchflare.metrics as metrics
 from torchflare.experiments.experiment import Experiment
-from sklearn.model_selection import train_test_split
 from torchflare.utils.seeder import seed_all
+from torchflare.experiments.config import ModelConfig
+from torchflare.experiments.core import State
 import os
 import pandas as pd
 
@@ -18,6 +19,10 @@ class Model(torch.nn.Module):
         return self.model(x)
 
 
+def create_ds(args):
+    dataset = torch.utils.data.TensorDataset(*args) if len(args) > 1 else args[0]
+    return dataset
+
 
 def test_experiment(tmpdir):
     optimizer = "Adam"
@@ -26,6 +31,15 @@ def test_experiment(tmpdir):
     fp16 = True if torch.cuda.is_available() else False
     num_samples, num_features, num_classes = int(1e4), int(100), 4
     test_samples = 50
+
+    config = ModelConfig(
+        nn_module=Model,
+        module_params=dict(num_features=num_features, num_classes=num_classes),
+        optimizer=optimizer,
+        criterion=criterion,
+        optimizer_params=dict(lr=optimizer_lr),
+    )
+
     X = torch.rand(num_samples, num_features)
     y = torch.randint(0, num_classes, size=(num_samples,))
     test_data = torch.randn(test_samples, num_features)
@@ -36,7 +50,7 @@ def test_experiment(tmpdir):
         save_dir = tmpdir.mkdir("/test_save")
         file_name = "test_classification.bin"
         dataset = torch.utils.data.TensorDataset(X, y)
-        test_dataset = torch.utils.data.TensorDataset(test_data)
+        test_dataset = create_ds((test_data,))
         loader = torch.utils.data.DataLoader(dataset, batch_size=32)
         test_dl = torch.utils.data.DataLoader(test_dataset, batch_size=16)
 
@@ -46,8 +60,8 @@ def test_experiment(tmpdir):
         ]
 
         callbacks = [
-            cbs.EarlyStopping(monitor="accuracy", mode="max"),
-            cbs.ModelCheckpoint(monitor="accuracy", mode="max", save_dir=save_dir, file_name=file_name),
+            cbs.EarlyStopping(monitor="val_accuracy", mode="max"),
+            cbs.ModelCheckpoint(monitor="val_accuracy", mode="max", save_dir=save_dir, file_name=file_name),
             cbs.CosineAnnealingWarmRestarts(T_0=2),
         ]
 
@@ -59,18 +73,14 @@ def test_experiment(tmpdir):
         )
 
         exp.compile_experiment(
-            module=Model,
-            module_params= dict(num_features=num_features,
-            num_classes=num_classes),
+            model_config=config,
             metrics=metric_list,
             callbacks=callbacks,
             main_metric="accuracy",
-            optimizer=optimizer,
-            criterion=criterion,
-            optimizer_params= dict(lr = optimizer_lr)
         )
+
+        assert isinstance(exp.state, State) is True
         exp.fit_loader(train_dl=loader, valid_dl=loader)
-        exp.plot_history(keys=["accuracy"], save_fig=False, plot_fig=False)
         logs = exp.get_logs()
         assert isinstance(logs, pd.DataFrame) is True
         outputs = []
@@ -92,8 +102,8 @@ def test_experiment(tmpdir):
         ]
 
         callbacks = [
-            cbs.EarlyStopping(monitor="accuracy", mode="max"),
-            cbs.ModelCheckpoint(monitor="accuracy", mode="max", save_dir=save_dir, file_name=file_name),
+            cbs.EarlyStopping(monitor="val_accuracy", mode="max"),
+            cbs.ModelCheckpoint(monitor="val_accuracy", mode="max", save_dir=save_dir, file_name=file_name),
             cbs.CosineAnnealingWarmRestarts(T_0=2),
         ]
 
@@ -105,18 +115,13 @@ def test_experiment(tmpdir):
         )
 
         exp.compile_experiment(
-            module=Model,
-            module_params=dict(num_features=num_features,
-                               num_classes=num_classes),
+            model_config=config,
             metrics=metric_list,
             callbacks=callbacks,
             main_metric="accuracy",
-            optimizer=optimizer,
-            criterion=criterion,
-            optimizer_params=dict(lr=optimizer_lr)
         )
+        assert isinstance(exp.state, State) is True
         exp.fit(x=X, y=y, val_data=(X, y), batch_size=32)
-        exp.plot_history(keys=["accuracy"], save_fig=False, plot_fig=False)
         logs = exp.get_logs()
         assert isinstance(logs, pd.DataFrame) is True
         outputs = []
@@ -127,6 +132,37 @@ def test_experiment(tmpdir):
 
         assert len(outputs) == test_samples
 
+    def _test_dict_inputs(device):
+
+        seed_all(42)
+        exp_config = ModelConfig(
+            nn_module={"model_A": Model, "model_B": Model},
+            module_params={
+                "model_A": {"num_features": num_features, "num_classes": num_classes},
+                "model_B": {"num_features": num_features, "num_classes": num_classes},
+            },
+            optimizer={"optim_A": optimizer, "optim_B": optimizer},
+            optimizer_params={"optim_A": {"lr": optimizer_lr}, "optim_B": {"lr": optimizer_lr}},
+            criterion=criterion,
+        )
+
+        exp = Experiment(
+            num_epochs=10,
+            fp16=fp16,
+            device=device,
+            seed=42,
+        )
+        exp.compile_experiment(
+            model_config=exp_config,
+            metrics=None,
+            callbacks=None,
+            main_metric="val_loss",
+        )
+        assert isinstance(exp.state, State) is True
+        assert len(exp.state.model.keys()) == 2
+        assert len(exp.state.optimizer.keys()) == 2
+
     device = "cuda" if torch.cuda.is_available() else "cpu"
     _test_fit(device=device)
     _test_fit_loader(device=device)
+    _test_dict_inputs(device=device)

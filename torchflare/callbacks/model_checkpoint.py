@@ -14,6 +14,19 @@ if TYPE_CHECKING:
     from torchflare.experiments.experiment import Experiment
 
 
+def get_state_dicts(d):
+    """Get state dictionaries for input dictionary or nn_modules.
+
+    Args:
+        d : The input dict or nn_module.
+    """
+    if isinstance(d, dict):
+        z = {k: v.state_dict() for k, v in d.items()}
+    else:
+        z = d.state_dict()
+    return z
+
+
 class ModelCheckpoint(Callbacks, ABC):
     """Callback for Checkpointing your model.
 
@@ -36,6 +49,9 @@ class ModelCheckpoint(Callbacks, ABC):
 
             Model checkpoint will be saved based on the values of metrics/loss obtained from validation set.
 
+    Raises:
+        ValueError if monitor does not start with prefix ``val_`` or ``train_``.
+
     Example:
         .. code-block::
 
@@ -43,28 +59,26 @@ class ModelCheckpoint(Callbacks, ABC):
             model_ckpt = cbs.ModelCheckpoint(monitor="val_accuracy", mode="max")
     """
 
-    def __init__(self, mode: str, monitor: str = "val_loss", save_dir: str = "./models", file_name: str = "model.bin"):
+    def __init__(self, mode: str, monitor: str, save_dir: str = "./", file_name: str = "model.bin"):
         """Constructor for ModelCheckpoint class."""
         super(ModelCheckpoint, self).__init__(order=CallbackOrder.CHECKPOINT)
+        if monitor.startswith("train_") or monitor.startswith("val_"):
+            self.monitor = monitor
+        else:
+            raise ValueError("Monitor must have a prefix either train_ or val_.")
         self.mode = mode
         self.eps = 1e-7
-        if "val_" not in monitor:
-            self.monitor = "val_" + monitor
-        else:
-            self.monitor = monitor
 
         self.improvement, self.best_val = init_improvement(mode=self.mode, min_delta=self.eps)
         self.path = os.path.join(save_dir, file_name)
 
     def checkpoint(self, model, optimizer):
         """Method to save the state dictionaries of model, optimizer,etc."""
-        torch.save(
-            {
-                "model_state_dict": model.state_dict(),
-                "optimizer_state_dict": optimizer.state_dict(),
-            },
-            self.path,
-        )
+        state_dict = {
+            "model_state_dict": get_state_dicts(d=model),
+            "optimizer_state_dict": get_state_dicts(d=optimizer),
+        }
+        torch.save(state_dict, self.path)
 
     def on_epoch_end(self, experiment: "Experiment"):
         """Method to save best model depending on the monitored quantity."""
@@ -73,8 +87,8 @@ class ModelCheckpoint(Callbacks, ABC):
         if self.improvement(score=val, best=self.best_val):
 
             self.checkpoint(
-                model=experiment.model,
-                optimizer=experiment.optimizer,
+                model=experiment.state.model,
+                optimizer=experiment.state.optimizer,
             )
 
     def on_experiment_end(self, experiment: "Experiment"):

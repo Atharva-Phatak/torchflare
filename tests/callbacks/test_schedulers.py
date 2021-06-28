@@ -18,14 +18,19 @@ from torchflare.callbacks.lr_schedulers import (
     ReduceLROnPlateau,
     StepLR,
 )
+from torchflare.experiments.core import State
 
 
 class Experiment:
     def __init__(self, cb):
 
-        self.model = torch.nn.Linear(10, 2)
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=0.03)
+        model = torch.nn.Linear(10, 2)
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.03)
+        self.state = State(model=model, optimizer=optimizer, dataloaders={"eval": None})
         self.exp_logs = None
+        self.train_stage, self.valid_stage = "train", "eval"
+        self.which_loader = self.train_stage
+
         self.main_metric = "loss"
         self.cb = cb
         self.val_key = "val_"

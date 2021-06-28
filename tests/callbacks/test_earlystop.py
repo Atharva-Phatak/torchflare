@@ -46,7 +46,7 @@ class Experiment:
 
 def test_on_val_loss():
 
-    es = EarlyStopping(mode="min")
+    es = EarlyStopping(mode="min",monitor = "val_loss")
     trainer = Experiment(cbs=es)
 
     trainer.fit()
@@ -56,7 +56,7 @@ def test_on_val_loss():
 
 
 def test_on_metric():
-    es = EarlyStopping(monitor="acc", mode="max")
+    es = EarlyStopping(monitor="val_acc", mode="max")
     trainer = Experiment(es)
 
     trainer.fit()
