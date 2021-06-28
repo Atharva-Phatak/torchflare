@@ -51,6 +51,7 @@ def on_experiment_start(order: CallbackOrder):
 
     Examples:
         .. code-block::python
+
             from torchflare.callbacks import on_experiment_start, CallbackOrder
             from torchflare.experiments import Experiment
 
@@ -80,6 +81,7 @@ def on_epoch_start(order: CallbackOrder):
 
     Examples:
         .. code-block::python
+
             from torchflare.callbacks import on_epoch_start, CallbackOrder
             from torchflare.experiments import Experiment
 
@@ -110,6 +112,7 @@ def on_loader_start(order: CallbackOrder):
 
     Examples:
         .. code-block::python
+
             from torchflare.callbacks import on_loader_start, CallbackOrder
             from torchflare.experiments import Experiment
 
@@ -140,6 +143,7 @@ def on_batch_start(order: CallbackOrder):
 
     Examples:
         .. code-block::python
+
             from torchflare.callbacks import on_batch_start, CallbackOrder
             from torchflare.experiments import Experiment
 
@@ -171,6 +175,7 @@ def on_experiment_end(order: CallbackOrder):
 
     Examples:
         .. code-block::python
+
             from torchflare.callbacks import on_experiment_end, CallbackOrder
             from torchflare.experiments import Experiment
 
@@ -202,6 +207,7 @@ def on_epoch_end(order: CallbackOrder):
 
     Examples:
         .. code-block::python
+
             from torchflare.callbacks import on_experiment_end, CallbackOrder
             from torchflare.experiments import Experiment
 
@@ -233,6 +239,7 @@ def on_loader_end(order: CallbackOrder):
 
     Examples:
         .. code-block::python
+
             from torchflare.callbacks import on_loader_end, CallbackOrder
             from torchflare.experiments import Experiment
 
@@ -264,6 +271,7 @@ def on_batch_end(order: CallbackOrder):
 
     Examples:
         .. code-block::python
+
             from torchflare.callbacks import on_batch_end, CallbackOrder
             from torchflare.experiments import Experiment
 
