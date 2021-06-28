@@ -244,8 +244,7 @@ class BaseExperiment:
     def _check_model_on_device(model):
         try:
             return next(model.parameters()).is_cuda
-        # flake8: noqa
-        except BaseException as e:
+        except BaseException as e:  # noqa: B902
             print(str(e))
 
     def _model_to_device(self):
