@@ -145,13 +145,16 @@ exp.get_logs() #This will return a dataframe constructed from model-history.
 ```
 
 ***
-### ***Examples***
+### ***Tutorials***
 * [Image Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification.ipynb) on CIFAR-10 using TorchFlare.
 * [Text Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Imdb_classification.ipynb) on IMDB data.
 * Tutorial on using [Hydra and TorchFlare](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/image_classification_hydra.ipynb) for efficient workflow and parameter management.
 * Tutorial on [fit methods](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/fit_methods.ipynb) and how to dispatch training progress to your personal discord channel.
 * Tutorial on how to train [Variational Autoencoders](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-VAE.ipynb) using torchflare on MNIST Dataset.
 * Tutorial to train [GAN's](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/MNIST-GAN.ipynb) with custom training loop.
+***
+### ***Projects***
+* [Manga-Colorizer](https://github.com/Atharva-Phatak/Manga-Colorizer) uses GAN's to colorize manga and uses TorchFlare to train the models.
 ***
 ### ***Current Contributors***
 
