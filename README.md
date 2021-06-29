@@ -131,7 +131,7 @@ For inference, you can use infer method, which yields output per batch. You can 
 ``` python
 outputs = []
 
-for op in exp.predict_on_loader(test_loader=test_dl , path_to_model='./models/model.bin' , device = 'cuda'):
+for op in exp.predict_on_loader(test_dl=test_dl , path_to_model='./models/model.bin' , device = 'cuda'):
     op = some_post_process_function(op)
     outputs.extend(op)
 
