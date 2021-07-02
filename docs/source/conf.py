@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.abspath("../.."))
 # -- Project information -----------------------------------------------------
 
 project = "TorchFlare"
-copyright = "2021, Atharva Phatak"
+project_copyright = "2021, Atharva Phatak"
 author = "Atharva Phatak"
 
 # The full version, including alpha/beta/rc tags
