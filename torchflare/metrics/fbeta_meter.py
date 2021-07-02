@@ -10,26 +10,25 @@ class FBeta(_BaseInputHandler, MetricMeter):
     Supports binary,multiclass and multilabel cases.
 
     Args:
-        num_classes(int) : The number of num_classes(For binary case , use out_features : 1)
-        threshold(float): The value of threshold for masking. Input is raw logits.
-        average(str): One of "micro" or "macro"
-        beta(float): weight of precision in harmonic mean.
-        multilabel(bool): Whether problem is multilabel or not.
+        num_classes : The number of num_classes(For binary case , use out_features : 1)
+        threshold: The value of threshold for masking. Input is raw logits.
+        average: One of "micro" or "macro"
+        beta: weight of precision in harmonic mean.
+        multilabel: Whether problem is multilabel or not.
 
     Examples:
-
         .. code-block:: python
 
-        from torchflare.metrics import FBeta
+            from torchflare.metrics import FBeta
 
-        # Binary-Classification Problems
-        acc = FBeta(num_classes=2, threshold=0.7, multilabel=False, average="macro")
+            # Binary-Classification Problems
+            acc = FBeta(num_classes=2, threshold=0.7, multilabel=False, average="macro")
 
-        # Mutliclass-Classification Problems
-        multiclass_acc = FBeta(num_classes=4, multilabel=False, average="macro")
+            # Mutliclass-Classification Problems
+            multiclass_acc = FBeta(num_classes=4, multilabel=False, average="macro")
 
-        # Multilabel-Classification Problems
-        multilabel_acc = FBeta(num_classes=5, multilabel=True, threshold=0.7, average="macro")
+            # Multilabel-Classification Problems
+            multilabel_acc = FBeta(num_classes=5, multilabel=True, threshold=0.7, average="macro")
     """
 
     def __init__(
@@ -109,10 +108,10 @@ class F1Score(_BaseInputHandler, MetricMeter):
     Supports binary,multiclass and multilabel cases.
 
     Args:
-            num_classes : The number of num_classes(For binary case , use out_features : 1)
-            threshold: The value of threshold for masking. Input is raw logits.
-            average : One of "micro" or "macro".
-            multilabel: Whether the problem is multilabel or not.
+        num_classes : The number of num_classes(For binary case , use out_features : 1)
+        threshold: The value of threshold for masking. Input is raw logits.
+        average : One of "micro" or "macro".
+        multilabel: Whether the problem is multilabel or not.
 
     Examples:
         .. code-block:: python

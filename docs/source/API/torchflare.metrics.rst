@@ -37,7 +37,7 @@ AUC
 
 FBeta Score
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. automodule:: torchflare.metrics.fbeta_meter.FBeta
+.. autoclass:: torchflare.metrics.fbeta_meter.FBeta
    :members:  handle , accumulate , value
    :exclude-members: reset
 
