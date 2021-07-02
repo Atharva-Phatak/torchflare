@@ -15,7 +15,7 @@ import sys
 
 import sphinx_rtd_theme
 
-autodoc_mock_imports = ["torch", "numpy", "matplotlib", "pandas", "sklearn"]
+autodoc_mock_imports = ["torch", "numpy", "matplotlib", "pandas", "sklearn", "einops", "albumentations"]
 sys.path.insert(0, os.path.abspath("../.."))
 
 

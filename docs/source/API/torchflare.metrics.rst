@@ -12,8 +12,7 @@ Accuracy
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. autoclass:: torchflare.metrics.Accuracy
-   :members:  handle , accumulate , value
-   :exclude-members: reset
+
 
 Precision
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
