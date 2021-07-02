@@ -15,14 +15,14 @@ import sys
 
 import sphinx_rtd_theme
 
-autodoc_mock_imports = ["torch", "numpy", "matplotlib", "pandas", "sklearn"]
+autodoc_mock_imports = ["torch", "numpy", "matplotlib", "pandas", "sklearn", "einops", "albumentations", "torchvision"]
 sys.path.insert(0, os.path.abspath("../.."))
 
 
 # -- Project information -----------------------------------------------------
 
 project = "TorchFlare"
-copyright = "2021, Atharva Phatak"
+project_copyright = "2021, Atharva Phatak"
 author = "Atharva Phatak"
 
 # The full version, including alpha/beta/rc tags

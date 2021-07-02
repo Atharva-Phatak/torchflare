@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.0.0
+    rev: v4.0.1
     hooks:
       - id: debug-statements
       - id: end-of-file-fixer
@@ -15,8 +15,8 @@ repos:
     rev: v2.1.1
     hooks:
       - id: seed-isort-config
-  - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v4.3.21
+  - repo: https://github.com/pycqa/isort
+    rev: 5.5.2
     hooks:
       - id: isort
         exclude: ^tests/|torchflare/callbacks/__init__.py
