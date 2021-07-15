@@ -186,3 +186,17 @@ Contributions are always welcome, it would be great to have people use and contr
 ### ***Author***
 
 * **Atharva Phatak** - [Atharva-Phatak](https://github.com/Atharva-Phatak)
+
+
+### Citation
+
+Please use this bibtex if you want to cite this repository in your publications:
+
+    @misc{TorchFlare,
+        author = {Atharva Phatak},
+        title = {TorchFlare: Easy model training and experimentation.},
+        year = {2020},
+        publisher = {GitHub},
+        journal = {GitHub repository},
+        howpublished = {\url{https://github.com/Atharva-Phatak/torchflare}},
+    }
