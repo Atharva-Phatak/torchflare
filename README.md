@@ -18,7 +18,7 @@
 
 # ***TorchFlare***
 
-***TorchFlare*** is a simple, beginner-friendly and an easy-to-use PyTorch Framework train your models without much effort.
+***TorchFlare*** is a simple, beginner-friendly and an easy-to-use PyTorch Framework to train your models without much effort.
 It provides an almost Keras-like experience for training
 your models with all the callbacks, metrics, etc
 
