@@ -25,7 +25,7 @@ class TextDataloader:
         cls,
         df: pd.DataFrame,
         input_col: str,
-        label_cols: Optional[Union[str, List[str]]],
+        label_cols: str | list[str] | None,
         tokenizer,
         max_len: int,
     ) -> TextDataloader:

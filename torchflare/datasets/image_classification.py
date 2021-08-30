@@ -17,7 +17,7 @@ def get_files(directory: str):
     return [os.path.join(directory, fname) for fname in os.listdir(directory)]
 
 
-def get_files_and_labels(directory: str, class_to_idx: Dict[str, int]) -> Tuple[List, List]:
+def get_files_and_labels(directory: str, class_to_idx: dict[str, int]) -> tuple[list, list]:
     image_list = []
     labels = []
 
@@ -41,9 +41,9 @@ class ImageDataset(Dataset):
 
     def __init__(
         self,
-        image_paths_list: List,
-        label_list: Optional[List] = None,
-        augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
+        image_paths_list: list,
+        label_list: list | None = None,
+        augmentations: A.Compose | torchvision.transforms.Compose | None = None,
         convert_mode: str = "RGB",
     ):
         """Constructor method for Image Dataset class.
@@ -66,12 +66,12 @@ class ImageDataset(Dataset):
         return {class_name: i for i, class_name in enumerate(classes)}
 
     @staticmethod
-    def _get_labels_from_df(df: pd.DataFrame, label_cols: Union[str, List[str]]):
+    def _get_labels_from_df(df: pd.DataFrame, label_cols: str | list[str]):
 
         return df.loc[:, label_cols].values.tolist() if label_cols is not None else None
 
     @staticmethod
-    def _join_paths(path: str, file_names: List[str], extension: Optional[str] = None) -> List[str]:
+    def _join_paths(path: str, file_names: list[str], extension: str | None = None) -> list[str]:
 
         if extension is None:
             return [os.path.join(path, x) for x in file_names]
@@ -84,8 +84,8 @@ class ImageDataset(Dataset):
         path: str,
         df: pd.DataFrame,
         image_col: str,
-        label_cols: Union[str, List[str]] = None,
-        augmentations: Union[A.Compose, torchvision.transforms.Compose] = None,
+        label_cols: str | list[str] = None,
+        augmentations: A.Compose | torchvision.transforms.Compose = None,
         extension: str = None,
         convert_mode: str = "RGB",
     ):
@@ -139,7 +139,7 @@ class ImageDataset(Dataset):
     def from_folders(
         cls,
         path: str,
-        augmentations: Union[A.Compose, torchvision.transforms.Compose] = None,
+        augmentations: A.Compose | torchvision.transforms.Compose = None,
         convert_mode: str = "RGB",
     ):
         """Classmethod to create pytorch dataset from folders.

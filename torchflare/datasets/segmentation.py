@@ -12,7 +12,7 @@ from torch.utils.data import Dataset
 from torchflare.datasets.utils import apply_image_transforms, apply_segmentation_augs, make_masks, open_image
 
 
-def get_rle(df: pd.DataFrame, image_col: str, mask_cols: List[str], name: str) -> List[str]:
+def get_rle(df: pd.DataFrame, image_col: str, mask_cols: list[str], name: str) -> list[str]:
     ids = df[df[image_col] == name].index.values
     rle = df.loc[ids, mask_cols].values.tolist()
     return rle
@@ -23,9 +23,9 @@ class SegmentationDataset(Dataset):
 
     def __init__(
         self,
-        image_paths_list: List,
+        image_paths_list: list,
         mask_list=None,
-        augmentations: [Union[A.Compose, torchvision.transforms.Compose]] = None,
+        augmentations: [A.Compose | torchvision.transforms.Compose] = None,
         image_convert_mode: str = "RGB",
         mask_convert_mode: str = "L",
         **kwargs
@@ -83,7 +83,7 @@ class SegmentationDataset(Dataset):
             return images
 
     @staticmethod
-    def _join_paths(path: str, file_names: List[str], extension: Optional[str] = None) -> List[str]:
+    def _join_paths(path: str, file_names: list[str], extension: str | None = None) -> list[str]:
 
         if extension is None:
             return [os.path.join(path, x) for x in file_names]
@@ -91,7 +91,7 @@ class SegmentationDataset(Dataset):
         return [os.path.join(path, x + extension) for x in file_names]
 
     @staticmethod
-    def create_mask_list(df: pd.DataFrame, image_col: str, mask_cols: List[str]) -> List[List[str]]:
+    def create_mask_list(df: pd.DataFrame, image_col: str, mask_cols: list[str]) -> list[list[str]]:
         """Create mask list.
 
         Args:
@@ -116,9 +116,9 @@ class SegmentationDataset(Dataset):
         path: str,
         df: pd.DataFrame,
         image_col: str,
-        mask_cols: List[str] = None,
-        augmentations: Union[A.Compose, torchvision.transforms.Compose] = None,
-        mask_size: Tuple[int, int] = None,
+        mask_cols: list[str] = None,
+        augmentations: A.Compose | torchvision.transforms.Compose = None,
+        mask_size: tuple[int, int] = None,
         num_classes: int = None,
         extension: str = None,
         image_convert_mode: str = "RGB",
@@ -181,7 +181,7 @@ class SegmentationDataset(Dataset):
         cls,
         image_path: str,
         mask_path: str = None,
-        augmentations: Union[A.Compose, torchvision.transforms.Compose] = None,
+        augmentations: A.Compose | torchvision.transforms.Compose = None,
         image_convert_mode: str = "L",
         mask_convert_mode: str = "L",
     ):

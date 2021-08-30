@@ -14,10 +14,10 @@ class TextClassificationDataset(Dataset):
 
     def __init__(
         self,
-        inputs: List[str],
+        inputs: list[str],
         tokenizer,
         max_len: int,
-        labels: [Union[str, List[str]]] = None,
+        labels: [str | list[str]] = None,
     ):
         """Constructor Method.
 
@@ -74,7 +74,7 @@ class TextClassificationDataset(Dataset):
         input_col: str,
         tokenizer,
         max_len: int,
-        label_cols: Union[str, List[str]] = None,
+        label_cols: str | list[str] = None,
     ) -> TextClassificationDataset:
         """Classmethod to create the dataset from dataframe.
 

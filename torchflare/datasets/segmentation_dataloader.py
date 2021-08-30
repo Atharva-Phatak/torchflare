@@ -28,11 +28,11 @@ class SegmentationDataloader:
         path: str,
         df: pd.DataFrame,
         image_col: str,
-        mask_cols: List[str] = None,
-        augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
-        mask_size: Tuple[int, int] = None,
-        num_classes: List = None,
-        extension: Optional[str] = None,
+        mask_cols: list[str] = None,
+        augmentations: A.Compose | torchvision.transforms.Compose | None = None,
+        mask_size: tuple[int, int] = None,
+        num_classes: list = None,
+        extension: str | None = None,
         image_convert_mode: str = "RGB",
     ):
         """Classmethod to create a dataset for segmentation when you have, rule length encodings stored in a dataframe.
@@ -99,7 +99,7 @@ class SegmentationDataloader:
         cls,
         image_path: str,
         mask_path: str = None,
-        augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
+        augmentations: A.Compose | torchvision.transforms.Compose | None = None,
         image_convert_mode: str = "L",
         mask_convert_mode: str = "L",
     ):

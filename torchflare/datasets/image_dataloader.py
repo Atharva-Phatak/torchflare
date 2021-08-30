@@ -28,8 +28,8 @@ class ImageDataloader:
         path: str,
         df: pd.DataFrame,
         image_col: str,
-        label_cols: Union[str, List[str]] = None,
-        augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
+        label_cols: str | list[str] = None,
+        augmentations: A.Compose | torchvision.transforms.Compose | None = None,
         convert_mode: str = "RGB",
         extension: str = None,
     ):
@@ -88,8 +88,8 @@ class ImageDataloader:
         path: str,
         csv_path: str,
         image_col: str,
-        label_cols: Union[str, List[str]] = None,
-        augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
+        label_cols: str | list[str] = None,
+        augmentations: A.Compose | torchvision.transforms.Compose | None = None,
         convert_mode: str = "RGB",
         extension: str = None,
     ):
@@ -145,7 +145,7 @@ class ImageDataloader:
     def from_folders(
         cls,
         path: str,
-        augmentations: Optional[Union[A.Compose, torchvision.transforms.Compose]] = None,
+        augmentations: A.Compose | torchvision.transforms.Compose | None = None,
         convert_mode: str = "RGB",
     ):
         """Classmethod to create pytorch dataset from folders.
