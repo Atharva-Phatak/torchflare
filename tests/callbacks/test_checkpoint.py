@@ -6,7 +6,7 @@ import torch
 
 from torchflare.callbacks.load_checkpoint import LoadCheckpoint
 from torchflare.callbacks.model_checkpoint import ModelCheckpoint
-from torchflare.experiments.core import State
+from torchflare.core.state import State
 
 
 class Experiment:

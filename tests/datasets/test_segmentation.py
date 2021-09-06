@@ -1,190 +1,135 @@
-# flake8: noqa
+# flake8 : noqa
 import collections
 
 import albumentations as A
 import pandas as pd
 import torch
-import torchvision
+from torchflare.datasets import SegmentationDataset
+import pytest
 
-from torchflare.datasets.segmentation import SegmentationDataset
-from torchflare.datasets.segmentation_dataloader import SegmentationDataloader
-
-
-df = pd.read_csv("tests/datasets/data/image_segmentation/csv_data/dummy.csv")
 df_inputs = collections.namedtuple(
     "df_inputs",
-    ["path", "image_col", "mask_cols", "mask_size", "num_classes", "extension", "df"],
+    ["path", "image_col", "mask_cols", "mask_size", "num_classes", "extension", "df", "augmentations"],
 )
 df_inputs = df_inputs(
     path="tests/datasets/data/image_segmentation/csv_data/images",
-    df=df,
-    image_col="im_id",
+    df=pd.read_csv("tests/datasets/data/image_segmentation/csv_data/dummy.csv"),
+    image_col=["im_id"],
     mask_cols=["EncodedPixels"],
     extension=None,
     mask_size=(320, 320),
     num_classes=4,
+    augmentations=A.Compose([A.Resize(256, 256)]),
 )
 
-folder_inputs = collections.namedtuple("folder_inputs", ["image_path", "mask_path"])
+folder_inputs = collections.namedtuple(
+    "folder_inputs", ["image_path", "mask_path", "image_convert_mode", "mask_convert_mode", "augmentations"]
+)
 folder_inputs = folder_inputs(
     image_path="tests/datasets/data/image_segmentation/folder_data/images",
     mask_path="tests/datasets/data/image_segmentation/folder_data/masks",
+    image_convert_mode="L",
+    mask_convert_mode="L",
+    augmentations=A.Compose([A.Resize(256, 256)]),
 )
 
 
-def test_from_df():
-    def test_albumentations_augs():
-        augmentations = A.Compose([A.Resize(256, 256)])
-
-        ds = SegmentationDataset.from_rle(
+class TestSegmentationDataFromDF:
+    def test_with_input_transforms(self):
+        ds = SegmentationDataset.from_df(
+            df=df_inputs.df,
             path=df_inputs.path,
-            df=df,
-            image_col=df_inputs.image_col,
-            mask_cols=df_inputs.mask_cols,
-            extension=df_inputs.extension,
-            mask_size=df_inputs.mask_size,
+            input_columns=df_inputs.image_col,
+            transforms=df_inputs.augmentations,
+        ).masks_from_rle(
+            shape=df_inputs.mask_size,
             num_classes=df_inputs.num_classes,
-            augmentations=augmentations,
-            image_convert_mode="RGB",
+            mask_columns=df_inputs.mask_cols,
         )
-
         x, y = ds[0]
-
         assert torch.is_tensor(x) is True
-        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         assert x.shape == (3, 256, 256)
         assert y.shape == (df_inputs.num_classes, 256, 256)
 
-    def test_torchvision_augs():
-
-        augmentations = torchvision.transforms.Compose([torchvision.transforms.Resize((256, 256))])
-
-        ds = SegmentationDataset.from_rle(
+    def test_inference(self):
+        ds = SegmentationDataset.from_df(
+            df=df_inputs.df,
             path=df_inputs.path,
-            df=df,
-            image_col=df_inputs.image_col,
-            mask_cols=df_inputs.mask_cols,
-            extension=df_inputs.extension,
-            mask_size=df_inputs.mask_size,
-            num_classes=df_inputs.num_classes,
-            augmentations=augmentations,
-            image_convert_mode="RGB",
-        )
+            input_columns=df_inputs.image_col,
+            transforms=df_inputs.augmentations,
+        ).add_test()
 
-        x, y = ds[0]
-
-        assert torch.is_tensor(x) is True
-        assert torch.is_tensor(x) is True
-        assert x.shape == (3, 256, 256)
-        assert y.shape == (df_inputs.num_classes, 256, 256)
-
-    def test_inference():
-        augmentations = torchvision.transforms.Compose([torchvision.transforms.Resize((256, 256))])
-        ds = SegmentationDataset.from_rle(
-            path=df_inputs.path,
-            df=df,
-            image_col=df_inputs.image_col,
-            mask_cols=None,
-            extension=df_inputs.extension,
-            mask_size=None,
-            num_classes=None,
-            augmentations=augmentations,
-            image_convert_mode="RGB",
-        )
         x = ds[0]
-
         assert torch.is_tensor(x) is True
         assert len(x.shape) == 3
 
-    test_torchvision_augs()
-    test_albumentations_augs()
-    test_inference()
-
-
-# test_from_df()
-
-
-def test_from_folders():
-    def test_albu_augs():
-        augmentations = A.Compose([A.Resize(256, 256)])
-
-        ds = SegmentationDataset.from_folders(
-            image_path=folder_inputs.image_path,
-            mask_path=folder_inputs.mask_path,
-            augmentations=augmentations,
-            image_convert_mode="L",
-            mask_convert_mode="L",
+    @pytest.mark.parametrize("batch_size", [1, 2])
+    def test_batching(self, batch_size):
+        dl = (
+            SegmentationDataset.from_df(
+                df=df_inputs.df,
+                path=df_inputs.path,
+                input_columns=df_inputs.image_col,
+                transforms=df_inputs.augmentations,
+            )
+            .masks_from_rle(
+                shape=df_inputs.mask_size,
+                num_classes=df_inputs.num_classes,
+                mask_columns=df_inputs.mask_cols,
+            )
+            .batch(batch_size=batch_size, shuffle=True)
         )
 
-        x, y = ds[0]
+        x, y = next(iter(dl))
+        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(x) is True
+        assert x.shape == (batch_size, 3, 256, 256)
+        assert y.shape == (batch_size, df_inputs.num_classes, 256, 256)
 
+
+class TestSegmentationDataFromFolders:
+    def test_with_input_transforms(self):
+        ds = SegmentationDataset.from_folders(
+            image_path=folder_inputs.image_path,
+            transforms=folder_inputs.augmentations,
+            image_convert_mode=folder_inputs.image_convert_mode,
+        ).masks_from_folders(
+            mask_path=folder_inputs.mask_path,
+            mask_convert_mode=folder_inputs.mask_convert_mode,
+        )
+        x, y = ds[0]
         assert torch.is_tensor(x) is True
-        assert torch.is_tensor(x) is True
+        assert torch.is_tensor(y) is True
         assert x.shape == (1, 256, 256)
         assert y.shape == (1, 256, 256)
 
-    def test_torchvision_augs():
-
-        augmentations = torchvision.transforms.Compose([torchvision.transforms.Resize((256, 256))])
+    def test_inference(self):
         ds = SegmentationDataset.from_folders(
             image_path=folder_inputs.image_path,
-            mask_path=folder_inputs.mask_path,
-            augmentations=augmentations,
-            image_convert_mode="L",
-            mask_convert_mode="L",
-        )
-
-        x, y = ds[0]
-
-        assert torch.is_tensor(x) is True
+            transforms=folder_inputs.augmentations,
+            image_convert_mode=folder_inputs.image_convert_mode,
+        ).add_test()
+        x = ds[0]
         assert torch.is_tensor(x) is True
         assert x.shape == (1, 256, 256)
-        assert y.shape == (1, 256, 256)
 
-    test_albu_augs()
-    test_torchvision_augs()
-
-
-def test_segmentation_dataloaders():
-    def test_segmentation_data_from_rle():
-        augmentations = A.Compose([A.Resize(256, 256)])
-
-        dl = SegmentationDataloader.from_rle(
-            path=df_inputs.path,
-            df=df,
-            image_col=df_inputs.image_col,
-            mask_cols=df_inputs.mask_cols,
-            extension=df_inputs.extension,
-            mask_size=df_inputs.mask_size,
-            num_classes=df_inputs.num_classes,
-            augmentations=augmentations,
-            image_convert_mode="RGB",
-        ).get_loader(batch_size=2, shuffle=True)
-
+    @pytest.mark.parametrize("batch_size", [1, 2])
+    def test_batching(self, batch_size):
+        dl = (
+            SegmentationDataset.from_folders(
+                image_path=folder_inputs.image_path,
+                transforms=folder_inputs.augmentations,
+                image_convert_mode=folder_inputs.image_convert_mode,
+            )
+            .masks_from_folders(
+                mask_path=folder_inputs.mask_path,
+                mask_convert_mode=folder_inputs.mask_convert_mode,
+            )
+            .batch(batch_size=batch_size, shuffle=True)
+        )
         x, y = next(iter(dl))
-
         assert torch.is_tensor(x) is True
-        assert torch.is_tensor(x) is True
-        assert x.shape == (2, 3, 256, 256)
-        assert y.shape == (2, df_inputs.num_classes, 256, 256)
-
-    def test_segmentation_data_from_folders():
-        augmentations = A.Compose([A.Resize(256, 256)])
-
-        dl = SegmentationDataloader.from_folders(
-            image_path=folder_inputs.image_path,
-            mask_path=folder_inputs.mask_path,
-            augmentations=augmentations,
-            image_convert_mode="L",
-            mask_convert_mode="L",
-        ).get_loader(batch_size=2, shuffle=False)
-
-        x, y = next(iter(dl))
-
-        assert torch.is_tensor(x) is True
-        assert torch.is_tensor(x) is True
-        assert x.shape == (2, 1, 256, 256)
-        assert y.shape == (2, 1, 256, 256)
-
-    test_segmentation_data_from_folders()
-    test_segmentation_data_from_rle()
+        assert torch.is_tensor(y) is True
+        assert x.shape == (batch_size, 1, 256, 256)
+        assert y.shape == (batch_size, 1, 256, 256)

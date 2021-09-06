@@ -5,8 +5,7 @@
 
 TorchFlare
 ======================================
-.. image:: https://raw.githubusercontent.com/Atharva-Phatak/torchflare/main/assets/TorchFlare_official.png
-   :target: https://github.com/Atharva-Phatak/torchflare
+.. image:: _static/TorchFlare_official.png
    :alt: TorchFlare logo
 
 
@@ -17,14 +16,14 @@ TorchFlare
     * *A high-level module for Keras-like training.*
     * *Off-the-shelf Pytorch style Datasets/Dataloaders for standard tasks such as Image classification, Image segmentation, Text Classification, etc.*
     * *Callbacks for model checkpoints, early stopping, and much more!*
-    * *Metrics and much more.*
     * *Reduction of the boiler plate code required for training your models.*
 
 **Currently, TorchFlare supports CPU and GPU training. DDP and TPU support will be coming soon!**
 
 *Installation*
 ------------------
-pip install torchflare
+.. code-block:: python
+   pip install torchflare
 
 *Getting Started*
 ------------------
@@ -42,18 +41,22 @@ Here is an easy-to-understand example to show how Experiment class works.
    import torch.nn.functional as F
    from torchflare.experiment import Experiment, ModelConfig
    import torchflare.callbacks as cbs
-   import torchflare.metrics as metrics
+   import torchmetrics
 
-   #Some dummy dataloaders
+   # Some dummy dataloaders
    train_dl = SomeTrainingDataloader()
    valid_dl = SomeValidationDataloader()
    test_dl = SomeTestingDataloader()
 
-   metric_list = [metrics.Accuracy(num_classes=num_classes, multilabel=False),
-                metrics.F1Score(num_classes=num_classes, multilabel=False)]
+   metric_list = [
+       torchmetrics.Accuracy(num_classes=num_classes)
+   ]
 
-   callbacks = [cbs.EarlyStopping(monitor="val_accuracy", mode="max"), cbs.ModelCheckpoint(monitor="val_accuracy"),
-            cbs.ReduceLROnPlateau(mode="max" , patience = 2)]
+   callbacks = [
+       cbs.EarlyStopping(monitor="val_accuracy", mode="max"),
+       cbs.ModelCheckpoint(monitor="val_accuracy"),
+       cbs.ReduceLROnPlateau(mode="max", patience=2),
+   ]
 
 
    # Set some constants for training
@@ -64,61 +67,50 @@ Here is an easy-to-understand example to show how Experiment class works.
        seed=42,
    )
 
-   #Defining the model config
-   config = ModelConfig(module = ModelClass,
-       module_params = {"in_features" : 200 , "num_classes" : 5}
-       optimizer = "Adam",
-       optimizer_params = {"lr" : 3e-4})
+   # Defining the model config
+   config = ModelConfig(
+       module=ModelClass,
+       module_params={"in_features": 200, "num_classes": 5},
+       optimizer="Adam",
+       optimizer_params={"lr": 3e-4},
+       criterion="cross_entropy",
+   )
 
    # Compile your experiment with model, optimizer, schedulers, etc
    exp.compile_experiment(
-       model_config = config
-       callbacks = callbacks,
-       criterion = "cross_entropy",
-       metrics = metric_list,
-       main_metric = "accuracy",
+       model_config=config,
+       callbacks=callbacks,
+       metrics=metric_list,
+       main_metric="accuracy",
    )
 
    # Run your experiment with training dataloader and validation dataloader.
-   exp.fit_loader(train_dl=train_dl, valid_dl= valid_dl)
+   exp.fit_loader(train_dl=train_dl, valid_dl=valid_dl)
 
-   #Do Inference
+   # Do Inference
    outputs = []
 
-   for op in exp.predict_on_loader(test_loader=test_dl , path_to_model='./models/model.bin' , device = 'cuda'):
+   for op in exp.predict_on_loader(
+       test_loader=test_dl, path_to_model="./models/model.bin", device="cuda"
+   ):
        op = some_post_process_function(op)
        outputs.extend(op)
 
-   #Visualize Model History
-   exp.plot_history(keys = ["loss" , "accuracy"] , save_fig = False , plot_fig = True)
 
 
 
 Indices and tables
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-.. toctree::
-   :maxdepth: 2
-   :caption: API
-
-
-   API/torchflare.experiments.rst
-   API/torchflare.callbacks.rst
-   API/torchflare.datasets.rst
-   API/torchflare.metrics.rst
-   API/torchflare.criterion.rst
-   API/torchflare.modules.rst
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: Examples
 
-   Examples/quickstart.rst
-   Examples/text_classification.rst
-   Examples/mnist-vae.rst
-   Examples/gans.rst
+   API/torchflare.rst
+
+
+.. toctree::
+   :maxdepth: 2
+
+   Tutorials/index.rst

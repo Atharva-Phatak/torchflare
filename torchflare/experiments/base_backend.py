@@ -1,6 +1,5 @@
 """Implements Base State."""
 
-import contextlib
 from typing import List
 
 import pandas as pd
@@ -8,61 +7,17 @@ import torch
 from torch.utils.data import DataLoader, TensorDataset
 
 from torchflare.callbacks.callback import sort_callbacks
+from torchflare.callbacks.criterion_callback import AvgLoss
 from torchflare.callbacks.metric_utils import MetricCallback
 from torchflare.callbacks.model_history import History
 from torchflare.callbacks.progress_bar import ProgressBar
-from torchflare.experiments.core import State
+from torchflare.core.state import State
+from torchflare.experiments.backends import AMPBackend, BaseBackend
+from torchflare.experiments.commons import ATTR_TO_INTERNAL, TRAIN_ATTRS
 from torchflare.experiments.criterion_utilities import get_criterion
 from torchflare.experiments.optim_utilities import get_optimizer
-from torchflare.experiments.simple_utils import AvgLoss, get_name, numpy_to_torch, to_device
+from torchflare.experiments.simple_utils import _pop_item, numpy_to_torch, to_device
 from torchflare.utils.seeder import seed_all
-
-
-# noinspection PyMethodMayBeStatic
-class BaseBackend:
-    """Class to perform steps for optimizer , scaling etc."""
-
-    def __init__(self):
-        self.autocast = contextlib.nullcontext()
-
-    # skipcq :  PYL-R1705
-    def zero_grad(self, optimizer) -> None:
-        """Wrapper for optimizer.zero_grad()."""
-        optimizer.zero_grad()
-
-    # skipcq :  PYL-R1705
-    def backward_loss(self, loss) -> None:
-        """Method to propogate loss backward."""
-        # skipcq: PYL-W0106
-        loss.backward()
-
-    # skipcq :  PYL-R1705
-    def optimizer_step(self, optimizer) -> None:
-        """Method to perform optimizer step."""
-        optimizer.step()
-
-
-# noinspection PyMethodMayBeStatic
-class AMPBackend:
-    """Class to perform steps for optimizer , scaling using mixed precision."""
-
-    def __init__(self):
-        self.scaler = torch.cuda.amp.GradScaler()
-        self.autocast = torch.cuda.amp.autocast()
-
-    # skipcq :  PYL-R1705
-    def zero_grad(self, optimizer) -> None:
-        """Wrapper for optimizer.zero_grad()."""
-        optimizer.zero_grad()
-
-    def backward_loss(self, loss) -> None:
-        """Method to propogate loss backward."""
-        self.scaler.scale(loss).backward()
-
-    def optimizer_step(self, optimizer) -> None:
-        """Method to perform optimizer step."""
-        self.scaler.step(optimizer)
-        self.scaler.update()
 
 
 class BaseExperiment:
@@ -82,10 +37,6 @@ class BaseExperiment:
             fp16 : Set this to True if you want to use mixed precision training(Default : False)
             device : The device where you want train your model.
             seed: The seed to ensure reproducibility.
-
-        Note:
-            If batch_mixers are used then set compute_train_metrics to False.
-            Also, only validation metrics will be computed if special batch_mixers are used.
         """
         self.num_epochs = num_epochs
         self.fp16 = fp16
@@ -94,6 +45,8 @@ class BaseExperiment:
         self.train_key, self.val_key, self.epoch_key = "train_", "val_", "Epoch"
         self.train_stage, self.valid_stage = "train", "eval"
         self.input_key, self.target_key = "inputs", "targets"
+        self.prediction_key, self.loss_key = "loss", "predictions"
+        self.batch_outputs = None
         self.which_loader = None
         self.main_metric = None
         self.stop_training = None
@@ -102,13 +55,15 @@ class BaseExperiment:
         self.history = None
         self.monitors = {self.train_stage: None, self.valid_stage: None}
         self.loss_per_batch = None
-        self.loss = None
         self.batch = None
-        self.preds = None
         self.batch_idx, self.current_epoch = None, 0
         self.backend = AMPBackend() if self.fp16 else BaseBackend()
-        self.state = None
-        self.callback_state = None
+        self.state = State()
+
+    def _prepare_batch_outputs(self):
+        self.loss_per_batch = {
+            k: _pop_item(v) for k, v in self.batch_outputs.items() if self.loss_key in k
+        }
 
     def get_prefix(self):
         """Generates the prefix for training and validation.
@@ -126,17 +81,10 @@ class BaseExperiment:
             callbacks: The input callbacks.
             metrics: The input metrics.
         """
-        self.state = State(model=self.init_model(config=config))
-        self.state.update(
-            {
-                "optimizer": self.init_optimizer(config=config),
-                "criterion": self.init_criterion(config=config),
-                "callbacks": self.init_callbacks(callbacks=callbacks, metrics=metrics),
-            }
-        )
-        if callbacks is not None:
-            self.callback_state = State()
-            self.callback_state.update({get_name(k): k for k in callbacks})
+        for attr in TRAIN_ATTRS:
+            attribute = getattr(self, f"init_{attr}")(config)
+            self.state[ATTR_TO_INTERNAL[attr]] = attribute
+        self.state["callbacks"] = self.init_callbacks(callbacks, metrics)
 
     def _run_callbacks(self, event):
         for callback in self.state.callbacks:
@@ -162,17 +110,26 @@ class BaseExperiment:
         """
         return (param for param in model.parameters() if param.requires_grad)
 
-    def get_model_params(self, optimizer):
+    def get_model_params(self, config):
         """Create model params for optimizer.
+        Overwrite this method to use custom learning rate for params,etc.
 
         Args:
-            optimizer: The optimizer to be used for Training.
-        """
-        if isinstance(self.state.model, dict):
-            grad_params = {
-                opt_key: self.get_params(self.state.model[m_key]) for m_key, opt_key in zip(self.state.model, optimizer)
-            }
+            config : The model config object.
 
+        Returns:
+            The trainable params.
+        """
+        if config.model_dict and config.optimizer_dict:
+            grad_params = {
+                m_key: self.get_params(self.state.model[m_key]) for m_key in config.nn_module
+            }
+        elif config.model_dict and not config.optimizer_dict:
+            raise ValueError(
+                "You have multiple models to instantiate but only one optimizer. "
+                "Please overwrite get_model_params by inherting Experiment class to define how to \
+                             get trainable params for models."
+            )
         else:
             grad_params = self.get_params(self.state.model)
 
@@ -184,7 +141,7 @@ class BaseExperiment:
         Args:
             config: The ModelConfig object.
         """
-        grad_params = self.get_model_params(config.optimizer)
+        grad_params = self.get_model_params(config)
         if config.optimizer_dict:
             optimizer = {
                 k: get_optimizer(o_class)(grad_params[k], **config.optimizer_params[k])
@@ -213,14 +170,16 @@ class BaseExperiment:
         return cbs
 
     @staticmethod
-    def init_model(config):
+    def init_nn_module(config):
         """Method to initialise the model.
 
         Args:
             config: The ModelConfig object.
         """
         if config.model_dict:
-            models = {k: m_class(**config.module_params[k]) for k, m_class in config.nn_module.items()}
+            models = {
+                k: m_class(**config.module_params[k]) for k, m_class in config.nn_module.items()
+            }
         else:
             models = config.nn_module(**config.module_params)
         return models
@@ -256,9 +215,9 @@ class BaseExperiment:
         """Function to move model to device."""
         # skipcq : PTC-W0063
         if isinstance(self.state.model, dict):
-            for k in self.state.model:
-                if self._check_model_on_device(self.state.model[k]) is False:
-                    self.state.model[k].to(self.device)
+            for key, value in self.state.model.items():
+                if self._check_model_on_device(value) is False:
+                    self.state.model[key].to(self.device)
         else:
             if self._check_model_on_device(self.state.model) is False:
                 self.state.model.to(self.device)
@@ -285,8 +244,9 @@ class BaseExperiment:
         self.exp_logs = None
         self.which_loader = None
         self.batch = None
-        self.loss, self.preds = None, None
+        self.batch_outputs = None
         self.batch_idx, self.current_epoch = None, None
+        self.loss_per_batch = None
 
     def get_logs(self):
         """Returns experiment logs as a dataframe."""

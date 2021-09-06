@@ -14,3 +14,17 @@ Experiment
 ModelConfig
 --------------------------
 .. autoclass:: torchflare.experiments.ModelConfig
+
+Backends
+--------------------------
+
+BaseBackend
+^^^^^^^^^^^^^^^^^^^^^
+.. autoclass:: torchflare.experiments.BaseBackend
+   :members: zero_grad, backward_loss, optimizer_step
+
+AMPBackend
+^^^^^^^^^^^^^^^^^
+
+.. autoclass:: torchflare.experiments.AMPBackend
+   :members: zero_grad, backward_loss, optimizer_step

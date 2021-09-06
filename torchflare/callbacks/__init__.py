@@ -37,7 +37,7 @@ from torchflare.callbacks.tensorboard_logger import TensorboardLogger
 from torchflare.callbacks.wandb_logger import WandbLogger  # isort: skip
 
 from torchflare.callbacks.lr_schedulers import CosineAnnealingLR  # isort: skip; isort: skip
-
+from torchflare.callbacks.criterion_callback import AvgLoss
 
 __all__ = [
     "Callbacks",
@@ -77,4 +77,5 @@ __all__ = [
     "on_epoch_start",
     "on_batch_end",
     "on_loader_start",
+    "AvgLoss",
 ]
