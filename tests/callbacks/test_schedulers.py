@@ -18,7 +18,7 @@ from torchflare.callbacks.lr_schedulers import (
     ReduceLROnPlateau,
     StepLR,
 )
-from torchflare.experiments.core import State
+from torchflare.core.state import State
 
 
 class Experiment:

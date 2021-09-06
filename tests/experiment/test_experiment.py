@@ -1,11 +1,12 @@
 # flake8: noqa
+import pytest
 import torch
 import torchflare.callbacks as cbs
-import torchflare.metrics as metrics
+from torchmetrics import Accuracy
 from torchflare.experiments.experiment import Experiment
 from torchflare.utils.seeder import seed_all
 from torchflare.experiments.config import ModelConfig
-from torchflare.experiments.core import State
+from torchflare.core.state import State
 import os
 import pandas as pd
 
@@ -55,8 +56,7 @@ def test_experiment(tmpdir):
         test_dl = torch.utils.data.DataLoader(test_dataset, batch_size=16)
 
         metric_list = [
-            metrics.Accuracy(num_classes=num_classes, multilabel=False),
-            metrics.F1Score(num_classes=num_classes, multilabel=False),
+            Accuracy(num_classes=num_classes),
         ]
 
         callbacks = [
@@ -97,8 +97,7 @@ def test_experiment(tmpdir):
         file_name = "test_classification.bin"
 
         metric_list = [
-            metrics.Accuracy(num_classes=num_classes, multilabel=False),
-            metrics.F1Score(num_classes=num_classes, multilabel=False),
+            Accuracy(num_classes=num_classes),
         ]
 
         callbacks = [
@@ -141,8 +140,8 @@ def test_experiment(tmpdir):
                 "model_A": {"num_features": num_features, "num_classes": num_classes},
                 "model_B": {"num_features": num_features, "num_classes": num_classes},
             },
-            optimizer={"optim_A": optimizer, "optim_B": optimizer},
-            optimizer_params={"optim_A": {"lr": optimizer_lr}, "optim_B": {"lr": optimizer_lr}},
+            optimizer={"model_A": optimizer, "model_B": optimizer},
+            optimizer_params={"model_A": {"lr": optimizer_lr}, "model_B": {"lr": optimizer_lr}},
             criterion=criterion,
         )
 
@@ -162,7 +161,50 @@ def test_experiment(tmpdir):
         assert len(exp.state.model.keys()) == 2
         assert len(exp.state.optimizer.keys()) == 2
 
+    def _test_dict_inputs_error(device):
+
+        seed_all(42)
+        exp_config = ModelConfig(
+            nn_module={"model_A": Model, "model_B": Model},
+            module_params={
+                "model_A": {"num_features": num_features, "num_classes": num_classes},
+                "model_B": {"num_features": num_features, "num_classes": num_classes},
+            },
+            optimizer=optimizer,
+            optimizer_params={"lr": optimizer_lr},
+            criterion=criterion,
+        )
+
+        exp = Experiment(
+            num_epochs=10,
+            fp16=fp16,
+            device=device,
+            seed=42,
+        )
+        with pytest.raises(ValueError):
+            exp.compile_experiment(
+                model_config=exp_config,
+                metrics=None,
+                callbacks=None,
+                main_metric="val_loss",
+            )
+
+    def _test_config_error():
+        with pytest.raises(ValueError):
+            exp_config = ModelConfig(
+                nn_module={"model_A": Model, "model_B": Model},
+                module_params={
+                    "model_A": {"num_features": num_features, "num_classes": num_classes},
+                    "model_B": {"num_features": num_features, "num_classes": num_classes},
+                },
+                optimizer={"optim_A": optimizer, "optim_B": optimizer},
+                optimizer_params={"optim_A": {"lr": optimizer_lr}, "optim_B": {"lr": optimizer_lr}},
+                criterion=criterion,
+            )
+
     device = "cuda" if torch.cuda.is_available() else "cpu"
     _test_fit(device=device)
     _test_fit_loader(device=device)
     _test_dict_inputs(device=device)
+    _test_config_error()
+    _test_dict_inputs_error(device=device)

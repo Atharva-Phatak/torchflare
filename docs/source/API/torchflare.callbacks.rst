@@ -1,10 +1,5 @@
 Callbacks
 ============================
-.. toctree::
-   :titlesonly:
-
-.. contents::
-   :local:
 
 
 Early Stopping
@@ -152,16 +147,39 @@ Slack Notifier Callback
    :members:
    :exclude-members: on_experiment_start, on_epoch_start, on_loader_start, on_batch_start, on_batch_end, on_loader_end, on_epoch_end, on_experiment_end
 
-Decorators
+Callback Decorators
 ------------------------------------
 
 The main callback decorators simply take function , order as inputs and bind it to a callback point, returning the result.
 
+on_experiment_start
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. autofunction:: torchflare.callbacks.on_experiment_start
+
+on_epoch_start
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. autofunction:: torchflare.callbacks.on_epoch_start
+
+on_loader_start
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. autofunction:: torchflare.callbacks.on_loader_start
+
+on_batch_start
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. autofunction:: torchflare.callbacks.on_batch_start
+
+on_experiment_end
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. autofunction:: torchflare.callbacks.on_experiment_end
+
+on_epoch_end
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. autofunction:: torchflare.callbacks.on_epoch_end
+
+on_loader_end
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. autofunction:: torchflare.callbacks.on_loader_end
+
+on_batch_end
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. autofunction:: torchflare.callbacks.on_batch_end

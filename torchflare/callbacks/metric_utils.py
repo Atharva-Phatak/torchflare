@@ -1,6 +1,8 @@
 """Implements container for loss and metric computation."""
 from typing import TYPE_CHECKING, Dict, List
 
+from torchmetrics import MetricCollection
+
 from torchflare.callbacks.callback import Callbacks
 from torchflare.callbacks.states import CallbackOrder
 
@@ -8,16 +10,8 @@ if TYPE_CHECKING:
     from torchflare.experiments.experiment import Experiment
 
 
-def wrap_metric_names(metric_list: List):
-    """Method to  get the metric names from metric list.
-
-    Args:
-        metric_list : A list of metrics.
-
-    Returns:
-        list of metric name.s
-    """
-    return [metric.handle() for metric in metric_list]
+def detach_tensor(x):
+    return x.detach().cpu()
 
 
 class MetricCallback(Callbacks):
@@ -30,33 +24,31 @@ class MetricCallback(Callbacks):
             metrics: The list of metrics
         """
         super(MetricCallback, self).__init__(CallbackOrder.METRICS)
-        if metrics is not None:
-            self.metrics = metrics
-            self.metric_names = wrap_metric_names(metric_list=metrics)
-        else:
-            self.metrics = None
-        self.metric_dict = None
+        metrics = MetricCollection(metrics)
+        self.metrics = {
+            "train": metrics.clone(prefix="train_"),
+            "eval": metrics.clone(prefix="val_"),
+        }
 
-    def reset(self):
+    def reset(self, stage) -> None:
         """Method to reset the state of metrics and loss meter."""
-        _ = map(lambda x: x.reset(), self.metrics)
+        self.metrics[stage].reset()
 
-    def on_loader_end(self, experiment: "Experiment") -> Dict:
+    def on_loader_end(self, experiment: "Experiment") -> None:
         """Method to compute the metrics once accumulation of values is done."""
-        prefix = experiment.get_prefix()
-        self.compute(prefix)
-        self.reset()
-        experiment.monitors[experiment.which_loader].update(self.metric_dict)
+        metric_dict = self.compute(stage=experiment.which_loader)
+        self.reset(stage=experiment.which_loader)
+        experiment.monitors[experiment.which_loader].update(metric_dict)
 
-    def on_batch_end(self, experiment: "Experiment"):
+    def on_batch_end(self, experiment: "Experiment") -> None:
         """Accumulate values."""
-        for metric in self.metrics:
-            metric.accumulate(experiment.preds, experiment.batch[experiment.target_key])
+        preds = detach_tensor(x=experiment.batch_outputs[experiment.prediction_key])
+        targets = detach_tensor(x=experiment.batch[experiment.target_key])
+        self.metrics[experiment.which_loader].update(preds, targets)
 
-    def compute(self, prefix):
+    def compute(self, stage) -> Dict:
         """Compute values."""
-        metric_vals = list(map(lambda x: x.value.item(), self.metrics))
-        self.metric_dict = {prefix + key: value for key, value in zip(self.metric_names, metric_vals)}
+        return {k.lower(): v.item() for k, v in self.metrics[stage].compute().items()}
 
 
 __all__ = ["MetricCallback"]
