@@ -84,7 +84,11 @@ class ProgressBar(Callbacks):
         self._seen_so_far = current_step
         now = time.time()
         info = f"- {now - self._start:.0f}s"
-        if now - self._last_update < self.interval and self.num_steps is not None and current_step < self.num_steps:
+        if (
+            now - self._last_update < self.interval
+            and self.num_steps is not None
+            and current_step < self.num_steps
+        ):
             return
 
         prev_total_width = self._total_width
@@ -146,7 +150,9 @@ class ProgressBar(Callbacks):
 
     def on_loader_end(self, experiment: "Experiment"):
         """On end of dataloader."""
-        self._update(current_step=self._seen_so_far + 1, values=experiment.monitors[experiment.which_loader])
+        self._update(
+            current_step=self._seen_so_far + 1, values=experiment.monitors[experiment.which_loader]
+        )
         self.reset()
 
     # noinspection PyTypeChecker

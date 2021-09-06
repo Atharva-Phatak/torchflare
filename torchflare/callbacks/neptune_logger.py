@@ -66,7 +66,10 @@ class NeptuneLogger(Callbacks, ABC):
     def on_experiment_start(self, experiment: "Experiment"):
         """Start of experiment."""
         self.experiment = neptune.init(
-            project=self.project_dir, api_token=self.api_token, tags=self.tags, name=self.experiment_name
+            project=self.project_dir,
+            api_token=self.api_token,
+            tags=self.tags,
+            name=self.experiment_name,
         )
         self.experiment["params"] = self.params
 

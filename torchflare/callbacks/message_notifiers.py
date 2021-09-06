@@ -49,7 +49,9 @@ class SlackNotifierCallback(Callbacks, ABC):
         """This function will dispatch messages to your Slack channel."""
         data = {"text": prepare_data(experiment.exp_logs)}
 
-        response = requests.post(self.webhook_url, json.dumps(data), headers={"Content-Type": "application/json"})
+        response = requests.post(
+            self.webhook_url, json.dumps(data), headers={"Content-Type": "application/json"}
+        )
 
         if response.status_code != 200:
             raise ValueError(
@@ -89,7 +91,9 @@ class DiscordNotifierCallback(Callbacks, ABC):
             "username": self.exp_name,
             "embeds": [{"description": prepare_data(experiment.exp_logs)}],
         }
-        response = requests.post(self.webhook_url, json.dumps(data), headers={"Content-Type": "application/json"})
+        response = requests.post(
+            self.webhook_url, json.dumps(data), headers={"Content-Type": "application/json"}
+        )
         try:
             response.raise_for_status()
         except requests.exceptions.HTTPError as err:

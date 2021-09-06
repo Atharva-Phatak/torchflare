@@ -55,7 +55,9 @@ class EarlyStopping(Callbacks, ABC):
         self.mode = mode
         self.min_delta = min_delta
         self.stopping_counter = 0
-        self.improvement, self.best_score = init_improvement(mode=self.mode, min_delta=self.min_delta)
+        self.improvement, self.best_score = init_improvement(
+            mode=self.mode, min_delta=self.min_delta
+        )
 
         self.stopping_counter = 0
 

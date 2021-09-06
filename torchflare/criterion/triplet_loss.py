@@ -10,7 +10,9 @@ def softmax_weights(dist, mask):
 
     max_v = torch.max(dist * mask, dim=1, keepdim=True)[0]
     difference = dist - max_v
-    z = torch.sum(torch.exp(difference) * mask, dim=1, keepdim=True) + 1e-6  # avoid division by zero
+    z = (
+        torch.sum(torch.exp(difference) * mask, dim=1, keepdim=True) + 1e-6
+    )  # avoid division by zero
     weights = torch.exp(difference) * mask / z
     return weights
 
@@ -107,7 +109,9 @@ class TripletLoss(nn.Module):
             The computed Triplet Loss.
         """
         distance_matrix = (
-            cosine_dist(embedding, embedding) if self.normalize_features else euclidean_dist(embedding, embedding)
+            cosine_dist(embedding, embedding)
+            if self.normalize_features
+            else euclidean_dist(embedding, embedding)
         )
 
         n = distance_matrix.size(0)

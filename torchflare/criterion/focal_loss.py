@@ -39,7 +39,13 @@ class BCEFocalLoss(nn.Module):
         logp = self.bce(logits, targets)
         p = torch.exp(-logp)
         loss = (1 - p) ** self.gamma * logp
-        return loss.mean() if self.reduction == "mean" else loss.sum() if self.reduction == "sum" else loss
+        return (
+            loss.mean()
+            if self.reduction == "mean"
+            else loss.sum()
+            if self.reduction == "sum"
+            else loss
+        )
 
 
 class FocalLoss(nn.Module):
@@ -75,7 +81,13 @@ class FocalLoss(nn.Module):
         logp = self.ce(logits, targets)
         p = torch.exp(-logp)
         loss = (1 - p) ** self.gamma * logp
-        return loss.mean() if self.reduction == "mean" else loss.sum() if self.reduction == "sum" else loss
+        return (
+            loss.mean()
+            if self.reduction == "mean"
+            else loss.sum()
+            if self.reduction == "sum"
+            else loss
+        )
 
 
 class FocalCosineLoss(nn.Module):

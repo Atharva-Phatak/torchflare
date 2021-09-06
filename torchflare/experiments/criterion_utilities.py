@@ -23,7 +23,9 @@ def get_criterion(criterion):
             crit = getattr(F, dir(F)[idx])
             return crit
         except ValueError:
-            raise ValueError("Invalid loss string input - must match pytorch function in torch.nn.functional")
+            raise ValueError(
+                "Invalid loss string input - must match pytorch function in torch.nn.functional"
+            )
 
     elif callable(criterion):
 

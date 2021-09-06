@@ -36,7 +36,9 @@ def bind_to_event(event):
         setattr(
             callback,
             event.__name__,
-            types.MethodType(lambda self, experiment: self.on_event(experiment=experiment), callback),
+            types.MethodType(
+                lambda self, experiment: self.on_event(experiment=experiment), callback
+            ),
         )
         return callback
 
