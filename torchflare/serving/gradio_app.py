@@ -31,10 +31,7 @@ class GradioApp:
         self.gradio_input_type = self._create_gradio_inputs()
 
     def _create_gradio_inputs(self):
-        if (
-            self.api_type == API_TYPES.image_classification
-            or self.api_type == API_TYPES.object_detection
-        ):
+        if self.api_type in [API_TYPES.image_classification, API_TYPES.object_detection]:
             return gradio.inputs.Image(label="Input")
         elif self.api_type == API_TYPES.text_classification:
             return gradio.inputs.Textbox(lines=4, label="Input")

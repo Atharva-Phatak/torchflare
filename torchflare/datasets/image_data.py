@@ -36,6 +36,7 @@ class ImageDataset(ItemReader):
             item = transforms(item)
         return to_tensor(item)
 
+    # skipcq : PYL-W0221
     @classmethod
     def from_df(
         cls,
@@ -82,6 +83,7 @@ class ImageDataset(ItemReader):
             **kwargs
         )
 
+    # skipcq : PYL-W0221
     @classmethod
     def from_folders(
         cls,
@@ -129,6 +131,7 @@ class ImageDataset(ItemReader):
             items=files, path=path, transforms=transforms, convert_mode=convert_mode, **kwargs
         )
 
+    # skipcq : PYL-W0221
     @classmethod
     def from_csv(
         cls,

@@ -37,6 +37,7 @@ class TextDataset(ItemReader):
             return transforms(item)
         return to_tensor(item)
 
+    # skipcq : PYL-W0221
     @classmethod
     def from_df(
         cls, df: DataFrame, input_columns: List[str], tokenizer=None, max_len=None, **kwargs
@@ -71,6 +72,7 @@ class TextDataset(ItemReader):
             **kwargs
         )
 
+    # skipcq : PYL-W0221
     @classmethod
     def from_csv(
         cls,

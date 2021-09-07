@@ -23,6 +23,7 @@ class TabularDataset(ItemReader):
             return transforms(item)
         return to_tensor(item)
 
+    # skipcq : PYL-W0221
     @classmethod
     def from_df(
         cls,
@@ -48,6 +49,7 @@ class TabularDataset(ItemReader):
         items = get_iloc_cols(df, input_columns)
         return cls(items=items, df=df, transforms=transforms, path=None, **kwargs)
 
+    # skipcq : PYL-W0221
     @classmethod
     def from_csv(
         cls,

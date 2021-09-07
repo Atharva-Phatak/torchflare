@@ -100,14 +100,13 @@ class SegmentationDataset(ItemReader):
 
     def apply_target_transforms(self, transforms, item):
         """Method to apply transforms to inputs."""
-        # skipcq: PYL-W0107
-        pass
+        raise NotImplementedError
 
     def apply_input_transforms(self, transforms, item):
         """Method to apply transforms to targets."""
-        # skipcq: PYL-W0107
-        pass
+        raise NotImplementedError
 
+    # skipcq : PYL-W0221
     @classmethod
     def from_df(
         cls,
@@ -159,6 +158,7 @@ class SegmentationDataset(ItemReader):
             **kwargs
         )
 
+    # skipcq : PYL-W0221
     @classmethod
     def from_folders(
         cls,

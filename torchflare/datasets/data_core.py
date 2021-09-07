@@ -90,8 +90,7 @@ class ItemReader:
             transforms : The transforms to be applied to input.
             item : The input.
         """
-        # skipcq: PYL-W0107
-        pass
+        raise NotImplementedError
 
     def apply_target_transforms(self, transforms, item):
         """Method to apply transformations to inputs.
@@ -100,8 +99,7 @@ class ItemReader:
             transforms : The transforms to be applied to targets.
             item : The input.
         """
-        # skipcq: PYL-W0107
-        pass
+        raise NotImplementedError
 
     def get_item(self, idx):
         """Get item for particular index."""
@@ -124,7 +122,7 @@ class ItemReader:
             input_columns : The columns which have input data.
             transforms : The transforms to be applied on the input.
         """
-        pass
+        raise NotImplementedError
 
     @classmethod
     def from_folders(cls, path, transforms=None, **kwargs):
@@ -134,7 +132,7 @@ class ItemReader:
             path : The path to folder.
             transforms : The transforms to be applied to the input.
         """
-        pass
+        raise NotImplementedError
 
     @classmethod
     def from_csv(cls, csv_path, input_columns, transforms=None, path=None, **kwargs):
@@ -146,7 +144,7 @@ class ItemReader:
             transforms: The transforms to be applied to inputs.
             path: The path to images(Used only in image classification).
         """
-        pass
+        raise NotImplementedError
 
     def _create_dataset(self, labels, target_transforms=None, **kwargs):
         return self.base_dataset(
