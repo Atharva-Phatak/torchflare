@@ -225,7 +225,7 @@ class SegmentationDataset(ItemReader):
             image_col=self.input_cols,
             mask_cols=mask_columns,
         )
-        return self.create_mask_dataset(
+        return self._create_mask_dataset(
             labels=masks,
             shape=shape,
             num_classes=num_classes,

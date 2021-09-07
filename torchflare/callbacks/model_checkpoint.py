@@ -47,7 +47,8 @@ class ModelCheckpoint(Callbacks, ABC):
             1) 'model_state_dict' : The state dictionary of model
             2) 'optimizer_state_dict'  : The state dictionary of optimizer
 
-            Model checkpoint will be saved based on the values of metrics/loss obtained from validation set.
+            Model checkpoint will be saved based \
+            on the values of metrics/loss obtained from validation set.
 
     Raises:
         ValueError if monitor does not start with prefix ``val_`` or ``train_``.
