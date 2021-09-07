@@ -17,6 +17,7 @@ def softmax_weights(dist, mask):
     return weights
 
 
+# skipcq: PYL-W0107
 """Source :
 https://github.com/earhian/Humpback-Whale-Identification-1st-/"""
 

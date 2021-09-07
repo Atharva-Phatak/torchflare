@@ -90,6 +90,7 @@ class ItemReader:
             transforms : The transforms to be applied to input.
             item : The input.
         """
+        # skipcq: PYL-W0107
         pass
 
     def apply_target_transforms(self, transforms, item):
@@ -99,6 +100,7 @@ class ItemReader:
             transforms : The transforms to be applied to targets.
             item : The input.
         """
+        # skipcq: PYL-W0107
         pass
 
     def get_item(self, idx):
