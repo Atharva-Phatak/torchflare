@@ -30,50 +30,35 @@ class Callbacks:
         """
         self.order = order
 
-    # skipcq: PTC-W0049
     def on_batch_start(self, experiment: "Experiment"):
         """Start of batch."""
-        # skipcq: PYL-W0107
-        pass
+        raise NotImplementedError
 
-    # skipcq: PTC-W0049
     def on_batch_end(self, experiment: "Experiment"):
         """End of Batch."""
-        # skipcq: PYL-W0107
-        pass
+        raise NotImplementedError
 
     # skipcq: PTC-W0049
     def on_loader_start(self, experiment: "Experiment"):
         """Start of loader."""
-        # skipcq: PYL-W0107
-        pass
+        raise NotImplementedError
 
-    # skipcq: PTC-W0049
     def on_loader_end(self, experiment: "Experiment"):
         """End of loader."""
-        # skipcq: PYL-W0107
-        pass
+        raise NotImplementedError
 
-    # skipcq: PTC-W0049
     def on_epoch_start(self, experiment: "Experiment"):
         """Start of Epoch."""
-        # skipcq: PYL-W0107
-        pass
+        raise NotImplementedError
 
-    # skipcq: PTC-W0049
     def on_epoch_end(self, experiment: "Experiment"):
         """End of epoch."""
-        # skipcq: PYL-W0107
-        pass
+        raise NotImplementedError
 
-    # skipcq: PTC-W0049
     def on_experiment_start(self, experiment: "Experiment"):
         """Start of experiment."""
-        # skipcq: PYL-W0107
-        pass
+        raise NotImplementedError
 
-    # skipcq: PTC-W0049
     def on_experiment_end(self, experiment: "Experiment"):
         """End of experiment."""
-        # skipcq: PYL-W0107
-        pass
+        raise NotImplementedError
