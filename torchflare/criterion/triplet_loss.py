@@ -17,7 +17,10 @@ def softmax_weights(dist, mask):
     return weights
 
 
-# Adapted From : https://github.com/earhian/Humpback-Whale-Identification-1st-/blob/master/models/triplet_loss.py
+"""Source :
+https://github.com/earhian/Humpback-Whale-Identification-1st-/"""
+
+
 def hard_example_mining(distance_matrix, pos_idxs, neg_idxs):
     """For each anchor, find the hardest positive and negative sample.
 

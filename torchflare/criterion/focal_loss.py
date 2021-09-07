@@ -29,7 +29,8 @@ class BCEFocalLoss(nn.Module):
         """Forward method.
 
         Args:
-            logits: The raw logits from the network of shape (N,k) where C = number of classes , k = extra dims
+            logits: The raw logits from the network of shape (N,k) \
+                    where C = number of classes , k = extra dims
             targets: The targets
 
         Returns:
@@ -72,7 +73,8 @@ class FocalLoss(nn.Module):
         """Forward method.
 
         Args:
-            logits: The raw logits from the network of shape (N,C,k) where C = number of classes and (k) = extra dims
+            logits: The raw logits from the network of shape (N,C,k)\
+                    where C = number of classes and (k) = extra dims
             targets: The targets of shape (N , k).
 
         Returns:

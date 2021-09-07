@@ -10,7 +10,6 @@ def normalize(x, axis=-1):
     return num / denom
 
 
-# Source : https://github.com/earhian/Humpback-Whale-Identification-1st-/blob/master/models/triplet_loss.py
 def euclidean_dist(x, y):
     """Computes Euclidean distance."""
     m, n = x.size(0), y.size(0)

@@ -32,7 +32,8 @@ class LiArcFace(nn.Module):
         """Forward Pass.
 
         Args:
-            features: The input features of shape (BS x F) where BS is batch size and F is input feature dimension.
+            features: The input features of shape (BS x F) \
+                    where BS is batch size and F is input feature dimension.
             targets: The targets with shape BS , where BS is batch size
 
         Returns:

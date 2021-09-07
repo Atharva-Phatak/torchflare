@@ -12,7 +12,8 @@ def get_criterion(criterion):
         The Required criterion.
 
     Raises:
-        ValueError: If input is string and criterion is not found in nn.functional value error is raised.
+        ValueError: If input is string and criterion \
+                    is not found in nn.functional value error is raised.
     """
     dir_f = dir(F)
     loss_fns = [d.lower() for d in dir_f]
