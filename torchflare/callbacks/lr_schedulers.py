@@ -177,8 +177,10 @@ class ReduceLROnPlateau(LRSchedulerCallback, ABC):
 
 
     Args:
-            mode: One of {"min", "max"}. In min mode, training will stop when the quantity monitored
-                has stopped decreasing.In "max" mode it will stop when the quantity monitored has stopped increasing.
+            mode: One of {"min", "max"}. In min mode, training will \
+                stop when the quantity monitored \
+                has stopped decreasing.In "max" mode it \
+                will stop when the quantity monitored has stopped increasing.
             factor (float, optional): The multiplicative factor. Defaults to 0.1.
             patience (int, optional): Number of training epochs without the
                 metric improvement to update the learning rate. Defaults to 10.
@@ -296,7 +298,9 @@ class CyclicLR(LRSchedulerCallback, ABC):
 
 
 class CosineAnnealingWarmRestarts(LRSchedulerCallback, ABC):
-    """Set the learning rate of each parameter group using a cosine annealing schedule with a warm restart.
+    """Set the learning rate of each \
+    parameter group using a cosine annealing \
+    schedule with a warm restart.
 
     Args:
            T_0 (int): Number of epochs or iterations for the first restart.
@@ -350,10 +354,13 @@ class MultiplicativeLR(LRSchedulerCallback, ABC):
 
 
 class OneCycleLR(LRSchedulerCallback, ABC):
-    """Sets the learning rate of each parameter group according to the 1cycle learning rate policy.
+    """Sets the learning rate of each parameter \
+    group according to the 1cycle learning rate policy.
     The 1cycle policy anneals
-    the learning rate from an initial learning rate to some maximum learning rate
-    and then from that maximum learning rate to some minimum learning rate much lower than the initial learning rate.
+    the learning rate from an initial learning rate \
+    to some maximum learning rate \
+    and then from that maximum learning rate to some minimum learning rate\
+     much lower than the initial learning rate.
 
     Args:
             max_lr (float or list of float): Upper learning rate boundaries in the

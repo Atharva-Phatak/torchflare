@@ -18,8 +18,10 @@ class EarlyStopping(Callbacks, ABC):
             monitor: The quantity to be monitored. (Default : val_loss)
                     If you want to monitor other metric just pass in the name of the metric.
             patience: Number of epochs with no improvement after which training will be stopped.
-            mode: One of {"min", "max"}. In min mode, training will stop when the quantity monitored
-                has stopped decreasing.In "max" mode it will stop when the quantity monitored has stopped increasing.
+            mode: One of {"min", "max"}. In min mode, training will stop when
+                the quantity monitored has stopped decreasing.
+                In "max" mode it will stop when the quantity monitored has
+                stopped increasing.
             min_delta: Minimum change in the monitored quantity to qualify as an improvement.
 
     Note:

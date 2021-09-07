@@ -25,7 +25,8 @@ class Callbacks:
         """Constructor for class callbacks.
 
         Args:
-            order: The priority value for callbacks so that they can be sorted according to the value.
+            order: The priority value for callbacks so that \
+            they can be sorted according to the value.
         """
         self.order = order
 

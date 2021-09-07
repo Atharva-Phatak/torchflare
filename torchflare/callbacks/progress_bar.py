@@ -12,7 +12,8 @@ from torchflare.callbacks.states import CallbackOrder
 if TYPE_CHECKING:
     from torchflare.experiments.experiment import Experiment
 
-# Adapted From: https://github.com/tensorflow/tensorflow/blob/v2.4.1/tensorflow/python/keras/utils/generic_utils.py
+"""Source: \
+https://github.com/keras-team/keras/blob/v2.6.0/keras/utils/generic_utils.py"""
 
 
 class ProgressBar(Callbacks):
