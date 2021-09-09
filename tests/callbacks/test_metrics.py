@@ -18,7 +18,6 @@ class Experiment:
     def train_fn(self):
 
         self.which_loader = "train"
-        self.metric_callback.on_experiment_start(self)
         for _ in range(10):
             self.metric_callback.on_batch_end(self)
 
@@ -30,7 +29,6 @@ class Experiment:
     def val_fn(self):
 
         self.which_loader = "eval"
-        self.metric_callback.on_experiment_start(self)
         loss = 20
         for _ in range(10):
             loss = loss * 0.1

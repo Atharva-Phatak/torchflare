@@ -82,8 +82,7 @@ def to_tensor(x, dtype=None):
         op = x
     if dtype is not None:
         return op.type(dtype)
-    else:
-        return op
+    return op
 
 
 def join_paths(path, files, extension):

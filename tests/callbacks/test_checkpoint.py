@@ -40,7 +40,6 @@ class Experiment:
         train_acc = 10
         val_acc = 10
 
-        self.cb.on_experiment_start(self)
 
         for epoch in range(10):
 

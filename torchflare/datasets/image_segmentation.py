@@ -83,10 +83,8 @@ class MaskDataset(BaseDataset):
                 image=x, transforms=self.item_reader.transforms, mask=mask
             )
             return images, mask
-
-        else:
-            images = apply_image_augmentations(x, transforms=self.item_reader.transforms)
-            return images
+        images = apply_image_augmentations(x, transforms=self.item_reader.transforms)
+        return images
 
 
 class SegmentationDataset(ItemReader):

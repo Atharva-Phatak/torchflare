@@ -90,7 +90,7 @@ class BaseExperiment:
         for callback in self.state.callbacks:
             try:
                 _ = getattr(callback, event)(self)
-            except AttributeError:
+            except (AttributeError, NotImplementedError):
                 pass
 
     def _process_batch(self, batch):

@@ -25,7 +25,11 @@ def test_avg_meter():
     assert meter.sum == 0
 
 
-def test_imports():
+@pytest.mark.parametrize("modules" , ["torch" , "lightly"])
+def test_imports(modules):
 
-    available = module_available("torch")
-    assert available is True
+    available = module_available(modules)
+    if modules == "torch":
+        assert available is True
+    else:
+        assert available is False
