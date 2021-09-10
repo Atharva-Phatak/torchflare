@@ -21,7 +21,7 @@ Segmentation Dataset
    :members: from_df , from_folders, masks_from_rle, masks_from_folders, add_test
    :exclude-members: __init__
 
-Tabular Dataset
+Text Dataset
 ------------------------------------------------
 
 .. autoclass:: torchflare.datasets.TextDataset
