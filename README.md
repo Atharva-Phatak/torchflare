@@ -19,7 +19,7 @@
 
 # ***TorchFlare***
 
-***TorchFlare*** is a simple, beginner-friendly and an easy-to-use PyTorch Framework to train your models without much effort.
+***TorchFlare*** is a simple, beginner-friendly and an easy-to-use PyTorch Framework to train your models with ease.
 It provides an almost Keras-like experience for training
 your models with all the callbacks, metrics, etc
 
@@ -30,8 +30,9 @@ your models with all the callbacks, metrics, etc
 * _Off-the-shelf Pytorch style Datasets/Dataloaders for standard tasks such as **Image classification, Image segmentation,
   Text Classification**, etc_
 * _**Callbacks** for model checkpoints, early stopping, and much more!_
-* _**Metrics** and much more._
+* _**TorchFlare** uses powerful [torchmetrics](https://github.com/PyTorchLightning/metrics) in the backend for metric computations!_
 * _**Reduction** of the boiler plate code required for training your models._
+* _Create **interactive UI** for model prototyping and POC_
 ***
 
 Currently, **TorchFlare** supports ***CPU*** and ***GPU*** training. DDP and TPU support will be coming soon!
@@ -62,10 +63,10 @@ Here is an easy-to-understand example to show how Experiment class works.
 
 ``` python
 import torch
+import torchmetrics
 import torch.nn as nn
 from torchflare.experiments import Experiment, ModelConfig
 import torchflare.callbacks as cbs
-import torchflare.metrics as metrics
 
 # Some dummy dataloaders
 train_dl = SomeTrainingDataloader()
@@ -97,8 +98,7 @@ class Net(nn.Module):
 Define callbacks and metrics
 ``` python
 metric_list = [
-    metrics.Accuracy(num_classes=num_classes, multilabel=False),
-    metrics.F1Score(num_classes=num_classes, multilabel=False),
+    torchmetrics.Accuracy(num_classes=num_classes)
 ]
 
 callbacks = [
@@ -106,6 +106,17 @@ callbacks = [
     cbs.ModelCheckpoint(monitor="val_accuracy"),
     cbs.ReduceLROnPlateau(mode="max", patience=2),
 ]
+```
+Define Model Configuration
+``` python
+#Defining Model Config for experiment.
+config = ModelConfig(
+    nn_module=Net,
+    module_params={"n_classes": 10, "p_dropout": 0.3},
+    optimizer="Adam",
+    optimizer_params={"lr": 3e-4},
+    criterion="cross_entropy",
+)
 ```
 
 Define your experiment
@@ -118,14 +129,7 @@ exp = Experiment(
     seed=42,
 )
 
-# Compile your experiment with model, optimizer, schedulers, etc
-config = ModelConfig(
-    nn_module=Net,
-    module_params={"n_classes": 10, "p_dropout": 0.3},
-    optimizer="Adam",
-    optimizer_params={"lr": 3e-4},
-    criterion="cross_entropy",
-)
+
 
 exp.compile_experiment(
     model_config=config,
@@ -152,14 +156,18 @@ If you want to access your experiments history or get as a dataframe. You can do
 history = exp.history  # This will return a dict
 exp.get_logs()  # This will return a dataframe constructed from model-history.
 ```
-
+***
+### ***Contributions***
+To contribute please refer to [Contributing Guide](https://github.com/Atharva-Phatak/torchflare/blob/main/.github/CONTRIBUTING.MD)
 ***
 ### ***Current Contributors***
 
 <a href="https://github.com/Atharva-Phatak/torchflare/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Atharva-Phatak/torchflare" />
 </a>
+
 ***
+
 ### ***Author***
 
 * **Atharva Phatak** - [Atharva-Phatak](https://github.com/Atharva-Phatak)
