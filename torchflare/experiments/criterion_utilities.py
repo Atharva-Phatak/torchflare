@@ -12,7 +12,8 @@ def get_criterion(criterion):
         The Required criterion.
 
     Raises:
-        ValueError: If input is string and criterion is not found in nn.functional value error is raised.
+        ValueError: If input is string and criterion \
+                    is not found in nn.functional value error is raised.
     """
     dir_f = dir(F)
     loss_fns = [d.lower() for d in dir_f]
@@ -23,7 +24,9 @@ def get_criterion(criterion):
             crit = getattr(F, dir(F)[idx])
             return crit
         except ValueError:
-            raise ValueError("Invalid loss string input - must match pytorch function in torch.nn.functional")
+            raise ValueError(
+                "Invalid loss string input - must match pytorch function in torch.nn.functional"
+            )
 
     elif callable(criterion):
 

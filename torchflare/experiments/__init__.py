@@ -1,7 +1,7 @@
 """Imports for experiment."""
+from torchflare.experiments.backends import AMPBackend, BaseBackend
 from torchflare.experiments.base_backend import BaseExperiment
 from torchflare.experiments.config import ModelConfig
-from torchflare.experiments.core import State
 from torchflare.experiments.criterion_utilities import get_criterion
 from torchflare.experiments.experiment import Experiment
 from torchflare.experiments.optim_utilities import get_optimizer
@@ -15,5 +15,6 @@ __all__ = [
     "get_criterion",
     "get_optimizer",
     "ModelConfig",
-    "State",
+    "BaseBackend",
+    "AMPBackend",
 ]

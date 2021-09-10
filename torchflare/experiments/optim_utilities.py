@@ -13,7 +13,9 @@ def get_optimizer(optimizer):
             str_idx = opts.index(optimizer.lower())
             return getattr(torch.optim, dir_optim[str_idx])
         except ValueError:
-            raise ValueError("Invalid optimizer string input - must match pytorch optimizer in torch.optim")
+            raise ValueError(
+                "Invalid optimizer string input - must match pytorch optimizer in torch.optim"
+            )
 
     elif hasattr(optimizer, "step") and hasattr(optimizer, "zero_grad"):
 

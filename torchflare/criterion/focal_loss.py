@@ -29,7 +29,8 @@ class BCEFocalLoss(nn.Module):
         """Forward method.
 
         Args:
-            logits: The raw logits from the network of shape (N,k) where C = number of classes , k = extra dims
+            logits: The raw logits from the network of shape (N,k) \
+                    where C = number of classes , k = extra dims
             targets: The targets
 
         Returns:
@@ -39,7 +40,13 @@ class BCEFocalLoss(nn.Module):
         logp = self.bce(logits, targets)
         p = torch.exp(-logp)
         loss = (1 - p) ** self.gamma * logp
-        return loss.mean() if self.reduction == "mean" else loss.sum() if self.reduction == "sum" else loss
+        return (
+            loss.mean()
+            if self.reduction == "mean"
+            else loss.sum()
+            if self.reduction == "sum"
+            else loss
+        )
 
 
 class FocalLoss(nn.Module):
@@ -66,7 +73,8 @@ class FocalLoss(nn.Module):
         """Forward method.
 
         Args:
-            logits: The raw logits from the network of shape (N,C,k) where C = number of classes and (k) = extra dims
+            logits: The raw logits from the network of shape (N,C,k)\
+                    where C = number of classes and (k) = extra dims
             targets: The targets of shape (N , k).
 
         Returns:
@@ -75,7 +83,13 @@ class FocalLoss(nn.Module):
         logp = self.ce(logits, targets)
         p = torch.exp(-logp)
         loss = (1 - p) ** self.gamma * logp
-        return loss.mean() if self.reduction == "mean" else loss.sum() if self.reduction == "sum" else loss
+        return (
+            loss.mean()
+            if self.reduction == "mean"
+            else loss.sum()
+            if self.reduction == "sum"
+            else loss
+        )
 
 
 class FocalCosineLoss(nn.Module):

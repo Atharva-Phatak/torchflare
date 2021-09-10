@@ -1,11 +1,5 @@
 Criterion
 ============================
-.. toctree::
-   :titlesonly:
-
-.. contents::
-   :local:
-
 
 BCEWithLogitsFlat
 ------------------------------------------
@@ -45,11 +39,6 @@ Focal Loss
 .. autoclass:: torchflare.criterion.FocalLoss
    :members:
 
-IOULoss
--------------------------------------
-
-.. autoclass:: torchflare.criterion.IOULoss
-   :members:
 
 Triplet Loss
 -----------------------------------------

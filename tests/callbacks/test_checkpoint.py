@@ -6,7 +6,7 @@ import torch
 
 from torchflare.callbacks.load_checkpoint import LoadCheckpoint
 from torchflare.callbacks.model_checkpoint import ModelCheckpoint
-from torchflare.experiments.core import State
+from torchflare.core.state import State
 
 
 class Experiment:
@@ -40,7 +40,6 @@ class Experiment:
         train_acc = 10
         val_acc = 10
 
-        self.cb.on_experiment_start(self)
 
         for epoch in range(10):
 

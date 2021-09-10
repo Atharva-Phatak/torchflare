@@ -36,7 +36,9 @@ def bind_to_event(event):
         setattr(
             callback,
             event.__name__,
-            types.MethodType(lambda self, experiment: self.on_event(experiment=experiment), callback),
+            types.MethodType(
+                lambda self, experiment: self.on_event(experiment=experiment), callback
+            ),
         )
         return callback
 
@@ -44,7 +46,8 @@ def bind_to_event(event):
 
 
 def on_experiment_start(order: CallbackOrder):
-    """The method ``on_experiment_start`` is used to initialise a class with method ``Callbacks.on_experiment_start``.
+    """The method ``on_experiment_start`` is used to initialise \
+    a class with method ``Callbacks.on_experiment_start``.
 
     Args:
         order: The callback order.
@@ -74,7 +77,8 @@ def on_experiment_start(order: CallbackOrder):
 
 
 def on_epoch_start(order: CallbackOrder):
-    """The method ``on_epoch_start`` is used to initialise a class with method ``Callbacks.on_epoch_start``.
+    """The method ``on_epoch_start`` is used to initialise \
+    a class with method ``Callbacks.on_epoch_start``.
 
     Args:
         order: The callback order.
@@ -105,7 +109,8 @@ def on_epoch_start(order: CallbackOrder):
 
 
 def on_loader_start(order: CallbackOrder):
-    """The method ``on_loader_start`` is used to initialise a class with method ``Callbacks.on_loader_start``.
+    """The method ``on_loader_start`` is used to \
+    initialise a class with method ``Callbacks.on_loader_start``.
 
     Args:
         order: The callback order.
@@ -136,7 +141,8 @@ def on_loader_start(order: CallbackOrder):
 
 
 def on_batch_start(order: CallbackOrder):
-    """The method ``on_batch_start`` is used to initialise a class with method ``Callbacks.on_batch_start``.
+    """The method ``on_batch_start`` is used to \
+    initialise a class with method ``Callbacks.on_batch_start``.
 
     Args:
         order: The callback order.
@@ -167,7 +173,8 @@ def on_batch_start(order: CallbackOrder):
 
 
 def on_experiment_end(order: CallbackOrder):
-    """The method ``on_experiment_end`` is used to initialise a class with method ``Callbacks.on_experiment_end``.
+    """The method ``on_experiment_end`` is used to initialise \
+    a class with method ``Callbacks.on_experiment_end``.
 
     Args:
         order: The callback order.
@@ -198,7 +205,8 @@ def on_experiment_end(order: CallbackOrder):
 
 
 def on_epoch_end(order: CallbackOrder):
-    """The method ``on_epoch_end`` is used to initialise a class with method ``Callbacks.on_epoch_end``.
+    """The method ``on_epoch_end`` is used to initialise \
+    a class with method ``Callbacks.on_epoch_end``.
 
     Args:
         order: The callback order.
@@ -229,7 +237,8 @@ def on_epoch_end(order: CallbackOrder):
 
 
 def on_loader_end(order: CallbackOrder):
-    """The method ``on_loader_end`` is used to initialise a class with method ``Callbacks.on_loader_end``.
+    """The method ``on_loader_end`` is used to initialise \
+    a class with method ``Callbacks.on_loader_end``.
 
     Args:
 
@@ -261,7 +270,8 @@ def on_loader_end(order: CallbackOrder):
 
 
 def on_batch_end(order: CallbackOrder):
-    """The method ``on_batch_end`` is used to initialise a class with method ``Callbacks.on_batch_end``.
+    """The method ``on_batch_end`` is used to initialise \
+    a class with method ``Callbacks.on_batch_end``.
 
     Args:
 

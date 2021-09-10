@@ -25,12 +25,14 @@ class History(Callbacks, ABC):
     def _update_history(self, logs):
         for key in logs:
             if key not in self.history:
-                self.history[key] = []
-                self.history[key].append(logs.get(key))
+                self.history[key] = [logs.get(key)]
             else:
                 self.history[key].append(logs.get(key))
 
     def on_epoch_end(self, experiment: "Experiment"):
         """Method to update history object at the end of every epoch."""
         self._update_history(logs=experiment.exp_logs)
+
+    def on_experiment_end(self, experiment: "Experiment"):
+        """Method assigns accumulated history to history attribute."""
         experiment.history = self.history

@@ -13,9 +13,17 @@
 import os
 import sys
 
-import sphinx_rtd_theme
+autodoc_mock_imports = [
+    "torch",
+    "numpy",
+    "pandas",
+    "sklearn",
+    "torchmetrics",
+    "torchvision",
+    "einops",
+    "albumentations",
+]
 
-autodoc_mock_imports = ["torch", "numpy", "matplotlib", "pandas", "sklearn", "einops", "albumentations", "torchvision"]
 sys.path.insert(0, os.path.abspath("../.."))
 
 
@@ -36,9 +44,9 @@ with open("../../version.txt", "r") as f:
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx.ext.napoleon",
     "sphinx.ext.autodoc",
     "sphinx.ext.viewcode",
-    "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
     "sphinx.ext.githubpages",
     "sphinx_rtd_theme",
@@ -59,10 +67,29 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_rtd_theme"
-html_theme_options = {"collapse_navigation": False}
-html_context = {"display_github": True, "github_user": "Atharva-Phatak", "github_repo": "torchflare"}
+html_theme = "pydata_sphinx_theme"
+# html_theme_options = {"collapse_navigation": False}
+pygments_style = "friendly"
+html_context = {
+    "display_github": True,
+    "github_user": "Atharva-Phatak",
+    "github_repo": "torchflare",
+}
+html_logo = "_static/logo.png"
+html_theme_options = {
+    "show_prev_next": False,
+    "icon_links": [
+        {
+            "name": "Github",
+            "url": "https://github.com/Atharva-Phatak/torchflare/tree/main",
+            "icon": "fab fa-github-square",
+        }
+    ],
+}
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+html_css_files = [
+    "css/custom.css",
+]

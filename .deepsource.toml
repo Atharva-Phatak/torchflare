@@ -7,7 +7,10 @@ test_patterns = [
 
 exclude_patterns = [
     "docs/**",
-    ":!:*.md"
+    ":!:*.md",
+    "examples/**",
+    "tests/**"
+
 ]
 
 [[analyzers]]
