@@ -51,6 +51,7 @@ class TextDataset(ItemReader):
             max_len(int): The max_len to be used.
 
         Example:
+
             .. code-block:: python
 
                 import transformers
@@ -92,6 +93,7 @@ class TextDataset(ItemReader):
             max_len(int): The max_len to be used.
 
         Example:
+
             .. code-block:: python
 
                 import transformers

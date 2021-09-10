@@ -128,6 +128,7 @@ class SegmentationDataset(ItemReader):
             extension : The extension of image file.
 
         Example:
+
             .. code-block:: python
 
                 from torchflare.datasets import SegmentationDataset
@@ -175,6 +176,7 @@ class SegmentationDataset(ItemReader):
             extension : The extension for image like .jpg, etc
 
         Example:
+
             .. code-block:: python
 
                 from torchflare.datasets import SegmentationDataset

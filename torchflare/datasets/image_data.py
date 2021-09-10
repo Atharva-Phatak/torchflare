@@ -155,6 +155,7 @@ class ImageDataset(ItemReader):
             convert_mode: The mode to be passed to PIL.Image.convert.
 
         Example:
+
             .. code-block:: python
 
                 from torchflare.datasets import ImageDataset

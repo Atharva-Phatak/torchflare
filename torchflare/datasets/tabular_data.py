@@ -40,6 +40,7 @@ class TabularDataset(ItemReader):
             transforms : A callable which applies transforms on input data.
 
         Example:
+
             .. code-block::
 
                 from torchflare.datasets import TabularDataset
@@ -67,6 +68,7 @@ class TabularDataset(ItemReader):
             transforms : A callable which applies transforms on input data.
 
         Example:
+
             .. code-block:: python
 
                 from torchflare.datasets import TabularDataset
