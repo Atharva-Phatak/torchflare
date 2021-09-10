@@ -139,7 +139,7 @@ class Experiment(BaseExperiment):
     # skipcq : PYL-W0107
     def on_loader_start(self) -> None:
         """Event on loader start."""
-        pass
+        raise NotImplementedError
 
     def on_epoch_start(self) -> None:
         """Event on epoch start."""
@@ -153,7 +153,7 @@ class Experiment(BaseExperiment):
     # skipcq : PYL-W0107
     def on_batch_end(self) -> None:
         """Event on batch end."""
-        pass
+        raise NotImplementedError
 
     def on_loader_end(self) -> None:
         """Event of loader end."""
@@ -162,16 +162,22 @@ class Experiment(BaseExperiment):
     # skipcq : PYL-W0107
     def on_epoch_end(self) -> None:
         """Event on epoch end."""
-        pass
+        raise NotImplementedError
 
     def _run_event(self, event: str) -> None:
         """Method to run events."""
         if _has_intersection(key="_start", event=event):
-            _ = getattr(self, event)()
+            try:
+                _ = getattr(self, event)()
+            except NotImplementedError:
+                pass
         # As soon as event ends, we run callbacks.
         self._run_callbacks(event=event)
         if _has_intersection(key="_end", event=event):
-            _ = getattr(self, event)()
+            try:
+                _ = getattr(self, event)()
+            except NotImplementedError:
+                pass
 
     def run_batch(self) -> None:
         """Run batch with batch event."""
