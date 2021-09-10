@@ -26,8 +26,8 @@ class Experiment(BaseExperiment):
         .. code-block:: python
 
             import torch
+            import torchmetrics
             import torchflare.callbacks as cbs
-            import torchflare.metrics as metrics
             from torchflare.experiments import Experiment
 
             # Defining Training/Validation Dataloaders
@@ -43,8 +43,7 @@ class Experiment(BaseExperiment):
 
             # Defining the list of metrics
             metric_list = [
-                metrics.Accuracy(num_classes=num_classes, multilabel=False),
-                metrics.F1Score(num_classes=num_classes, multilabel=False),
+                torchmetrics.Accuracy(num_classes = num_classes)
             ]
 
             # Defining the list of callbacks
@@ -54,14 +53,7 @@ class Experiment(BaseExperiment):
                 cbs.ReduceLROnPlateau(mode="max", patience=3),  # Defining Scheduler callback.
             ]
 
-            # Creating Experiment and setting the params.
-            exp = Experiment(
-                num_epochs=num_epochs,
-                fp16=True,
-                device=device,
-                seed=42,
-            )
-            # Defining the model config which contains model, optimizer, criterion.
+             # Defining the model config which contains model, optimizer, criterion.
             config = ModelConfig(
                 nn_module=SomeModelClass,
                 module_params={"num_features": 200, "num_classes": 5},
@@ -69,6 +61,15 @@ class Experiment(BaseExperiment):
                 optimizer_params=optimizer_params,
                 criterion=criterion,
             )
+
+            # Creating Experiment and setting the params.
+            exp = Experiment(
+                num_epochs=num_epochs,
+                fp16=True,
+                device=device,
+                seed=42,
+            )
+
             # Compiling the experiment
             exp.compile_experiment(
                 model_config=config,

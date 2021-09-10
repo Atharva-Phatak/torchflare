@@ -112,7 +112,7 @@ class ImageDataset(ItemReader):
                 test_dir/xyz.jpg
                 test_dir/ppp.jpg
 
-        Examples:
+        Example:
 
             .. code-block:: python
 
@@ -156,7 +156,10 @@ class ImageDataset(ItemReader):
 
         Example:
             .. code-block:: python
+
                 from torchflare.datasets import ImageDataset
+                import albumentations as A
+
                 ds = ImageDataset.from_csv(csv_path = "train/train.csv",
                     path = "train/images",
                     input_columns = ['image_ids'],

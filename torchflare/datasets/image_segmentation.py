@@ -127,7 +127,7 @@ class SegmentationDataset(ItemReader):
             image_convert_mode: The mode to be passed to PIL.Image.convert.
             extension : The extension of image file.
 
-         Examples:
+        Example:
             .. code-block:: python
 
                 from torchflare.datasets import SegmentationDataset
@@ -174,7 +174,7 @@ class SegmentationDataset(ItemReader):
             image_convert_mode: The mode to be passed to PIL.Image.convert for input images
             extension : The extension for image like .jpg, etc
 
-        Examples:
+        Example:
             .. code-block:: python
 
                 from torchflare.datasets import SegmentationDataset

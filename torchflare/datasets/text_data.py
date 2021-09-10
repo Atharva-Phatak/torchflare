@@ -50,8 +50,9 @@ class TextDataset(ItemReader):
             tokenizer: The tokenizer to be used.(Use only tokenizer available in huggingface.
             max_len(int): The max_len to be used.
 
-        Examples:
+        Example:
             .. code-block:: python
+
                 import transformers
                 from torchflare.datasets import TextClassificationDataset
 
@@ -59,7 +60,7 @@ class TextDataset(ItemReader):
 
                 ds = TextClassificationDataset.from_df(
                     df=df, input_col=["tweet"], tokenizer=tokenizer, max_len=128
-                ).targets_from_df(target_columns=["label"])
+                    ).targets_from_df(target_columns=["label"])
         """
         items = get_iloc_cols(df, input_columns)
         return cls(
@@ -83,13 +84,14 @@ class TextDataset(ItemReader):
         **kwargs
     ):
         """Classmethod to create the dataset from dataframe.
+
         Args:
             csv_path : The full path to csv.
             input_columns: A list containing names of inputs columns.
             tokenizer: The tokenizer to be used.(Use only tokenizer available in huggingface.
             max_len(int): The max_len to be used.
 
-        Examples:
+        Example:
             .. code-block:: python
 
                 import transformers
@@ -99,7 +101,7 @@ class TextDataset(ItemReader):
 
                 ds = TextClassificationDataset.from_csv(
                     csv_path="/train/train.csv", input_col="tweet", tokenizer=tokenizer, max_len=128
-                ).targets_from_df(target_columns=["label"])
+                    ).targets_from_df(target_columns=["label"])
         """
         df = pd.read_csv(csv_path)
         return cls.from_df(

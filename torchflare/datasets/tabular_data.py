@@ -39,12 +39,13 @@ class TabularDataset(ItemReader):
             input_columns: A list containing name of input columns.
             transforms : A callable which applies transforms on input data.
 
-        Examples:
+        Example:
             .. code-block::
+
                 from torchflare.datasets import TabularDataset
                 ds = TabularDataset.from_df(df=df,
                         feature_cols=["col1", "col2"]
-                        ).targets_from_df(target_columns=["labels"])
+                    ).targets_from_df(target_columns=["labels"])
         """
         items = get_iloc_cols(df, input_columns)
         return cls(items=items, df=df, transforms=transforms, path=None, **kwargs)
@@ -65,13 +66,14 @@ class TabularDataset(ItemReader):
             input_columns: A list containing name of input columns.
             transforms : A callable which applies transforms on input data.
 
-        Examples:
+        Example:
             .. code-block:: python
+
                 from torchflare.datasets import TabularDataset
 
                 ds = TabularDataset.from_csv(
                     csv_path="/train/train_data.csv", feature_cols=["col1", "col2"]
-                ).targets_from_df(target_columns=["labels"])
+                    ).targets_from_df(target_columns=["labels"])
         """
         df = pd.read_csv(csv_path)
         return cls.from_df(df=df, input_columns=input_columns, **kwargs)

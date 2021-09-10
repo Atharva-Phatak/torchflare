@@ -229,15 +229,10 @@ class BaseExperiment:
         else:
             _ = getattr(self.state.model, stage)()
 
-    def _reset_model_logs(self):
-        if bool(self.exp_logs):
-            self.exp_logs = None
-
     def initialise(self):
         """Method initialise some stuff."""
         seed_all(self.seed)
         self._model_to_device()
-        self._reset_model_logs()
 
     def cleanup(self):
         """Method Cleanup internal variables."""
