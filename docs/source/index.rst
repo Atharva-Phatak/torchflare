@@ -6,6 +6,7 @@
 TorchFlare
 ======================================
 .. image:: _static/TorchFlare_official.png
+   :target: _static/TorchFlare_official.png
    :alt: TorchFlare logo
 
 
@@ -23,6 +24,7 @@ TorchFlare
 *Installation*
 ------------------
 .. code-block:: python
+
    pip install torchflare
 
 *Getting Started*

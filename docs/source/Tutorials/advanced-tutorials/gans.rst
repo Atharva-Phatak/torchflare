@@ -153,8 +153,7 @@ Training DCGANs
     However you have to keep following things in mind when you override the method.
 
     a) Train step in TorchFlare involves forward pass from the model, loss computation, backward pass and optimizer step.
-    b) You always have to define ``self.loss_per_batch`` as it is used by progress bar to log results.
-    c) If you are using metrics ensure that you assign your predictions to ``self.preds`` attribute so that internal metric callback can accumulate predictions.
+    b) Train step must return a dictionary with atleast loss value.
 
     .. code-block:: python
 
@@ -197,7 +196,7 @@ Training DCGANs
                 self.backend.backward_loss(loss_g)
                 self.backend.optimizer_step(self.state.optimizer["generator"])
 
-                return {"train_loss_g": loss_g, "train_loss_d": loss_d}
+                return {"loss_g": loss_g.item(), "loss_d": loss_d.item()}
 
 4. Create dataloaders
 
@@ -232,7 +231,7 @@ Training DCGANs
 
     callbacks = [cbs.ModelCheckpoint(mode="min", monitor="train_loss_g", save_dir="./")]
 
-6. Define and train your models.
+6. Compile and Run the experiment.
 
 .. code-block:: python
 

@@ -1,10 +1,8 @@
-torchflare.utils package
+Utilities
 ========================
 
-Submodules
-----------
 
-torchflare.utils.average\_meter module
+Average Meter
 --------------------------------------
 
 .. automodule:: torchflare.utils.average_meter
@@ -12,18 +10,10 @@ torchflare.utils.average\_meter module
    :undoc-members:
    :show-inheritance:
 
-torchflare.utils.seeder module
+Seeder
 ------------------------------
 
 .. automodule:: torchflare.utils.seeder
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: torchflare.utils
    :members:
    :undoc-members:
    :show-inheritance:

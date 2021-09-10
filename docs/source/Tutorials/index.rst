@@ -8,6 +8,7 @@ Basic-Tutorials
 
    basic-tutorials/quickstart.rst
    basic-tutorials/text_classification.rst
+
 Advanced-Tutorials
 -------------------------
 .. toctree::
