@@ -1,4 +1,6 @@
-"""Text classification using Tiny-Bert on IMDB Dataset."""
+"""Text classification using Tiny-Bert on IMDB Dataset.
+Dataset : https://www.kaggle.com/columbine/imdb-dataset-sentiment-analysis-in-csv-format?select=Valid.csv
+"""
 
 import pandas as pd
 import torch
