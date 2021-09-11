@@ -1,3 +1,10 @@
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: bug / fix, help wanted
+assignees: ''
+---
 ## Bug
 Concise and lucid description of bug.
 <!-- A clear and concise description of what the bug is. -->
