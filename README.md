@@ -1,4 +1,4 @@
-![image](https://raw.githubusercontent.com/Atharva-Phatak/torchflare/main/assets/TorchFlare_official.png)
+![image](https://raw.githubusercontent.com/Atharva-Phatak/torchflare/main/docs/source/_static/TorchFlare_official.png)
 
 ![PyPI](https://img.shields.io/pypi/v/torchflare?color=success)
 ![API](https://img.shields.io/badge/API-stable-success)
@@ -129,8 +129,6 @@ exp = Experiment(
     seed=42,
 )
 
-
-
 exp.compile_experiment(
     model_config=config,
     callbacks=callbacks,
@@ -164,8 +162,11 @@ exp.get_logs()  # This will return a dataframe constructed from model-history.
 * [Variational Auto-encoders](https://github.com/Atharva-Phatak/torchflare/tree/main/examples/Advanced-Tutorials/autoencoders) to generate MNIST dataset.
 * Train [DCGANS](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Advanced-Tutorials/gans/dcgan.py) to generate MNIST data.
 * [Self Supervised learning](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Advanced-Tutorials/self-supervision/ssl_byol.py) using [Bootstrap your own latent(BYOL)](https://arxiv.org/abs/2006.07733)
+
+***
 ### ***Contributions***
 To contribute please refer to [Contributing Guide](https://github.com/Atharva-Phatak/torchflare/blob/main/.github/CONTRIBUTING.MD)
+
 ***
 ### ***Current Contributors***
 
