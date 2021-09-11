@@ -1,3 +1,7 @@
+"""Implementation of Bootstrap your own latent: A new approach to self-supervised Learning
+Paper : https://arxiv.org/abs/2006.07733
+"""
+
 import random
 from typing import Callable, Dict, Tuple
 

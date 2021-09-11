@@ -157,6 +157,13 @@ history = exp.history  # This will return a dict
 exp.get_logs()  # This will return a dataframe constructed from model-history.
 ```
 ***
+### ***Examples***
+
+* [Image Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Basic-Tutorials/image_classification.py) using TorchFlare on MNIST dataset.
+* [Text Classification](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Basic-Tutorials/text_classification.py) using Tiny Bert on IMDB dataset
+* [Variational Auto-encoders](https://github.com/Atharva-Phatak/torchflare/tree/main/examples/Advanced-Tutorials/autoencoders) to generate MNIST dataset.
+* Train [DCGANS](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Advanced-Tutorials/gans/dcgan.py) to generate MNIST data.
+* [Self Supervised learning](https://github.com/Atharva-Phatak/torchflare/blob/main/examples/Advanced-Tutorials/self-supervision/ssl_byol.py) using [Bootstrap your own latent(BYOL)](https://arxiv.org/abs/2006.07733)
 ### ***Contributions***
 To contribute please refer to [Contributing Guide](https://github.com/Atharva-Phatak/torchflare/blob/main/.github/CONTRIBUTING.MD)
 ***
