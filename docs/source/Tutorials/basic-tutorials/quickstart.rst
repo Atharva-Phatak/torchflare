@@ -54,9 +54,9 @@ Image Classification
 
     metric_list = [torchmetrics.Accuracy(num_classes = 10)]
 
-    callbacks = [cbs.EarlyStoppingCallback(monitor = "accuracy" , mode = "max"),
-                cbs.ModelCheckpointCallback(monitor = "accuracy", mode = "max"),
-                cbs.ReduceLROnPlateau(monitor='accuracy', patience=3)]
+    callbacks = [cbs.EarlyStoppingCallback(monitor = "val_accuracy" , mode = "max"),
+                cbs.ModelCheckpointCallback(monitor = "val_accuracy", mode = "max"),
+                cbs.ReduceLROnPlateau(mode = "max", patience=3)]
 
 4. Define Model Config
 

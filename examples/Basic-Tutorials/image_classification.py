@@ -46,8 +46,8 @@ if __name__ == "__main__":
 
     # Defining callbacks.
     callbacks = [
-        cbs.EarlyStopping(monitor="accuracy", mode="max"),
-        cbs.ModelCheckpoint(monitor="accuracy", mode="max"),
+        cbs.EarlyStopping(monitor="val_accuracy", mode="max"),
+        cbs.ModelCheckpoint(monitor="val_accuracy", mode="max"),
         cbs.ReduceLROnPlateau(mode="max", patience=3),
     ]
     # Defining metrics.

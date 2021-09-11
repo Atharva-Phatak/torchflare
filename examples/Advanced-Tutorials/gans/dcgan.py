@@ -160,7 +160,7 @@ class DCGANExperiment(Experiment):
         self.backend.backward_loss(loss_g)
         self.backend.optimizer_step(self.state.optimizer["generator"])
 
-        return {"train_loss_g": loss_g, "train_loss_d": loss_d}
+        return {"loss_g": loss_g.item(), "loss_d": loss_d.item()}
 
 
 if __name__ == "__main__":
