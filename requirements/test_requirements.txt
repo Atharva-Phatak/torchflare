@@ -1,6 +1,6 @@
 pytest==5.3.1
 pytest-cov==2.11.1
-transformers==4.9.2
+transformers==4.12.3
 neptune_client==0.13.0
 comet_ml==3.15.1
 wandb==0.10.27
