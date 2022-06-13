@@ -15,13 +15,13 @@ class VAE(nn.Module):
         super().__init__()
         self.d = d
         self.encoder = nn.Sequential(
-            nn.Linear(784, self.d ** 2), nn.ReLU(), nn.Linear(self.d ** 2, self.d * 2)
+            nn.Linear(784, self.d**2), nn.ReLU(), nn.Linear(self.d**2, self.d * 2)
         )
 
         self.decoder = nn.Sequential(
-            nn.Linear(self.d, self.d ** 2),
+            nn.Linear(self.d, self.d**2),
             nn.ReLU(),
-            nn.Linear(self.d ** 2, 784),
+            nn.Linear(self.d**2, 784),
             nn.Sigmoid(),
         )
 
