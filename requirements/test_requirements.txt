@@ -3,5 +3,5 @@ pytest-cov==2.11.1
 transformers==4.9.2
 neptune_client==0.13.0
 comet_ml==3.15.1
-wandb==0.10.27
+wandb==0.12.21
 tensorboard==2.6.0
