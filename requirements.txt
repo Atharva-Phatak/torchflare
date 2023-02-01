@@ -3,5 +3,5 @@ pandas==1.2.5
 torch==1.9.0
 torchvision==0.10.0
 albumentations==1.0.0
-torchmetrics==0.5.0
+torchmetrics==0.11.1
 gradio==2.2.13
