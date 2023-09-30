@@ -49,5 +49,10 @@ class AMPBackend:
         self.scaler.step(optimizer)
         self.scaler.update()
 
+class AcceleratorBackend:
+
+    def __init__(self):
+        self.accelerator = 
+
 
 __all__ = ["BaseBackend", "AMPBackend"]
