@@ -1,6 +1,7 @@
 import contextlib
 
 import torch
+from accelerate import Accelerator
 
 
 # noinspection PyMethodMayBeStatic
@@ -51,8 +52,31 @@ class AMPBackend:
 
 class AcceleratorBackend:
 
-    def __init__(self):
-        self.accelerator = 
+    def __init__(self, optimizer, acclerate_args: dict):
+        self.accelerator = Accelerator(**acclerate_args)
+        self.optimizer = self.prepare_optimizer(optimizer = optimizer)
+
+    def prepare_optimizer(self, optimizer):
+        return self.accelerator.prepare(optimizer)
+    
+    # skipcq :  PYL-R1705
+    def zero_grad(self) -> None:
+        """Wrapper for optimizer.zero_grad()."""
+        self.optimizer.zero_grad()
+
+    # skipcq :  PYL-R1705
+    def backward_loss(self, loss) -> None:
+        """Method to propogate loss backward."""
+        # skipcq: PYL-W0106
+        self.accelerator.backward(loss)
+
+    # skipcq :  PYL-R1705
+    def optimizer_step(self) -> None:
+        """Method to perform optimizer step."""
+        optimizer.step()
+    
+    
+    
 
 
 __all__ = ["BaseBackend", "AMPBackend"]

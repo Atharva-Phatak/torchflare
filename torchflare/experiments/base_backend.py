@@ -12,7 +12,7 @@ from torchflare.callbacks.metric_utils import MetricCallback
 from torchflare.callbacks.model_history import History
 from torchflare.callbacks.progress_bar import ProgressBar
 from torchflare.core.state import State
-from torchflare.experiments.backends import AMPBackend, BaseBackend
+from torchflare.experiments.backends import AcceleratorBackend
 from torchflare.experiments.commons import ATTR_TO_INTERNAL, TRAIN_ATTRS
 from torchflare.experiments.criterion_utilities import get_criterion
 from torchflare.experiments.optim_utilities import get_optimizer
@@ -29,6 +29,7 @@ class BaseExperiment:
         fp16: bool,
         device: str,
         seed: int = 42,
+        backend_args:dict = {},
     ):
         """Init method to set up important variables for training and validation.
 
@@ -57,7 +58,7 @@ class BaseExperiment:
         self.loss_per_batch = None
         self.batch = None
         self.batch_idx, self.current_epoch = None, 0
-        self.backend = AMPBackend() if self.fp16 else BaseBackend()
+        self.backend = AcceleratorBackend(**backend_args)
         self.state = State()
 
     def _prepare_batch_outputs(self):
