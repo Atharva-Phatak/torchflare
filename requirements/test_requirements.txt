@@ -1,4 +1,4 @@
-pytest==5.3.1
+pytest==8.0.2
 pytest-cov==2.11.1
 transformers==4.9.2
 neptune_client==0.13.0
