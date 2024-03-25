@@ -1,4 +1,5 @@
 """Generating MNIST Digits using DCGAN."""
+
 import os
 
 import torch
@@ -20,7 +21,7 @@ class Generator(nn.Module):
             latent_dim (int): latent dimension ("noise vector")
             batchnorm (bool): Whether or not to use batch normalization
         """
-        super(Generator, self).__init__()
+        super().__init__()
         self.latent_dim = latent_dim
         self.batchnorm = batchnorm
         self._init_modules()
@@ -77,7 +78,7 @@ class Discriminator(nn.Module):
         Images must be single-channel and 28x28 pixels.
         Output activation is Sigmoid.
         """
-        super(Discriminator, self).__init__()
+        super().__init__()
         self.output_dim = output_dim
         self._init_modules()  # I know this is overly-organized. Fight me.
 
@@ -127,7 +128,7 @@ class Discriminator(nn.Module):
 class DCGANExperiment(Experiment):
     def __init__(self, latent_dim, batch_size, **kwargs):
 
-        super(DCGANExperiment, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.noise_fn = lambda x: torch.randn((x, latent_dim), device=self.device)
         self.target_ones = torch.ones((batch_size, 1), device=self.device)
