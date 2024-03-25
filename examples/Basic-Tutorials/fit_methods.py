@@ -14,7 +14,7 @@ from torchflare.experiments import Experiment, ModelConfig
 
 class Net(torch.nn.Module):
     def __init__(self, out_features):
-        super(Net, self).__init__()
+        super().__init__()
 
         self.conv1 = nn.Sequential(
             nn.Conv2d(in_channels=1, out_channels=64, kernel_size=3, padding=1),
