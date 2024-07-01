@@ -20,7 +20,7 @@ class ImageDataset(ItemReader):
     """Class to create the dataset for Image Classification."""
 
     def __init__(self, convert_mode: str, *args, **kwargs):
-        super(ImageDataset, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.convert_mode = convert_mode
 
     def apply_input_transforms(self, transforms: A.Compose, item) -> torch.Tensor:

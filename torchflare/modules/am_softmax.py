@@ -1,4 +1,5 @@
 """Implements AM-softmax."""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -17,7 +18,7 @@ class AMSoftmax(nn.Module):
 
     def __init__(self, in_features, out_features, m=0.35, s=32):
         """Class Constructor."""
-        super(AMSoftmax, self).__init__()
+        super().__init__()
 
         self.in_features = in_features
         self.out_features = out_features
