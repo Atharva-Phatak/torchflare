@@ -1,4 +1,5 @@
 """Implements extra utilities required."""
+
 import math
 from functools import partial
 
