@@ -11,7 +11,7 @@ class AvgLoss(Callbacks):
     """Class for averaging the loss."""
 
     def __init__(self):
-        super(AvgLoss, self).__init__(order=CallbackOrder.LOSS)
+        super().__init__(order=CallbackOrder.LOSS)
         self.accum_loss, self.count = {}, 0
         self.reset()
 

@@ -1,4 +1,5 @@
 """Implements Model Checkpoint Callback."""
+
 import os
 from abc import ABC
 from typing import TYPE_CHECKING
@@ -62,7 +63,7 @@ class ModelCheckpoint(Callbacks, ABC):
 
     def __init__(self, mode: str, monitor: str, save_dir: str = "./", file_name: str = "model.bin"):
         """Constructor for ModelCheckpoint class."""
-        super(ModelCheckpoint, self).__init__(order=CallbackOrder.CHECKPOINT)
+        super().__init__(order=CallbackOrder.CHECKPOINT)
         if monitor.startswith("train_") or monitor.startswith("val_"):
             self.monitor = monitor
         else:
