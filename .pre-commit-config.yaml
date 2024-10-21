@@ -1,22 +1,22 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v5.0.0
     hooks:
       - id: debug-statements
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: check-merge-conflict
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.4.1
+    rev: v3.18.0
     hooks:
       - id: pyupgrade
   - repo: https://github.com/pycqa/isort
-    rev: 5.8.0
+    rev: 5.13.2
     hooks:
       - id: isort
         exclude: ^tests/|torchflare/callbacks/__init__.py
-  - repo: https://github.com/python/black
-    rev: 21.4b2
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
     hooks:
       - id: black
         exclude: ^tests/

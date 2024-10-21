@@ -1,6 +1,7 @@
 """Vanilla Knowledge distillation using Torchflare.
 This example only shows how to modify the training script for KD.
 """
+
 from typing import Dict
 
 import torch
@@ -11,7 +12,7 @@ from torchflare.experiments import Experiment
 
 class KDExperiment(Experiment):
     def __init__(self, temperature, alpha, **kwargs):
-        super(KDExperiment, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.temperature = temperature
         self.alpha = alpha
 
