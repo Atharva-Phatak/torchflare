@@ -15,7 +15,7 @@ class History(Callbacks, ABC):
 
     def __init__(self):
         """Constructor class for History Class."""
-        super(History, self).__init__(order=CallbackOrder.LOGGING)
+        super().__init__(order=CallbackOrder.LOGGING)
         self.history = None
 
     def on_experiment_start(self, experiment: "Experiment"):

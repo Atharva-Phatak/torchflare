@@ -1,4 +1,5 @@
 """Imports for criterion."""
+
 from torchflare.criterion.cross_entropy import (
     BCEFlat,
     BCEWithLogitsFlat,

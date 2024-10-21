@@ -1,4 +1,5 @@
 """Implements notifiers for slack and discord."""
+
 import json
 from abc import ABC
 from typing import TYPE_CHECKING
@@ -42,7 +43,7 @@ class SlackNotifierCallback(Callbacks, ABC):
 
     def __init__(self, webhook_url: str):
         """Constructor method for SlackNotifierCallback."""
-        super(SlackNotifierCallback, self).__init__(order=CallbackOrder.EXTERNAL)
+        super().__init__(order=CallbackOrder.EXTERNAL)
         self.webhook_url = webhook_url
 
     def on_epoch_end(self, experiment: "Experiment"):
@@ -81,7 +82,7 @@ class DiscordNotifierCallback(Callbacks, ABC):
 
     def __init__(self, exp_name: str, webhook_url: str):
         """Constructor method for DiscordNotifierCallback."""
-        super(DiscordNotifierCallback, self).__init__(order=CallbackOrder.EXTERNAL)
+        super().__init__(order=CallbackOrder.EXTERNAL)
         self.exp_name = exp_name
         self.webhook_url = webhook_url
 

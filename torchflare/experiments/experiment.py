@@ -1,4 +1,5 @@
 """Implements Base class."""
+
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 import numpy as np
@@ -89,7 +90,7 @@ class Experiment(BaseExperiment):
         seed: int = 42,
     ):
         """Init method to set up important variables for training and validation."""
-        super(Experiment, self).__init__(
+        super().__init__(
             num_epochs=num_epochs,
             fp16=fp16,
             device=device,

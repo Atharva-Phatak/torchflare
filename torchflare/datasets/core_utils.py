@@ -158,7 +158,7 @@ def DecodeRLE(mask_rle: str, shape: Tuple):
     """
     # print(type(mask_rle))
     s = mask_rle.split()
-    start, lengths = [numpy.asarray(x, dtype=int) for x in (s[0:][::2], s[1:][::2])]
+    start, lengths = (numpy.asarray(x, dtype=int) for x in (s[0:][::2], s[1:][::2]))
     start -= 1
     end = start + lengths
     img = numpy.zeros(shape[0] * shape[1], dtype=numpy.uint8)

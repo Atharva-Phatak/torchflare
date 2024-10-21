@@ -54,7 +54,7 @@ class CometLogger(Callbacks, ABC):
         tags: List[str],
     ):
         """Constructor for CometLogger class."""
-        super(CometLogger, self).__init__(order=CallbackOrder.LOGGING)
+        super().__init__(order=CallbackOrder.LOGGING)
         self.api_token = api_token
         self.project_name = project_name
         self.workspace = workspace
