@@ -1,6 +1,6 @@
 numpy
 pandas
-torch==2.0.1
+torch==2.7.1
 torchvision
 albumentations
 torchmetrics
