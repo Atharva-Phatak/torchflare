@@ -1,4 +1,5 @@
 """Implementation of Early stopping."""
+
 import math
 from abc import ABC
 from typing import TYPE_CHECKING
@@ -47,7 +48,7 @@ class EarlyStopping(Callbacks, ABC):
         min_delta: float = 1e-7,
     ):
         """Constructor for EarlyStopping class."""
-        super(EarlyStopping, self).__init__(order=CallbackOrder.STOPPING)
+        super().__init__(order=CallbackOrder.STOPPING)
 
         if monitor.startswith("train_") or monitor.startswith("val_"):
             self.monitor = monitor

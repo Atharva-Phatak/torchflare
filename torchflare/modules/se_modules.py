@@ -23,7 +23,7 @@ class CSE(nn.Module):
             in_channels(int): The number of input channels in the feature map.
             r(int): The reduction ration (Default : 16)
         """
-        super(CSE, self).__init__()
+        super().__init__()
 
         self.in_channels = in_channels
         self.r = r
@@ -67,7 +67,7 @@ class SSE(nn.Module):
         Args:
             in_channels(int): The number of input channels in the feature map.
         """
-        super(SSE, self).__init__()
+        super().__init__()
 
         self.in_channels = in_channels
         # noinspection PyTypeChecker
@@ -109,7 +109,7 @@ class SCSE(nn.Module):
             in_channels(int): The number of input channels in the feature map.
             r(int): The reduction ration (Default : 16)
         """
-        super(SCSE, self).__init__()
+        super().__init__()
 
         self.in_channels = in_channels
         self.r = r

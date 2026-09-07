@@ -1,4 +1,5 @@
 """Implements container for loss and metric computation."""
+
 from typing import TYPE_CHECKING, Dict, List
 
 from torchmetrics import MetricCollection
@@ -23,7 +24,7 @@ class MetricCallback(Callbacks):
         Args:
             metrics: The list of metrics
         """
-        super(MetricCallback, self).__init__(CallbackOrder.METRICS)
+        super().__init__(CallbackOrder.METRICS)
         metrics = MetricCollection(metrics)
         self.metrics = {
             "train": metrics.clone(prefix="train_"),
