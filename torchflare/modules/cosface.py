@@ -1,4 +1,5 @@
 """Implements CosFace."""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -16,7 +17,7 @@ class CosFace(nn.Module):
 
     def __init__(self, in_features, out_features, s=30.0, m=0.35):
         """Class Constructor."""
-        super(CosFace, self).__init__()
+        super().__init__()
 
         self.in_features = in_features
         self.out_features = out_features
