@@ -1,4 +1,5 @@
 """Implements Tensorboard Logger."""
+
 from abc import ABC
 from typing import TYPE_CHECKING
 
@@ -26,7 +27,7 @@ class TensorboardLogger(Callbacks, ABC):
 
     def __init__(self, log_dir: str):
         """Constructor for TensorboardLogger class."""
-        super(TensorboardLogger, self).__init__(order=CallbackOrder.LOGGING)
+        super().__init__(order=CallbackOrder.LOGGING)
         self.log_dir = log_dir
         self._experiment = None
 

@@ -1,6 +1,7 @@
 # flake8: noqa
 # isort: skip
 """Imports for callbacks."""
+
 from torchflare.callbacks.callback import Callbacks, sort_callbacks  # isort: skip
 from torchflare.callbacks.callback_decorators import FunctionalCallback  # isort: skip; isort: skip
 from torchflare.callbacks.callback_decorators import bind_to_event  # isort: skip
