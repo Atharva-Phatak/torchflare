@@ -65,7 +65,7 @@ def default_augmentation(image_size: Tuple[int, int] = (224, 224)) -> nn.Module:
 # Defining the models.
 class MLPHead(nn.Module):
     def __init__(self, in_channels: int, projection_size: int = 256, hidden_size: int = 4096):
-        super(MLPHead, self).__init__()
+        super().__init__()
 
         self.net = nn.Sequential(
             nn.Linear(in_channels, hidden_size),
@@ -81,7 +81,7 @@ class MLPHead(nn.Module):
 # Defining resnet encoders.
 class ResnetEncoder(nn.Module):
     def __init__(self, pretrained, mlp_params):
-        super(ResnetEncoder, self).__init__()
+        super().__init__()
         resnet = torchvision.models.resnet18(pretrained=pretrained)
         self.encoder = torch.nn.Sequential(*list(resnet.children())[:-1])
         self.projector = MLPHead(in_channels=resnet.fc.in_features, **mlp_params)
@@ -95,7 +95,7 @@ class ResnetEncoder(nn.Module):
 # Defining custom training method required as required by Bootstrap your own latent.(SSL)
 class BYOLExperiment(Experiment):
     def __init__(self, momentum, augmentation_fn, image_size, **kwargs):
-        super(BYOLExperiment, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.momentum = momentum
         self.augmentation_fn = augmentation_fn(image_size)
 

@@ -62,7 +62,7 @@ class MaskDataset(BaseDataset):
         num_classes: int = None,
         **kwargs
     ):
-        super(MaskDataset, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.mask_convert_mode = mask_convert_mode
         self.image_convert_mode = image_convert_mode
         self.shape = shape
@@ -91,7 +91,7 @@ class SegmentationDataset(ItemReader):
     """PyTorch style dataset for image segmentation."""
 
     def __init__(self, input_cols, image_convert_mode, **kwargs):
-        super(SegmentationDataset, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.image_convert_mode = image_convert_mode
         self.input_cols = input_cols
         self.mask_dataset = MaskDataset

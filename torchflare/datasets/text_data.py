@@ -12,7 +12,7 @@ class TextDataset(ItemReader):
     """Class for text data as required by transformers."""
 
     def __init__(self, tokenizer, max_len, **kwargs):
-        super(TextDataset, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.tokenizer = tokenizer
         self.max_len = max_len
 
