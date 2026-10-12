@@ -70,11 +70,9 @@ class ModelConfig:
 
     criterion: Union[Callable, Dict, str] = field(
         default=MISSING,
-        metadata={
-            "help": "The loss function to optimize or name of the loss function.\
+        metadata={"help": "The loss function to optimize or name of the loss function.\
                     If you pass in the name of the loss function,\
-                    only loss functions available in pytorch can be supported."
-        },
+                    only loss functions available in pytorch can be supported."},
     )
     model_dict: bool = field(default=False)
     optimizer_dict: bool = field(default=False)

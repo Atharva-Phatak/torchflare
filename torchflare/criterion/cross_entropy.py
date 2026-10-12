@@ -1,4 +1,5 @@
 """Implements variants for Cross Entropy loss."""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -45,7 +46,7 @@ class LabelSmoothingCrossEntropy(nn.Module):
 
     def __init__(self, smoothing: float = 0.1):
         """Constructor method for LabelSmoothingCrossEntropy."""
-        super(LabelSmoothingCrossEntropy, self).__init__()
+        super().__init__()
         if smoothing > 1.0:
             raise ValueError("Smoothing value must be less than 1.")
         self.smoothing = smoothing
@@ -82,7 +83,7 @@ class SymmetricCE(nn.Module):
 
     def __init__(self, num_classes, alpha: float = 1.0, beta: float = 1.0):
         """Constructor method for symmetric CE."""
-        super(SymmetricCE, self).__init__()
+        super().__init__()
         self.alpha = alpha
         self.beta = beta
         self.num_classes = num_classes
