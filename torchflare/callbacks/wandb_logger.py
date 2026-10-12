@@ -1,4 +1,5 @@
 """Implements logger for weights and biases."""
+
 from abc import ABC
 from typing import TYPE_CHECKING, Dict, List, Optional
 
@@ -62,7 +63,7 @@ class WandbLogger(Callbacks, ABC):
         directory: str = None,
     ):
         """Constructor of WandbLogger."""
-        super(WandbLogger, self).__init__(order=CallbackOrder.LOGGING)
+        super().__init__(order=CallbackOrder.LOGGING)
         self.entity = entity
         self.project = project
         self.name = name
