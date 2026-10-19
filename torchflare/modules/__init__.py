@@ -1,4 +1,5 @@
 """Imports for modules."""
+
 from torchflare.modules.airface import LiArcFace
 from torchflare.modules.am_softmax import AMSoftmax
 from torchflare.modules.arcface import ArcFace
