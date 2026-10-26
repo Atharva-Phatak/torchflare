@@ -1,4 +1,5 @@
 """Implements get criterion method."""
+
 import torch.nn.functional as F
 
 

@@ -19,7 +19,7 @@ from torchflare.experiments import Experiment, ModelConfig
 class Model(torch.nn.Module):
     def __init__(self, dropout, out_features):
 
-        super(Model, self).__init__()
+        super().__init__()
         self.bert = transformers.BertModel.from_pretrained("prajjwal1/bert-tiny", return_dict=False)
         self.bert_drop = nn.Dropout(dropout)
         self.out = nn.Linear(128, out_features)
