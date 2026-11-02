@@ -1,4 +1,5 @@
 """Implements LiArcFace."""
+
 import math
 
 import torch
@@ -18,7 +19,7 @@ class LiArcFace(nn.Module):
 
     def __init__(self, in_features, out_features, s=64, m=0.45):
         """Constructor class of LiArcFace."""
-        super(LiArcFace, self).__init__()
+        super().__init__()
 
         self.in_features = in_features
         self.out_features = out_features

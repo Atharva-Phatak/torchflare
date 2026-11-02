@@ -1,4 +1,5 @@
 """Implementation of Progress Bar."""
+
 import math
 import sys
 import time
@@ -26,7 +27,7 @@ class ProgressBar(Callbacks):
         unit_name: str = "step",
     ):
         """Constructor class for ProgressBar."""
-        super(ProgressBar, self).__init__(order=CallbackOrder.EXTERNAL)
+        super().__init__(order=CallbackOrder.EXTERNAL)
         self.num_epochs = None
         self.width = width
         self.interval = interval
