@@ -13,7 +13,7 @@ import pandas as pd
 
 class Model(torch.nn.Module):
     def __init__(self, num_features, num_classes):
-        super(Model, self).__init__()
+        super().__init__()
         self.model = torch.nn.Linear(num_features, num_classes)
 
     def forward(self, x):
