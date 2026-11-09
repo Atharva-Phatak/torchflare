@@ -1,4 +1,5 @@
 """Setup.py for torchflare."""
+
 # flake8: noqa
 import os
 
@@ -15,15 +16,15 @@ current_file_path = os.path.abspath(os.path.dirname(__file__))
 
 
 readme_file_path = os.path.join(current_file_path, "README.md")
-with open(readme_file_path, "r", encoding="utf-8") as f:
+with open(readme_file_path, encoding="utf-8") as f:
     readme = f.read()
 
 
 version_file_path = os.path.join(current_file_path, "version.txt")
-with open(version_file_path, "r", encoding="utf-8") as f:
+with open(version_file_path, encoding="utf-8") as f:
     version = f.read().strip()
 
-with open(os.path.join(current_file_path, "requirements.txt"), "r") as f:
+with open(os.path.join(current_file_path, "requirements.txt")) as f:
     requirements = f.read().splitlines()
 
 
