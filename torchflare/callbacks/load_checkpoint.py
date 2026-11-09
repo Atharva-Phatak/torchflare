@@ -1,4 +1,5 @@
 """Implements Load checkpoint."""
+
 from abc import ABC
 from typing import TYPE_CHECKING
 
@@ -16,7 +17,7 @@ class LoadCheckpoint(Callbacks, ABC):
 
     def __init__(self, path_to_model: str = None):
         """Constructor method for LoadCheckpoint Class."""
-        super(LoadCheckpoint, self).__init__(order=CallbackOrder.MODEL_INIT)
+        super().__init__(order=CallbackOrder.MODEL_INIT)
         self.path = path_to_model
 
     @staticmethod

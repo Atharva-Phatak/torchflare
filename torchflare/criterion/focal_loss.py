@@ -1,4 +1,5 @@
 """Implements variants for Focal loss."""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -19,7 +20,7 @@ class BCEFocalLoss(nn.Module):
             eps : Constant for computational stability.
             reduction: The reduction parameter for Cross Entropy Loss.
         """
-        super(BCEFocalLoss, self).__init__()
+        super().__init__()
         self.gamma = gamma
         self.reduction = reduction
         self.eps = eps
@@ -43,9 +44,7 @@ class BCEFocalLoss(nn.Module):
         return (
             loss.mean()
             if self.reduction == "mean"
-            else loss.sum()
-            if self.reduction == "sum"
-            else loss
+            else loss.sum() if self.reduction == "sum" else loss
         )
 
 
@@ -63,7 +62,7 @@ class FocalLoss(nn.Module):
 
     def __init__(self, gamma=0, eps=1e-7, reduction="mean"):
         """Constructor Method for FocalLoss class."""
-        super(FocalLoss, self).__init__()
+        super().__init__()
         self.gamma = gamma
         self.reduction = reduction
         self.eps = eps
@@ -86,9 +85,7 @@ class FocalLoss(nn.Module):
         return (
             loss.mean()
             if self.reduction == "mean"
-            else loss.sum()
-            if self.reduction == "sum"
-            else loss
+            else loss.sum() if self.reduction == "sum" else loss
         )
 
 
@@ -100,7 +97,7 @@ class FocalCosineLoss(nn.Module):
 
     def __init__(self, alpha: float = 1, gamma: float = 2, xent: float = 0.1, reduction="mean"):
         """Constructor for FocalCosineLoss."""
-        super(FocalCosineLoss, self).__init__()
+        super().__init__()
         self.alpha = alpha
         self.gamma = gamma
         self.xent = xent

@@ -1,4 +1,5 @@
 """Implements Neptune Logger."""
+
 from abc import ABC
 from typing import TYPE_CHECKING, List
 
@@ -55,7 +56,7 @@ class NeptuneLogger(Callbacks, ABC):
         tags: List[str] = None,
     ):
         """Constructor for NeptuneLogger Class."""
-        super(NeptuneLogger, self).__init__(order=CallbackOrder.LOGGING)
+        super().__init__(order=CallbackOrder.LOGGING)
         self.project_dir = project_dir
         self.api_token = api_token
         self.params = params
