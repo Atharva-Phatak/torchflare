@@ -1,4 +1,5 @@
 """Implements triplet loss."""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -96,7 +97,7 @@ class TripletLoss(nn.Module):
         hard_mining: bool = True,
     ):
         """Constructor method for TripletLoss."""
-        super(TripletLoss, self).__init__()
+        super().__init__()
 
         self.normalize_features = normalize_features
         self.margin = margin
