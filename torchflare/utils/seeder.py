@@ -1,4 +1,5 @@
 """Implements function for seeding."""
+
 import os
 import random
 
