@@ -34,7 +34,7 @@ project_copyright = "2021, Atharva Phatak"
 author = "Atharva Phatak"
 
 # The full version, including alpha/beta/rc tags
-with open("../../version.txt", "r") as f:
+with open("../../version.txt") as f:
     release = str(f.readline().strip())
 
 
