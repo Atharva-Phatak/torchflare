@@ -1,4 +1,5 @@
 """Definitions of experiment states and Callback order."""
+
 from enum import IntEnum
 
 

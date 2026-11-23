@@ -18,7 +18,7 @@ class FunctionalCallback(Callbacks):
     """
 
     def __init__(self, func, order):
-        super(FunctionalCallback, self).__init__(order=order)
+        super().__init__(order=order)
         self.func = func
         functools.update_wrapper(self, func)
 
